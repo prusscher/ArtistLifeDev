@@ -40,7 +40,6 @@ public class GameScreen implements Screen{
 		game.font.draw(game.batch, "Hay, You're in the game :^)", Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
 		game.font.draw(game.batch, "Press Backspace to go back to the Main Menu", Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2 - 25);
 		
-		
 //		// Draw FPS every frame
 //		if(true) //(TimeUtils.millis() - lastFpsDraw > 100)
 //		{
@@ -61,8 +60,9 @@ public class GameScreen implements Screen{
 
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-		
+		// Basic Resizing
+		camera.setToOrtho(false, width, height);
+		game.batch.setProjectionMatrix(camera.combined);
 	}
 
 	@Override
