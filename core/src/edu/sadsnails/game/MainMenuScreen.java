@@ -4,17 +4,19 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
 public class MainMenuScreen implements Screen{
 	
 	MyGdxGame game;
 	OrthographicCamera camera;
 	
+	private double fps;
+	
 	public MainMenuScreen(final MyGdxGame game) {
 		this.game = game;
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1280, 720);
+		fps = 0.0;
 	}
 	
 	@Override
@@ -41,9 +43,9 @@ public class MainMenuScreen implements Screen{
 		game.font.draw(game.batch, "Yeah theres no button here yet, click to continue", Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2 - 50);
 		
 		// Draw FPS
-		double fps = 1/delta;
-		game.font.draw(game.batch, Double.toString(fps), 0, 0);
-
+		fps = (int)(1/delta);
+		game.font.draw(game.batch, "FPS :" + Double.toString(fps), 20, Gdx.graphics.getHeight()-20);
+		
 		// End the sprite batch
 		game.batch.end();
 	
