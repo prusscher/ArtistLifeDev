@@ -8,6 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class GameScreen implements Screen{
 	MyGdxGame game;
@@ -19,7 +22,7 @@ public class GameScreen implements Screen{
 	private Container<Label> fpsCon;
 	private Label fpsText;
 	
-	private double fps;
+	private double fps = 60.0;
 	
 	private boolean debug = false;
 	
@@ -28,20 +31,21 @@ public class GameScreen implements Screen{
 		
 		skin = new Skin(Gdx.files.internal("uiskin.json"));
 		
-		stage = new Stage();
+		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
 		
 		// Create the table, fill the stage, and add the table to the stage
 		table = new Table();
 		table.setFillParent(true); 
+		table.setWidth(Gdx.graphics.getWidth());
+		table.setHeight(Gdx.graphics.getHeight());
+		table.setOrigin(0, 0);
 		
 		// Setup FPS with Container
-		fpsCon = new Container<Label>();
 		fpsText = new Label("FPS: " + Double.toString(fps) ,skin);
-		fpsCon.setActor(fpsText);
-		fpsCon.setSize(60, 20);
-		fpsCon.setX(10);
-		fpsCon.setY(Gdx.graphics.getHeight()-30);
+		fpsCon = new Container<Label>(fpsText);
+		fpsCon.debug();
+		fpsCon.setBounds(10, Gdx.graphics.getHeight()-30, fpsText.getWidth(), fpsText.getHeight());
 		
 		// Add the FPS and Table to the Stage
 		stage.addActor(fpsCon);
@@ -107,6 +111,8 @@ public class GameScreen implements Screen{
 	@Override
 	public void resize(int width, int height) {
 		stage.getViewport().update(width, height, true);
+		fpsCon.setX(10);
+		fpsCon.setY(height-30);
 	}
 
 	@Override
