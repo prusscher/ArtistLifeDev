@@ -1,6 +1,7 @@
 package edu.sadsnails.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -9,7 +10,9 @@ public class MainMenuScreen implements Screen{
 	
 	MyGdxGame game;
 	OrthographicCamera camera;
-	
+
+	private int count;
+
 	private double fps;
 	
 	public MainMenuScreen(final MyGdxGame game) {
@@ -17,6 +20,7 @@ public class MainMenuScreen implements Screen{
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1280, 720);
 		fps = 0.0;
+		count = 0;
 	}
 	
 	@Override
@@ -40,7 +44,7 @@ public class MainMenuScreen implements Screen{
 		
 		// Main Menu Text
 		game.font.draw(game.batch, "Main Menu", Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
-		game.font.draw(game.batch, "Yeah theres no button here yet, click to continue", Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2 - 50);
+		game.font.draw(game.batch, "Press Space for Ball Bounce, Click for Main Game : ", Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2 - 50);
 		
 		// Draw FPS
 		fps = (int)(1/delta);
@@ -48,12 +52,19 @@ public class MainMenuScreen implements Screen{
 		
 		// End the sprite batch
 		game.batch.end();
-	
+
 		// Check to see if the screen was clicked
 		if(Gdx.input.isTouched()){
+			System.out.println("Creating GameScreen");
 			game.setScreen(new GameScreen(game));
 			this.dispose();
 		}
+		else if(Gdx.input.isKeyPressed(Keys.SPACE)){
+			System.out.println("Creating BallBounce");
+			game.setScreen(new BallBounceTest(game));
+			this.dispose();
+		}
+
 	}
 	
 	@Override

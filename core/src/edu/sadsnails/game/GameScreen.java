@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -21,7 +22,10 @@ public class GameScreen implements Screen{
 	
 	private Container<Label> fpsCon;
 	private Label fpsText;
-	
+	private Image testImage;
+
+	private Texture texture;
+
 	private double fps = 60.0;
 	
 	private boolean debug = false;
@@ -46,10 +50,23 @@ public class GameScreen implements Screen{
 		fpsCon = new Container<Label>(fpsText);
 		fpsCon.debug();
 		fpsCon.setBounds(10, Gdx.graphics.getHeight()-30, fpsText.getWidth(), fpsText.getHeight());
-		
+
+		// Test image, Checking to see if IntelliJ compiling works.
+		texture = new Texture(Gdx.files.internal("badlogic.jpg"));
+		testImage = new Image(texture);
+		testImage.setPosition(100, 100);
+
+		/*
+		OK, IntelliJ works, When you have to come back to this to figure out why it doesnt work...
+		Be sure the run config is for an application and the main class is DesktopLauncher.java
+		Change the run config WORKING DIRECTORY to the assets folder in the core.
+		Thats all idiot
+		 */
+
 		// Add the FPS and Table to the Stage
 		stage.addActor(fpsCon);
 		stage.addActor(table);
+		stage.addActor(testImage);
 		
 		// This is optional, but enables debug lines for tables.
 		table.setDebug(debug); 
@@ -82,6 +99,25 @@ public class GameScreen implements Screen{
 		table.add(button);
 		
 		fps = 0.0;
+
+		/*
+		Ok, Heres the breakdown of what all that was. So,
+		STAGE:
+			Our screen has a stage, This is a basic scene2d object used for drawing.
+			Think of it actually like a stage, or how the stuff is displayed on screen
+			our Screens are like multiple different theaters and each of them has a stage, I guess
+		FPSCON, Table, and testImage:
+			Theses are Scene2d elements that are "Actors". Actors interface with the stage and are used for organization
+			They make doing things in the stage EZ.
+			Table:
+				The table is a dynamically created table element. Its actually pretty cool, it acts like the console.
+				Add individual elements to the table and they will go left to right, use the row method to create a new
+				row. Elements within the table (In this case labels) are also elements and can be sized accordingly.
+				Using the .center(), .expand(), etc. commands let you change the individual size of the table.
+		Skin:
+			Ok so scene2d needs a "skin" or basic configuration before you can use elements. This is the basic skin
+			provided by libGDX. We can figure out what it actually does later.
+		*/
 	}
 	
 	@Override
