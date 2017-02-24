@@ -14,6 +14,17 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+/**
+ * GameScreen.java
+ *
+ * Main game screen. Contains the basic UI elements.
+ *
+ * @author Parker Russcher
+ * @author Connor Przybyla
+ * @author Leah Teng
+ * @author Ryanne Sutton
+ * 
+ */
 public class GameScreen implements Screen{
 	MyGdxGame game;
 	
@@ -23,30 +34,30 @@ public class GameScreen implements Screen{
 	protected Actions actions;
 	protected State state;
 	
-	private Container<Label> clock;
+	private Container<Label> clock;		// Time Container and Label
 	private Label time;
-	private Container<Label> rank;
+	private Container<Label> rank; 		// Level Container and Label
 	private Label level;
-	private Container<Label> exp;
+	private Container<Label> exp;		// Experience Container and Label
 	private Label xp;
-	private Container<Label> money;
+	private Container<Label> money;		// Money Container and Label
 	private Label amount;
-	private Container<Label> energy;
+	private Container<Label> energy;	// Energy Container and Label
 	private Label energybar;
 	
-	private Image testImage;
-	private TextButton pause;
+	private Image testImage;	// Player image 
+	private Texture player;
+	
+	private TextButton pause;	// Pause and Action buttons
 	private TextButton action;
 	
-	private Table popupTable;
+	private Table popupTable;	// Popup Action menu 
 	private TextButton sleep;
 	private TextButton art;
-	
-	private Texture player;
 
-	private boolean popup = true;
+	private boolean popup = true;	// Popup Menu displayed variable
 	
-	private boolean debug = false;
+	private boolean debug = false;	// Global debug variable
 	
 	public GameScreen(final MyGdxGame game) {
 		this.game = game;
@@ -59,10 +70,9 @@ public class GameScreen implements Screen{
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
 		
-		// Create the button
+		// Create the button and set its bounds
 		action = new TextButton("Action", skin);
 		pause = new TextButton("Pause", skin);
-		
 		action.setBounds((Gdx.graphics.getWidth() - 250) / 2, 10, 250, 40);
 		pause.setBounds(Gdx.graphics.getWidth() - 75, 0, 75, 75);
 		
@@ -112,13 +122,11 @@ public class GameScreen implements Screen{
 		energy.setBounds(Gdx.graphics.getWidth() - 85, Gdx.graphics.getHeight() - 95, 75, 75);
 		//energy.debug();
 
-		// Test image, Checking to see if IntelliJ compiling works.
 		player = new Texture(Gdx.files.internal("badlogic.jpg"));
 		testImage = new Image(player);
 		testImage.setBounds(0, Gdx.graphics.getHeight() - 100, 100, 100);
 		
 		// Create popup UI
-		
 		popupTable = new Table();
 		
 		sleep = new TextButton("Sleep", skin);
@@ -180,9 +188,6 @@ public class GameScreen implements Screen{
 	public void render(float delta) {
 		Gdx.gl.glClearColor(.2f, .2f, .2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		// Update the FPS Counter
-		//fpsText.setText("FPS: " + Double.toString(fps));
 		
 		// Draw The Scene2d stage
 		stage.act();

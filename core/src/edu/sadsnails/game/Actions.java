@@ -1,18 +1,22 @@
 package edu.sadsnails.game;
 
+/**
+ * Actions.java
+ * 
+ * This class serves the purpose of maintaining all of the possible
+ * actions within the game.
+ *	
+ * For now, the methods contain placeholder instructions
+ * that do basic versions of the tasks they are to perform.
+ *
+ * These placeholder instructions will hopefully be replaced
+ * with better versions in sprint 2.
+ * 
+ * @author Ryanne Sutton
+ * @author Parker Russcher
+ */
 public class Actions {
-	
-	/* -----------------------------------------------------------------
-	 * 	This class serves the purpose of maintaining all of the possible
-	 *	actions within the game.
-	 *	
-	 *	For now, the methods contain placeholder instructions
-	 *	that do basic versions of the tasks they are to perform.
-	 *
-	 *	These placeholder instructions will hopefully be replaced
-	 *	with better versions in sprint 2.
-	 * -----------------------------------------------------------------*/
-	
+
 	private State state;
 	
 	public Actions(State state){
@@ -41,13 +45,6 @@ public class Actions {
 		state.hour		= 1;
 		
 		state.printStates();
-	}
-
-	public void capitalism() {
-		//placeholder instructions
-		System.out.println("I bought coffee!");
-		state.energy += 10;
-		state.money -= 5;
 	}
 	
 	public void incXP(int xpAmount) {
