@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -18,13 +19,28 @@ public class GameScreen implements Screen{
 	
 	private Skin skin;
 	private Stage stage;
-	private Table table;
+	//private Table table;
 	
-	private Container<Label> fpsCon;
-	private Label fpsText;
+	//private Container<Label> fpsCon;
+	//private Label fpsText;
+	private Container<Label> clock;
+	private Label time;
+	private Container<Label> rank;
+	private Label level;
+	private Container<Label> exp;
+	private Label xp;
+	private Container<Label> money;
+	private Label amount;
+	private Container<Label> energy;
+	private Label energybar;
+	
 	private Image testImage;
+	private TextButton pause;
+	private TextButton action;
 
-	private Texture texture;
+	
+	
+	private Texture player;
 
 	private double fps = 60.0;
 	
@@ -39,22 +55,74 @@ public class GameScreen implements Screen{
 		Gdx.input.setInputProcessor(stage);
 		
 		// Create the table, fill the stage, and add the table to the stage
-		table = new Table();
+		/*table = new Table();
 		table.setFillParent(true); 
 		table.setWidth(Gdx.graphics.getWidth());
 		table.setHeight(Gdx.graphics.getHeight());
 		table.setOrigin(0, 0);
+		*/
+		
+		action = new TextButton("Action", skin);
+		pause = new TextButton("Pause", skin);
+		
+		action.setBounds((Gdx.graphics.getWidth() - 250) / 2, 10, 250, 40);
+		pause.setBounds(Gdx.graphics.getWidth() - 75, 0, 75, 75);
+		
+		// Listeners
+		action.addListener(new ChangeListener(){
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				
+			}
+		});
+		
+		pause.addListener(new ChangeListener(){
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				
+			}
+		});
 		
 		// Setup FPS with Container
-		fpsText = new Label("FPS: " + Double.toString(fps) ,skin);
+		/*fpsText = new Label("FPS: " + Double.toString(fps) ,skin);
 		fpsCon = new Container<Label>(fpsText);
 		fpsCon.debug();
 		fpsCon.setBounds(10, Gdx.graphics.getHeight()-30, fpsText.getWidth(), fpsText.getHeight());
+		*/
+		
+		time = new Label("12:00",skin);
+		clock = new Container<Label>(time);
+		clock.setBounds(15, 5, 40, 40);
+		//clock.debug();
+		
+
+		level = new Label("Beginner",skin);
+		rank = new Container<Label>(level);
+		rank.setBounds(120, Gdx.graphics.getHeight() - 80, 50, 50);
+		//rank.debug();
+		
+
+		xp = new Label("0/100",skin);
+		exp = new Container<Label>(xp);
+		exp.setBounds(120, Gdx.graphics.getHeight() - 40, 40, 40);
+		//exp.debug();
+		
+
+		amount = new Label("Money: $0",skin);
+		money = new Container<Label>(amount);
+		money.setBounds(Gdx.graphics.getWidth() - 85, Gdx.graphics.getHeight() - 60, 75, 75);
+		//money.debug();
+		
+
+		energybar = new Label("100/100",skin);
+		energy = new Container<Label>(energybar);
+		energy.setBounds(Gdx.graphics.getWidth() - 85, Gdx.graphics.getHeight() - 95, 75, 75);
+		//energy.debug();
 
 		// Test image, Checking to see if IntelliJ compiling works.
-		texture = new Texture(Gdx.files.internal("badlogic.jpg"));
-		testImage = new Image(texture);
-		testImage.setPosition(100, 100);
+		player = new Texture(Gdx.files.internal("badlogic.jpg"));
+		testImage = new Image(player);
+		testImage.setBounds(0, Gdx.graphics.getHeight() - 100, 100, 100);
 
 		/*
 		OK, IntelliJ works, When you have to come back to this to figure out why it doesnt work...
@@ -64,18 +132,25 @@ public class GameScreen implements Screen{
 		 */
 
 		// Add the FPS and Table to the Stage
-		stage.addActor(fpsCon);
-		stage.addActor(table);
+		//stage.addActor(fpsCon);
+		stage.addActor(clock);
+		stage.addActor(exp);
+		stage.addActor(energy);
+		stage.addActor(money);
+		stage.addActor(rank);
+		//stage.addActor(table);
 		stage.addActor(testImage);
+		stage.addActor(action);
+		stage.addActor(pause);
 		
 		// This is optional, but enables debug lines for tables.
-		table.setDebug(debug); 
+	//	table.setDebug(debug); 
 		
 		// Center the table layout
-		table.center();
+	//	table.center();
 		
 		// Create and Add the text to the table
-		Label label1 = new Label("This is the Game Screen :^)", skin);
+/*		Label label1 = new Label("This is the Game Screen :^)", skin);
 		Label label2 = new Label("This should be centered text, Press Backspace to go back to the Main Menu", skin);
 		Label label3 = new Label("\nClick to toggle table.setDebug. Notice the lines!", skin);
 		
@@ -90,7 +165,7 @@ public class GameScreen implements Screen{
 		});
 		
 		// Add all the actors to the table
-		table.add(label1).expandX();
+	/*	table.add(label1).expandX();
 		table.row();
 		table.add(label2);
 		table.row();
@@ -99,7 +174,7 @@ public class GameScreen implements Screen{
 		table.add(button);
 		
 		fps = 0.0;
-
+*/
 		/*
 		Ok, Heres the breakdown of what all that was. So,
 		STAGE:
@@ -129,7 +204,7 @@ public class GameScreen implements Screen{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		// Update the FPS Counter
-		fpsText.setText("FPS: " + Double.toString(fps));
+		//fpsText.setText("FPS: " + Double.toString(fps));
 		
 		// Draw The Scene2d stage
 		stage.act();
@@ -144,11 +219,14 @@ public class GameScreen implements Screen{
 		}
 	}
 
+	
 	@Override
 	public void resize(int width, int height) {
-		stage.getViewport().update(width, height, true);
+		/*stage.getViewport().update(width, height, true);
 		fpsCon.setX(10);
 		fpsCon.setY(height-30);
+		pause.right();
+		pause.bottom();*/
 	}
 
 	@Override
