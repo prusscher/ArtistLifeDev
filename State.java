@@ -2,7 +2,7 @@ package edu.sadsnails.game;
 
 public class State {
 
-	// Experiance
+	// Experience
 	protected int xp; 			// the current amount of experience we have
 
 	// Level
