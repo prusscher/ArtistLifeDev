@@ -38,6 +38,7 @@ public class State {
 	// ---
 	
 	public State() {
+		//initialize all your sad, sad stats when you start a new game
 		xp = 0;
 		
 		toNext = 30;

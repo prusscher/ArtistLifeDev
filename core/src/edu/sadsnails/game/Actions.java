@@ -42,10 +42,18 @@ public class Actions {
 		state.printStates();
 	}
 	
+	public void capitalism() {
+		//placeholder instructions
+		System.out.println("I bought coffee!");
+		state.energy += 10;
+		state.money -= 5;
+	}
+	
 	public void incXP(int xpAmount) {
 		//placeholder instructions		
 		
-		if(xpAmount + state.xp >= state.toNext) {
+		if(xpAmount + state.xp >= state.toNext && state.level != 8) {
+			//level up, if you're not max level
 			
 			state.xp	+= xpAmount;
 			state.level	++;
@@ -72,7 +80,7 @@ public class Actions {
 					 break;
 			}
 			
-			System.out.println("You've leveled up! You are now level " +state.level + ", a " + state.title);
+			System.out.println("You've leveled up! You are now level " +state.level + "! People have started to call you the " + state.title);
 		}
 		else
 			state.xp 	+= xpAmount;
