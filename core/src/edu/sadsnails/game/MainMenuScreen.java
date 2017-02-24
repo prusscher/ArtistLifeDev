@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -24,6 +25,9 @@ public class MainMenuScreen implements Screen{
 	private TextButton startGame;
 	private TextButton settings;
 	
+	private Container<Label> titleContainer;
+	private Label title;
+	
 	private Stage stage;
 	
 	public MainMenuScreen(final MyGdxGame game) {
@@ -37,6 +41,8 @@ public class MainMenuScreen implements Screen{
 		// Create TextButtons
 		startGame = new TextButton("Start Game", skin);
 		settings = new TextButton("Setting", skin);
+		title = new Label("Artist Life", skin);
+		title.setFontScale(3);
 		
 		// Listeners
 		startGame.addListener(new ChangeListener(){
@@ -55,7 +61,9 @@ public class MainMenuScreen implements Screen{
 		// Create Containers to fill screen
 		startContainer = new Container<TextButton>(startGame);
 		settingsContainer = new Container<TextButton>(settings);
+		titleContainer = new Container<Label>(title);
 		
+		titleContainer.setBounds(Gdx.graphics.getWidth()/2-title.getWidth()/2, (Gdx.graphics.getHeight()/2 + (2*title.getHeight())), title.getWidth(), title.getHeight());
 		startContainer.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		settingsContainer.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());	
 		
@@ -66,7 +74,7 @@ public class MainMenuScreen implements Screen{
 		// add Containers
 		stage.addActor(startContainer);
 		stage.addActor(settingsContainer);
-		
+		stage.addActor(titleContainer);
 	}
 	
 	@Override

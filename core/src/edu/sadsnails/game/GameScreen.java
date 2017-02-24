@@ -151,7 +151,6 @@ public class GameScreen implements Screen{
 		popupTable.add(art).width(w).height(h);
 		
 		popupTable.setBounds(action.getX(), action.getY() + h + 10, w, 2*h);
-		popupTable.debug();
 		
 		
 		// Add the UI to the stage
@@ -170,8 +169,8 @@ public class GameScreen implements Screen{
 		time.setText(Integer.toString(state.hour + 1) + ":00");
 		level.setText("Level: " + Integer.toString(state.level));
 		xp.setText("XP: " + Integer.toString(state.xp));
-		amount.setText("$" + Double.toString(state.money));
-		energybar.setText("Energy: " + Integer.toString(state.energy) + "/100");
+		amount.setText("$" + Double.toString(state.money) + "0");
+		energybar.setText("E: " + Integer.toString(state.energy) + "/100");
 	}
 	
 	@Override
