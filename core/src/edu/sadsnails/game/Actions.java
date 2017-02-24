@@ -19,7 +19,6 @@ public class Actions {
 		this.state = state;
 	}
 	
-<<<<<<< HEAD
 	public void makeArt() {		//placeholder instructions
 		if(state.energy >= 20) {
 			System.out.println("I made art");
@@ -31,19 +30,7 @@ public class Actions {
 		} else {
 			System.out.println("Not enough energy: " + state.energy + " < 20");
 		}
-=======
-	public void makeArt() {		
-		//placeholder instructions
-		System.out.println("I made art");
-		state.energy -= 20;
-		state.hour   += 2;
-		state.money  += 10;
-
-		incXP(30);
-		
->>>>>>> origin/actions
 		state.printStates();
-		
 	}
 	
 	public void sleep() {		
@@ -55,15 +42,7 @@ public class Actions {
 		
 		state.printStates();
 	}
-	
-<<<<<<< HEAD
-	public void incXP(int xpAmount) { //method for incrementing the experience according to value passed
-		if(xpAmount + state.xp == 30) {	
-			state.xp	+= 30;
-			state.level	++;
-			System.out.println("You've leveled up! You are now level " +state.level);
-		} else {
-=======
+
 	public void capitalism() {
 		//placeholder instructions
 		System.out.println("I bought coffee!");
@@ -105,9 +84,8 @@ public class Actions {
 			System.out.println("You've leveled up! You are now level " +state.level + "! People have started to call you the " + state.title);
 		}
 		else
->>>>>>> origin/actions
 			state.xp 	+= xpAmount;
 		}
-	}
-	
 }
+	
+
