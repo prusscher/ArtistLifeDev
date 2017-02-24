@@ -1,6 +1,16 @@
 package edu.sadsnails.game;
 
 public class State {
+	
+	/* -----------------------------------------------------------------
+	 *	This class serves the purpose of being a container for 
+	 *	game variables. Through this class, one may alter the various
+	 *	statistics and variables within the game.
+	 * 
+	 *	For debugging purposes, the printStates
+	 *	method prints all of the current states of the variables
+	 *	within this class.
+	 * -----------------------------------------------------------------*/
 
 	// Experience
 	protected int xp; 			// the current amount of experience we have
