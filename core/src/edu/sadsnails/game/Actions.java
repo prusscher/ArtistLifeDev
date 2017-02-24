@@ -13,13 +13,16 @@ public class Actions {
 	}
 	
 	public void makeArt() {		//placeholder instructions
-		System.out.println("I made art");
-		state.energy -= 20;
-		state.hour   += 2;
-		state.money  += 10;
-
-		incXP(30);
-		
+		if(state.energy >= 20) {
+			System.out.println("I made art");
+			state.energy -= 20;
+			state.hour   += 2;
+			state.money  += 10;
+	
+			incXP(30);
+		} else {
+			System.out.println("Not enough energy: " + state.energy + " < 20");
+		}
 		state.printStates();
 		
 	}
@@ -34,15 +37,13 @@ public class Actions {
 	}
 	
 	public void incXP(int xpAmount) { //method for incrementing the experience according to value passed
-		if(xpAmount + state.xp == 30) {
-			
+		if(xpAmount + state.xp == 30) {	
 			state.xp	+= 30;
 			state.level	++;
 			System.out.println("You've leveled up! You are now level " +state.level);
-		}
-		else
+		} else {
 			state.xp 	+= xpAmount;
-		
+		}
 	}
 	
 }
