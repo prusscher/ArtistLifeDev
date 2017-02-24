@@ -43,12 +43,36 @@ public class Actions {
 	}
 	
 	public void incXP(int xpAmount) {
-		//placeholder instructions
-		if(xpAmount + state.xp == 30) {
+		//placeholder instructions		
+		
+		if(xpAmount + state.xp >= state.toNext) {
 			
-			state.xp	+= 30;
+			state.xp	+= xpAmount;
 			state.level	++;
-			System.out.println("You've leveled up! You are now level " +state.level);
+			state.toNext *= 2;
+			
+			switch (state.level){
+			case 1: state.title = "Stubborn Snail";
+					break;
+			case 2: state.title = "Determined Doodler";
+					break;
+			case 3: state.title = "Seasoned Sketcher";
+					break;
+			case 4: state.title = "Accomplished Artiste";
+					break;
+			case 5: state.title = "Level Five Clever Text";
+					break;
+			case 6: state.title = "Level Six Clever And Cool Text";
+					break;
+			case 7: state.title = "Actually Aesthetic";
+					break;
+			case 8: state.title = "A R T I S T";
+					break;
+			default: state.title = "you broke me. :(";
+					 break;
+			}
+			
+			System.out.println("You've leveled up! You are now level " +state.level + ", a " + state.title);
 		}
 		else
 			state.xp 	+= xpAmount;

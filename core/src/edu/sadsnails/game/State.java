@@ -14,9 +14,11 @@ public class State {
 
 	// Experience
 	protected int xp; 			// the current amount of experience we have
+	protected int toNext;		// the next XP milestone before your level increases
 
 	// Level
 	protected int level;		// current level in drawing skill [0 -> 8]
+	protected String title;		//the title associated with your current level
 	
 	// Popularity
 	protected float popularity;	// current popularity [-1 <-> 1]
@@ -38,7 +40,11 @@ public class State {
 	public State() {
 		xp = 0;
 		
+		toNext = 30;
+		
 		level = 0;
+		
+		title = "Starry Eyed Scribbler";
 		
 		popularity = 0;
 		
@@ -57,6 +63,7 @@ public class State {
 	public void printStates() {
 		System.out.println("XP: " + xp);
 		System.out.println("Level: " + level);
+		System.out.println("Title: " + title);
 		System.out.println("Popularity: " + popularity);
 		System.out.println("Year " + date[0] + " Month " + date[1] + " Day " + date[2]);
 		System.out.println("Hour: " + hour);
