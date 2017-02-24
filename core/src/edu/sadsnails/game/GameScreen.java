@@ -20,6 +20,9 @@ public class GameScreen implements Screen{
 	private Skin skin;
 	private Stage stage;
 	
+	protected Actions actions;
+	protected State state;
+	
 	private Container<Label> clock;
 	private Label time;
 	private Container<Label> rank;
@@ -35,16 +38,28 @@ public class GameScreen implements Screen{
 	private TextButton pause;
 	private TextButton action;
 	
+	private Table popupTable;
+	private TextButton sleep;
+	private TextButton art;
+	
 	private Texture player;
 
+	private boolean popup = true;
+	
+	private boolean debug = false;
+	
 	public GameScreen(final MyGdxGame game) {
 		this.game = game;
+		
+		state = new State();
+		actions = new Actions(state);
 		
 		skin = new Skin(Gdx.files.internal("uiskin.json"));
 		
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
 		
+		// Create the button
 		action = new TextButton("Action", skin);
 		pause = new TextButton("Pause", skin);
 		
@@ -55,7 +70,12 @@ public class GameScreen implements Screen{
 		action.addListener(new ChangeListener(){
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				
+				if(popup)
+					stage.addActor(popupTable);
+				else
+					popupTable.remove();
+
+				popup = !popup;
 			}
 		});
 		
@@ -66,27 +86,28 @@ public class GameScreen implements Screen{
 			}
 		});
 		
-		time = new Label("12:00",skin);
+		// ----- MAIN UI ELEMENTS -----
+		time = new Label("",skin);
 		clock = new Container<Label>(time);
 		clock.setBounds(15, 5, 40, 40);
 		//clock.debug();
-
-		level = new Label("Beginner",skin);
+		
+		level = new Label("",skin);
 		rank = new Container<Label>(level);
 		rank.setBounds(120, Gdx.graphics.getHeight() - 80, 50, 50);
 		//rank.debug();
-
-		xp = new Label("0/100",skin);
+		
+		xp = new Label("",skin);
 		exp = new Container<Label>(xp);
 		exp.setBounds(120, Gdx.graphics.getHeight() - 40, 40, 40);
 		//exp.debug();
 		
-		amount = new Label("Money: $0",skin);
+		amount = new Label("",skin);
 		money = new Container<Label>(amount);
 		money.setBounds(Gdx.graphics.getWidth() - 85, Gdx.graphics.getHeight() - 60, 75, 75);
 		//money.debug();
 		
-		energybar = new Label("100/100",skin);
+		energybar = new Label("",skin);
 		energy = new Container<Label>(energybar);
 		energy.setBounds(Gdx.graphics.getWidth() - 85, Gdx.graphics.getHeight() - 95, 75, 75);
 		//energy.debug();
@@ -95,8 +116,46 @@ public class GameScreen implements Screen{
 		player = new Texture(Gdx.files.internal("badlogic.jpg"));
 		testImage = new Image(player);
 		testImage.setBounds(0, Gdx.graphics.getHeight() - 100, 100, 100);
-
-		// Add the FPS and Table to the Stage
+		
+		// Create popup UI
+		
+		popupTable = new Table();
+		
+		sleep = new TextButton("Sleep", skin);
+		art = new TextButton("Make Art", skin);
+		
+		sleep.addListener(new ChangeListener(){
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				popup = !popup;
+				popupTable.remove();
+				actions.sleep();
+				updateState();
+			}
+		});
+		art.addListener(new ChangeListener(){
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				popup = !popup;
+				popupTable.remove();
+				actions.makeArt();
+				updateState();
+			}
+		});
+		
+		float h = action.getHeight();
+		float w = action.getWidth();
+		
+		popupTable.add(sleep).width(w).height(h);
+		popupTable.row();
+		popupTable.add(art).width(w).height(h);
+		
+		popupTable.setBounds(action.getX(), action.getY() + h + 10, w, 2*h);
+		popupTable.debug();
+		
+		
+		// Add the UI to the stage
+		updateState();
 		stage.addActor(clock);
 		stage.addActor(exp);
 		stage.addActor(energy);
@@ -107,6 +166,14 @@ public class GameScreen implements Screen{
 		stage.addActor(pause);
 	}
 	
+	private void updateState() {
+		time.setText(Integer.toString(state.hour + 1) + ":00");
+		level.setText("Level: " + Integer.toString(state.level));
+		xp.setText("XP: " + Integer.toString(state.xp));
+		amount.setText("$" + Double.toString(state.money));
+		energybar.setText("Energy: " + Integer.toString(state.energy) + "/100");
+	}
+	
 	@Override
 	public void show() { }
 
@@ -114,11 +181,14 @@ public class GameScreen implements Screen{
 	public void render(float delta) {
 		Gdx.gl.glClearColor(.2f, .2f, .2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-			
+		
+		// Update the FPS Counter
+		//fpsText.setText("FPS: " + Double.toString(fps));
+		
 		// Draw The Scene2d stage
 		stage.act();
 		stage.draw();
-	
+		
 		// Return to the main menu
 		if(Gdx.input.isKeyPressed(Keys.BACKSPACE)){
 			game.setScreen(new MainMenuScreen(game));
