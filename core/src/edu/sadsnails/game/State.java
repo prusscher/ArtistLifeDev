@@ -1,12 +1,24 @@
 package edu.sadsnails.game;
 
 public class State {
+	
+	/* -----------------------------------------------------------------
+	 *	This class serves the purpose of being a container for 
+	 *	game variables. Through this class, one may alter the various
+	 *	statistics and variables within the game.
+	 * 
+	 *	For debugging purposes, the printStates
+	 *	method prints all of the current states of the variables
+	 *	within this class.
+	 * -----------------------------------------------------------------*/
 
 	// Experience
 	protected int xp; 			// the current amount of experience we have
+	protected int toNext;		// the next XP milestone before your level increases
 
 	// Level
 	protected int level;		// current level in drawing skill [0 -> 8]
+	protected String title;		//the title associated with your current level
 	
 	// Popularity
 	protected float popularity;	// current popularity [-1 <-> 1]
@@ -26,9 +38,14 @@ public class State {
 	// ---
 	
 	public State() {
+		//initialize all your sad, sad stats when you start a new game
 		xp = 0;
 		
+		toNext = 30;
+		
 		level = 0;
+		
+		title = "Starry Eyed Scribbler";
 		
 		popularity = 0;
 		
@@ -47,6 +64,7 @@ public class State {
 	public void printStates() {
 		System.out.println("XP: " + xp);
 		System.out.println("Level: " + level);
+		System.out.println("Title: " + title);
 		System.out.println("Popularity: " + popularity);
 		System.out.println("Year " + date[0] + " Month " + date[1] + " Day " + date[2]);
 		System.out.println("Hour: " + hour);
