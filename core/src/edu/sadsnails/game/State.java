@@ -1,16 +1,20 @@
 package edu.sadsnails.game;
 
+/**
+ * State.java
+ * 
+ * This class serves the purpose of being a container for 
+ * game variables. Through this class, one may alter the various
+ * statistics and variables within the game.
+ * 
+ * For debugging purposes, the printStates
+ * method prints all of the current states of the variables
+ * within this class.
+ * 
+ * @author Ryanne Sutton
+ */
+
 public class State {
-	
-	/* -----------------------------------------------------------------
-	 *	This class serves the purpose of being a container for 
-	 *	game variables. Through this class, one may alter the various
-	 *	statistics and variables within the game.
-	 * 
-	 *	For debugging purposes, the printStates
-	 *	method prints all of the current states of the variables
-	 *	within this class.
-	 * -----------------------------------------------------------------*/
 
 	// Experience
 	protected int xp; 			// the current amount of experience we have
@@ -38,27 +42,21 @@ public class State {
 	// ---
 	
 	public State() {
-		//initialize all your sad, sad stats when you start a new game
 		xp = 0;
-		
 		toNext = 30;
-		
 		level = 0;
-		
 		title = "Starry Eyed Scribbler";
-		
 		popularity = 0;
-		
 		date = new int[3];
 			date[0] = 1;
 			date[1] = 1;
 			date[2] = 1;
-			
 		hour = 0;
-		
 		energy = 100;
 		
-		money = 0; spent_money = 0; earned_money = 0;
+		money = 0; 
+		spent_money = 0; 
+		earned_money = 0;
 	}
 	
 	public void printStates() {
