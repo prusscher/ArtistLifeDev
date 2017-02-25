@@ -1,7 +1,5 @@
 package edu.sadsnails.game.desktop;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import edu.sadsnails.game.MyGdxGame;

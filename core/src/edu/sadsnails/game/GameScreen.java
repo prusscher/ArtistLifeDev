@@ -59,14 +59,23 @@ public class GameScreen implements Screen{
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
 		
-		// Create the button
+		createUI(debug);
+		
+	}
+	
+	private void createUI(boolean debug) {
+		
+		if(debug)
+			stage.setDebugAll(true);
+		
+		// Create the Screen Buttons
 		action = new TextButton("Action", skin);
 		pause = new TextButton("Pause", skin);
 		
 		action.setBounds((Gdx.graphics.getWidth() - 250) / 2, 10, 250, 40);
 		pause.setBounds(Gdx.graphics.getWidth() - 75, 0, 75, 75);
 		
-		// Listeners
+		// Button Listeners
 		action.addListener(new ChangeListener(){
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -90,35 +99,29 @@ public class GameScreen implements Screen{
 		time = new Label("",skin);
 		clock = new Container<Label>(time);
 		clock.setBounds(15, 5, 40, 40);
-		//clock.debug();
 		
 		level = new Label("",skin);
 		rank = new Container<Label>(level);
 		rank.setBounds(120, Gdx.graphics.getHeight() - 80, 50, 50);
-		//rank.debug();
 		
 		xp = new Label("",skin);
 		exp = new Container<Label>(xp);
 		exp.setBounds(120, Gdx.graphics.getHeight() - 40, 40, 40);
-		//exp.debug();
 		
 		amount = new Label("",skin);
 		money = new Container<Label>(amount);
 		money.setBounds(Gdx.graphics.getWidth() - 85, Gdx.graphics.getHeight() - 60, 75, 75);
-		//money.debug();
 		
 		energybar = new Label("",skin);
 		energy = new Container<Label>(energybar);
 		energy.setBounds(Gdx.graphics.getWidth() - 85, Gdx.graphics.getHeight() - 95, 75, 75);
-		//energy.debug();
 
 		// Test image, Checking to see if IntelliJ compiling works.
 		player = new Texture(Gdx.files.internal("badlogic.jpg"));
 		testImage = new Image(player);
 		testImage.setBounds(0, Gdx.graphics.getHeight() - 100, 100, 100);
 		
-		// Create popup UI
-		
+		// ----- Create popup UI -----		
 		popupTable = new Table();
 		
 		sleep = new TextButton("Sleep", skin);
@@ -198,11 +201,7 @@ public class GameScreen implements Screen{
 	
 	@Override
 	public void resize(int width, int height) {
-		/*stage.getViewport().update(width, height, true);
-		fpsCon.setX(10);
-		fpsCon.setY(height-30);
-		pause.right();
-		pause.bottom();*/
+		//stage.getViewport().update(width, height, true);
 	}
 
 	@Override
