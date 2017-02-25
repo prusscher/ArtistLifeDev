@@ -1,6 +1,8 @@
 # ArtistLifeDev
 Game for CS3141. Developer Repository for Team 4.
 
+Sprint 1 Deliverable: https://github.com/prusscher/ArtistLifeDev/releases/tag/0.1.0
+
 Level/Progression based game built using libGDX and Java for Desktop.
 
 To Run: Import the project into your existing workspace in Eclipse, select the DesktopLauncher class from the ArtistLife-Desktop project and run like normal. 
