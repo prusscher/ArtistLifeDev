@@ -274,7 +274,7 @@ public class GameScreen implements Screen 	{
 		stage.addActor(action);
 		stage.addActor(pause);
 		stage.addActor(statistics);
-		stage.addActor(datecontainer);	
+		stage.addActor(datecontainer);
 	}
 	
 	private void updateState() {
@@ -284,6 +284,28 @@ public class GameScreen implements Screen 	{
 		amount.setText("$" + Double.toString(state.money) + "0");
 		energybar.setText("E: " + Integer.toString(state.energy) + "/100");
 		date.setText("Year " + state.date[0] + " Month " + state.date[1] + " Day " + state.date[2]);
+
+		//change character portrait if character's energy is low
+		if((state.energy <= 50) && (state.energy > 20)) {
+			player = new Texture(Gdx.files.internal("scribbler2.gif"));
+			testImage = new Image(player);
+			testImage.setBounds(0, Gdx.graphics.getHeight() - 100, 100, 100);
+			stage.addActor(testImage);
+		}
+		else if(state.energy <= 20) {
+			player = new Texture(Gdx.files.internal("scribbler3.gif"));
+			testImage = new Image(player);
+			testImage.setBounds(0, Gdx.graphics.getHeight() - 100, 100, 100);
+			stage.addActor(testImage);
+		}
+		else if(state.energy > 50) {
+			player = new Texture(Gdx.files.internal("scribbler.gif"));
+			testImage = new Image(player);
+			testImage.setBounds(0, Gdx.graphics.getHeight() - 100, 100, 100);
+			stage.addActor(testImage);
+		}
+		
+	
 	}
 	
 	@Override
