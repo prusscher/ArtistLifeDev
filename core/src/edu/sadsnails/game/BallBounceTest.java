@@ -17,11 +17,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import java.util.Random;
 
 /**
- * BallBounceTest.java
- *
- * Just a test class, please ignore
- *
- * @author Parker Russcher
+ * Created by Parker on 2/22/2017.
  */
 public class BallBounceTest implements Screen {
     MyGdxGame game;

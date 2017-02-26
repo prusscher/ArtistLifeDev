@@ -1,20 +1,16 @@
 package edu.sadsnails.game;
 
-/**
- * State.java
- * 
- * This class serves the purpose of being a container for 
- * game variables. Through this class, one may alter the various
- * statistics and variables within the game.
- * 
- * For debugging purposes, the printStates
- * method prints all of the current states of the variables
- * within this class.
- * 
- * @author Ryanne Sutton
- */
-
 public class State {
+	
+	/* -----------------------------------------------------------------
+	 *	This class serves the purpose of being a container for 
+	 *	game variables. Through this class, one may alter the various
+	 *	statistics and variables within the game.
+	 * 
+	 *	For debugging purposes, the printStates
+	 *	method prints all of the current states of the variables
+	 *	within this class.
+	 * -----------------------------------------------------------------*/
 
 	// Experience
 	protected int xp; 			// the current amount of experience we have
@@ -39,24 +35,34 @@ public class State {
 	protected double spent_money;
 	protected double earned_money;
 	
+	// Booster
+	protected boolean coffee_used;
+	protected boolean has_napped;
+	
 	// ---
 	
 	public State() {
+		//init statistics
 		xp = 0;
+		
 		toNext = 30;
+		
 		level = 0;
+		
 		title = "Starry Eyed Scribbler";
+		
 		popularity = 0;
+		
 		date = new int[3];
 			date[0] = 1;
 			date[1] = 1;
 			date[2] = 1;
-		hour = 0;
+			
+		hour = 1;
+		
 		energy = 100;
 		
-		money = 0; 
-		spent_money = 0; 
-		earned_money = 0;
+		money = 0; spent_money = 0; earned_money = 0;
 	}
 	
 	public void printStates() {
@@ -68,6 +74,8 @@ public class State {
 		System.out.println("Hour: " + hour);
 		System.out.println("Energy: " + energy);
 		System.out.println("Money : " + money);
+		System.out.println("Money Earned : " + earned_money);
+		System.out.println("Money Spent : " + spent_money);
 		
 	}
 }
