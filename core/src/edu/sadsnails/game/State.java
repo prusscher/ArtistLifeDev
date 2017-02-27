@@ -39,6 +39,15 @@ public class State {
 	protected boolean coffee_used;
 	protected boolean has_napped;
 	
+	// stack backlog implementation (?)
+	// if things from the backlog are repeated,
+	// player is penalized and xp is halved, 
+	// popularity goes down if possible
+	protected String [][] backlog = 
+		{ {"1", "2"} , 
+		  {"3", "4"} , 
+		  {"5", "6"} };
+	
 	// ---
 	
 	public State() {
@@ -63,19 +72,20 @@ public class State {
 		energy = 100;
 		
 		money = 0; spent_money = 0; earned_money = 0;
+		
 	}
 	
 	public void printStates() {
-		System.out.println("XP: " + xp);
-		System.out.println("Level: " + level);
-		System.out.println("Title: " + title);
-		System.out.println("Popularity: " + popularity);
-		System.out.println("Year " + date[0] + " Month " + date[1] + " Day " + date[2]);
-		System.out.println("Hour: " + hour);
-		System.out.println("Energy: " + energy);
-		System.out.println("Money : " + money);
-		System.out.println("Money Earned : " + earned_money);
-		System.out.println("Money Spent : " + spent_money);
+//		System.out.println("XP: " + xp);
+//		System.out.println("Level: " + level);
+//		System.out.println("Title: " + title);
+//		System.out.println("Popularity: " + popularity);
+//		System.out.println("Year " + date[0] + " Month " + date[1] + " Day " + date[2]);
+//		System.out.println("Hour: " + hour);
+//		System.out.println("Energy: " + energy);
+//		System.out.println("Money : " + money);
+//		System.out.println("Money Earned : " + earned_money);
+//		System.out.println("Money Spent : " + spent_money);
 		
 	}
 }

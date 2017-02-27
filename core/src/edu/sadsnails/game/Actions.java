@@ -5,18 +5,22 @@ public class Actions {
 	/* -----------------------------------------------------------------
 	 * 	This class serves the purpose of maintaining all of the possible
 	 *	actions within the game.
-	 *	
-	 *	For now, the methods contain placeholder instructions
-	 *	that do basic versions of the tasks they are to perform.
-	 *
-	 *	These placeholder instructions will hopefully be replaced
-	 *	with better versions in sprint 2.
 	 * -----------------------------------------------------------------*/
 	
 	private State state;
 	
+	private String d_type;
+	private String d_subject;
+	
+	private int xp_gain;
+	
+	private int time_consum;		// time consumption of a task
+	private int energy_consum;	// energy consumption of a task
+	
 	public Actions(State state){
 		this.state = state;
+		d_type = new String("type");
+		d_subject = new String("subject");
 	}
 	
 	/*	makeArt method:
@@ -30,23 +34,109 @@ public class Actions {
 	 * 	type of drawing it is. Refer to the running document for data tables.
 	 * 
 	 */
-	public void makeArt() {		//placeholder instructions
-		if((state.hour + 2) >= 24) {
-			nextDay();
+	public void makeArt(int type, int subject) {
+		
+		System.out.println("I made art");
+		type++; subject++;
+		switch(type){
+		case 1:
+			d_type = "Pixel";
+			time_consum = 2;
+			energy_consum = 25;
+			xp_gain = 25;
+			break;
+		case 2:
+			d_type = "Sketch";
+			time_consum = 1;
+			energy_consum = 30;
+			xp_gain = 20;
+			break;
+		case 3:
+			d_type = "Abstract";
+			time_consum = 3;
+			energy_consum = 40;
+			xp_gain = 30;
+			break;
+		case 4:
+			d_type = "Surreal";
+			time_consum = 5;
+			energy_consum = 50;
+			xp_gain = 50;
+			break;
+		case 5:
+			d_type = "Realistic";
+			time_consum = 7;
+			energy_consum = 70;
+			xp_gain = 70;
+			break;
+		case 6:
+			d_type = "Painting";
+			time_consum = 10;
+			energy_consum = 95;
+			xp_gain = 100;
 		}
-		if(state.energy >= 20) {
-			System.out.println("I made art");
-			state.energy -= 20;
-			state.money  += 10;
-			state.earned_money += 10;
-	
-			incXP(30);
-		} 
-		if(state.energy == 0) {
-			sleep(2);
+		
+		switch(subject){
+		case 1:
+			d_subject = "Anime";
+			break;
+		case 2:
+			d_subject = "Retro";
+			break;
+		case 3:
+			d_subject = "Funny";
+			break;
+		case 4:
+			d_subject = "Fantasy";
+			break;
+		case 5:
+			d_subject ="Animal";
+			break;
+		case 6:
+			d_subject = "Nature";
+			break;
+		case 7:
+			d_subject = "Human";
+			break;
 		}
-		state.hour   += 2;
+		
+		System.out.println("Type: " + d_type + " \nSubject: " + d_subject);
+		
+		if(energy_consum >= state.energy) {
+			System.out.println("This task will take more energy than you have");
+			time_consum = 0;
+			energy_consum = 0;
+			xp_gain = 0;
+		}
+		
+		// the most positive rating combinations
+		// TODO
+		// add the other combinations
+		// include money gain for each popularity bracket
+		// include popularity variable
+		if((d_type.equals("Pixel") && d_subject.equals("Retro"))
+			|| (d_type.equals("Sketch") && d_subject.equals("People"))
+			|| (d_type.equals("Abstract") && d_subject.equals("Funny"))
+			|| (d_type.equals("Abstract") && d_subject.equals("Nature"))
+			|| (d_type.equals("Abstract") && d_subject.equals("People"))
+			|| (d_type.equals("Surreal") && d_subject.equals("Fantasy"))
+			|| (d_type.equals("Surreal") && d_subject.equals("People"))
+			|| (d_type.equals("Realistic") && d_subject.equals("Animal"))
+			|| (d_type.equals("Realistic") && d_subject.equals("Nature"))
+			|| (d_type.equals("Painting") && d_subject.equals("Retro"))
+			|| (d_type.equals("Painting") && d_subject.equals("Animal"))
+			|| (d_type.equals("Painting") && d_subject.equals("Nature"))
+			|| (d_type.equals("Painting") && d_subject.equals("People")))
+		{
+			System.out.println("The audience really liked your drawing");
+			state.money += 40;
+		}
+		
+		state.energy -= energy_consum;
+		incXP(xp_gain);
+		passTime(time_consum);
 		state.printStates();
+		
 	}
 	
 	/*	sleep method:
@@ -70,17 +160,9 @@ public class Actions {
 		// if it's a full night's sleep, it moves to the first hour
 		// 	of the next day
 		if(type == 2) {
-		System.out.println("I attempted to sleep");
-		if(state.energy == 0) {
-			System.out.println("You passed out from exhaustion");
-			nextDay();
-			state.energy	= 80;
-		}
-		else {
 			System.out.println("I successfully slept");
-			nextDay();
+			passTime(-1);
 			state.energy = 100;
-		}
 		}
 
 		// if you have napped, you can't nap again
@@ -99,13 +181,8 @@ public class Actions {
 					state.energy += 50;
 					state.has_napped = true;
 				}
-
-				if((state.hour + 12) >= 24) {
-					nextDay();
-				}
-				else
-					state.hour += 12;
-				}
+				passTime(5);
+			}
 		}
 	}
 		
@@ -120,9 +197,11 @@ public class Actions {
 	 *  etc.
 	 */
 	public void buyBooster() {
-		//placeholder instructions
 		if(state.coffee_used) 
 			System.out.println("I have already had coffee today");
+		else if(state.money < 5) {
+			System.out.println("I do not have enough money for this");
+		}
 		else if(state.energy == 100) {
 			System.out.println("I cannot drink coffee when I am wide awake");
 		}
@@ -145,14 +224,13 @@ public class Actions {
 	 * 		Refer to the running document for data tables.
 	 */
 	public void incXP(int xpAmount) {
-		//placeholder instructions		
 		
 		if(xpAmount + state.xp >= state.toNext && state.level != 8) {
 			//level up, if you're not max level
 			
 			state.xp	+= xpAmount;
 			state.level	++;
-			state.toNext *= 2;
+			state.toNext *= 3;
 			
 			switch (state.level){
 			case 1: state.title = "Stubborn Snail";
@@ -181,24 +259,43 @@ public class Actions {
 			state.xp 	+= xpAmount;
 		}
 	
-	/* nextDay method:
-	 * 		This method increments the day. This handles checks for
-	 * 		incrementing month at 30 days and incrementing year at 12
+	/* passTime method:
+	 * 		This method increments the time. This handles checks for
+	 * 		incrementing day at 24 hours,
+	 * 		month at 30 days and incrementing year at 12
 	 * 		months and 30 days.
 	 */
-	public void nextDay() {
-		state.coffee_used = false;
-		if(state.date[2] == 30) {
-			if(state.date[1] == 12) {
-				state.date[0]++; state.date[1] = 1; state.date[2] = 1;
+	public void passTime(int hrs) {
+		if(hrs == -1) {
+			if(state.date[2] == 30) {
+				if(state.date[1] == 12) 
+					state.date[0] ++;
+				state.date[1] ++;
+				state.date[2] = 0;
 			}
 			else {
-				state.date[1]++; state.date[2] = 1;
+				state.date[2] ++;
 			}
+		 state.hour = 1;
 		}
-		else
-			state.date[2]++;
-		state.hour = 1;
+		else if((state.hour + hrs) > 24) {
+			int hr = 24 - state.hour;
+			if(state.date[2] == 30) {
+				if(state.date[1] == 12) 
+					state.date[0] ++;
+				state.date[1] ++;
+				state.date[2] = 0;
+			}
+			else {
+				state.date[2] ++;
+			}
+			state.hour = hr + hrs;
+			state.has_napped = false;
+			state.coffee_used = false;
+		}
+		
+		state.hour += hrs;
+		
 	}
 	
 }

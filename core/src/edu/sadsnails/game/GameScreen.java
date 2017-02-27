@@ -23,6 +23,7 @@ public class GameScreen implements Screen 	{
 	protected Actions actions;
 	protected State state;
 	
+	
 	private Container<Label> clock;
 	private Label time;
 	private Container<Label> rank;
@@ -47,6 +48,18 @@ public class GameScreen implements Screen 	{
 	private TextButton buyCoffee;
 	
 	private Table stats_popupTable;
+
+	// MEME
+	private Table makeArt_popupTable;
+	protected SelectBox drawing_type;
+	protected SelectBox drawing_subject;
+	protected String [] drawing_type_array
+			= {"Pixel", "Sketch", "Abstract", "Surreal", "Realistic", "Painting"};
+	protected String [] drawing_subject_array
+	= {"Anime", "Retro", "Funny", "Fantasy", "Animal", "Nature", "People"};
+	private TextButton submitArt;
+	private int selected_type_index;
+	private int selected_subject_index;
 	
 	private Table sleep_popupTable;
 	private TextButton sleep1; 	// sleep all night
@@ -54,9 +67,10 @@ public class GameScreen implements Screen 	{
 	
 	private Texture player;
 
-	private boolean action_popup = true;
-	private boolean stats_popup = true;
-	private boolean sleep_popup = true;
+	private boolean action_popup 	= true;
+	private boolean stats_popup 	= true;
+	private boolean sleep_popup		= true;
+	private boolean art_popup		= true;
 	
 	private boolean debug = false;
 	
@@ -97,12 +111,20 @@ public class GameScreen implements Screen 	{
 					stage.addActor(actions_popupTable);
 				else
 					actions_popupTable.remove();
-				if(sleep_popup)
-					sleep_popupTable.remove();
+				
+				sleep_popupTable.remove();
+				makeArt_popupTable.remove();
 
 				action_popup = !action_popup;
 			}
 		});
+		
+		// ----- create makeArt user interface -----
+		
+		makeArt_popupTable = new Table();
+		
+		drawing_type = new SelectBox(skin);
+		drawing_subject = new SelectBox(skin);
 		
 		pause.addListener(new ChangeListener(){
 			@Override
@@ -178,17 +200,17 @@ public class GameScreen implements Screen 	{
 		// ----- Create sleep options popup UI -----
 		sleep_popupTable = new Table();
 		
-		float height = action.getHeight() + 40;
+		float height = action.getHeight();
 		float width = action.getWidth() + 100;
 		
 		sleep1 = new TextButton("Take a nap", skin);
 		sleep2 = new TextButton("Sleep until tomorrow", skin);
 		
-		sleep_popupTable.add(sleep1).width(width).height(height);
+		sleep_popupTable.add(sleep1).width(width).height(50);
 		sleep_popupTable.row();
-		sleep_popupTable.add(sleep2).width(width).height(height);
+		sleep_popupTable.add(sleep2).width(width).height(50);
 		
-		sleep_popupTable.setBounds(action.getX(), action.getY() + height + 10, width, 2*height);
+		sleep_popupTable.setBounds(action.getX() - 50, action.getY() + 100, width, 2*height);
 		
 		sleep1.addListener(new ChangeListener(){
 			@Override
@@ -210,9 +232,6 @@ public class GameScreen implements Screen 	{
 			}
 		});
 		
-		
-		
-		
 		// ----- Create actions popup UI -----		
 		actions_popupTable = new Table();
 		
@@ -231,15 +250,68 @@ public class GameScreen implements Screen 	{
 				//updateState();
 			}
 		});
+		
+		// ----- create makeArt interface ----
+		// makeArt menu integration still in progress
 		art.addListener(new ChangeListener(){
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				action_popup = !action_popup;
 				actions_popupTable.remove();
-				actions.makeArt();
+				stage.addActor(makeArt_popupTable);
+				//actions.makeArt();
+				//updateState();
+			}
+		});
+		
+		makeArt_popupTable = new Table(skin);
+		
+		drawing_type = new SelectBox(skin);
+		drawing_subject = new SelectBox(skin);
+		
+		submitArt = new TextButton("Submit", skin);
+		
+		drawing_type.setItems(drawing_type_array);
+		drawing_subject.setItems(drawing_subject_array);
+		
+		makeArt_popupTable.add(new Label("Type of drawing:", skin));
+		makeArt_popupTable.row();
+		makeArt_popupTable.add(new Label("", skin)); //println
+		makeArt_popupTable.row();
+		makeArt_popupTable.add(drawing_type).width(drawing_type.getWidth() + 100).height(drawing_type.getHeight());
+		makeArt_popupTable.row();
+		makeArt_popupTable.add(new Label("", skin)); //println
+		makeArt_popupTable.row();
+		makeArt_popupTable.add(new Label("Subject of drawing:", skin));
+		makeArt_popupTable.row();
+		makeArt_popupTable.add(new Label("", skin)); //println
+		makeArt_popupTable.row();
+		makeArt_popupTable.add(drawing_subject).width(drawing_type.getWidth() + 100).height(drawing_type.getHeight());
+		makeArt_popupTable.row();
+		makeArt_popupTable.add(new Label("", skin)); //println
+		makeArt_popupTable.row();
+		makeArt_popupTable.add(submitArt).width(drawing_type.getWidth() + 100).height(drawing_type.getHeight());
+		
+		makeArt_popupTable.setBounds(Gdx.graphics.getWidth() / 2 - 50, Gdx.graphics.getHeight() / 2, 100, 200);
+		
+		
+		submitArt.addListener(new ChangeListener(){
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				selected_type_index = drawing_type.getSelectedIndex();
+				selected_subject_index = drawing_subject.getSelectedIndex();
+				
+				//System.out.println(drawing_type_array[selected_type_index]);
+				//System.out.println(drawing_subject_array[selected_subject_index]);
+				actions.makeArt(selected_type_index, selected_subject_index);
+				
+				makeArt_popupTable.remove();
+				action_popup = !action_popup;
+				actions_popupTable.remove();
 				updateState();
 			}
 		});
+		// ----- end of makeArt interface -----
 		
 		buyCoffee.addListener(new ChangeListener(){
 			@Override
@@ -285,7 +357,7 @@ public class GameScreen implements Screen 	{
 		energybar.setText("E: " + Integer.toString(state.energy) + "/100");
 		date.setText("Year " + state.date[0] + " Month " + state.date[1] + " Day " + state.date[2]);
 
-		//change character portrait if character's energy is low
+		//change character portrait according to character's energy
 		if((state.energy <= 50) && (state.energy > 20)) {
 			player = new Texture(Gdx.files.internal("scribbler2.gif"));
 			testImage = new Image(player);
