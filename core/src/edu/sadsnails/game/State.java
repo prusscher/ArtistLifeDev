@@ -35,6 +35,8 @@ public class State {
 	protected double spent_money;
 	protected double earned_money;
 	
+	protected String pop_title;
+	
 	// Booster
 	protected boolean coffee_used;
 	protected boolean has_napped;
@@ -72,6 +74,8 @@ public class State {
 		energy = 100;
 		
 		money = 0; spent_money = 0; earned_money = 0;
+		
+		pop_title = "Not popular or unpopular";
 		
 	}
 	

@@ -147,7 +147,7 @@ public class GameScreen implements Screen 	{
 						new Label("XP: " + state.xp + "\n" + "\n" +
 								  "Level: " + state.level  + "\n" + "\n" +
 								  "Title: " + state.title + "\n" + "\n" +
-								  "Popularity: " + state.popularity + "\n" + "\n" +
+								  "Popularity: " + state.pop_title + "\n" + "\n" +
 								  "Year " + state.date[0] + " Month " + state.date[1] + " Day " + state.date[2] + "\n" + "\n" +
 								  "Hour: " + state.hour + "\n" + "\n" +
 								  "Energy: " + state.energy + "\n" + "\n" +

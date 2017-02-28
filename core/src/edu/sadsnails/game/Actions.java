@@ -17,6 +17,8 @@ public class Actions {
 	private int time_consum;		// time consumption of a task
 	private int energy_consum;	// energy consumption of a task
 	
+	private int art_rank;
+	
 	public Actions(State state){
 		this.state = state;
 		d_type = new String("type");
@@ -108,34 +110,150 @@ public class Actions {
 			energy_consum = 0;
 			xp_gain = 0;
 		}
+		else {
 		
 		// the most positive rating combinations
 		// TODO
-		// add the other combinations
 		// include money gain for each popularity bracket
 		// include popularity variable
 		if((d_type.equals("Pixel") && d_subject.equals("Retro"))
-			|| (d_type.equals("Sketch") && d_subject.equals("People"))
-			|| (d_type.equals("Abstract") && d_subject.equals("Funny"))
-			|| (d_type.equals("Abstract") && d_subject.equals("Nature"))
-			|| (d_type.equals("Abstract") && d_subject.equals("People"))
-			|| (d_type.equals("Surreal") && d_subject.equals("Fantasy"))
-			|| (d_type.equals("Surreal") && d_subject.equals("People"))
-			|| (d_type.equals("Realistic") && d_subject.equals("Animal"))
-			|| (d_type.equals("Realistic") && d_subject.equals("Nature"))
-			|| (d_type.equals("Painting") && d_subject.equals("Retro"))
-			|| (d_type.equals("Painting") && d_subject.equals("Animal"))
-			|| (d_type.equals("Painting") && d_subject.equals("Nature"))
-			|| (d_type.equals("Painting") && d_subject.equals("People")))
+		|| (d_type.equals("Sketch") && d_subject.equals("People"))
+		|| (d_type.equals("Abstract") && d_subject.equals("Funny"))
+		|| (d_type.equals("Abstract") && d_subject.equals("Nature"))
+		|| (d_type.equals("Abstract") && d_subject.equals("People"))
+		|| (d_type.equals("Surreal") && d_subject.equals("Fantasy"))
+		|| (d_type.equals("Surreal") && d_subject.equals("People"))
+		|| (d_type.equals("Realistic") && d_subject.equals("Animal"))
+		|| (d_type.equals("Realistic") && d_subject.equals("Nature"))
+		|| (d_type.equals("Painting") && d_subject.equals("Retro"))
+		|| (d_type.equals("Painting") && d_subject.equals("Animal"))
+		|| (d_type.equals("Painting") && d_subject.equals("Nature"))
+		|| (d_type.equals("Painting") && d_subject.equals("People")))
 		{
 			System.out.println("The audience really liked your drawing");
-			state.money += 40;
+			art_rank = 2;
+			alterPopularity(2);
 		}
 		
+		if((d_type.equals("Pixel") && d_subject.equals("Anime"))
+		|| (d_type.equals("Pixel") && d_subject.equals("Fantasy"))
+		|| (d_type.equals("Pixel") && d_subject.equals("Nature"))
+		|| (d_type.equals("Sketch") && d_subject.equals("Anime"))
+		|| (d_type.equals("Sketch") && d_subject.equals("Funny"))
+		|| (d_type.equals("Sketch") && d_subject.equals("Animal"))
+		|| (d_type.equals("Sketch") && d_subject.equals("Nature"))
+		|| (d_type.equals("Realistic") && d_subject.equals("Anime"))
+		|| (d_type.equals("Realistic") && d_subject.equals("Funny"))
+		|| (d_type.equals("Realistic") && d_subject.equals("Fantasy"))
+		|| (d_type.equals("Realistic") && d_subject.equals("People"))
+		|| (d_type.equals("Painting") && d_subject.equals("Anime"))
+		|| (d_type.equals("Painting") && d_subject.equals("Fantasy")))
+		{
+			System.out.println("The audience liked your drawing a little");
+			art_rank = 1;
+			alterPopularity(1);
+		}
+
+		if((d_type.equals("Pixel") && d_subject.equals("Animal"))
+		|| (d_type.equals("Pixel") && d_subject.equals("People"))
+		|| (d_type.equals("Surreal") && d_subject.equals("Retro"))
+		|| (d_type.equals("Surreal") && d_subject.equals("Funny"))
+		|| (d_type.equals("Surreal") && d_subject.equals("Animal"))
+		|| (d_type.equals("Surreal") && d_subject.equals("Nature")))
+		{
+			System.out.println("The audience did not feel strongly one way or the other about your drawing");
+			art_rank = 0;
+			alterPopularity(0);
+		}
+		
+		if((d_type.equals("Pixel") && d_subject.equals("Funny"))
+		|| (d_type.equals("Sketch") && d_subject.equals("Retro"))
+		|| (d_type.equals("Sketch") && d_subject.equals("Fantasy"))
+		|| (d_type.equals("Realistic") && d_subject.equals("Retro"))
+		|| (d_type.equals("Painting") && d_subject.equals("Funny")))
+		{
+			System.out.println("The audience did not really like your drawing");
+			art_rank = -1;
+			alterPopularity(-1);
+		}
+		
+		if((d_type.equals("Abstract") && d_subject.equals("Anime"))
+		|| (d_type.equals("Abstract") && d_subject.equals("Retro"))
+		|| (d_type.equals("Abstract") && d_subject.equals("Fantasy"))
+		|| (d_type.equals("Abstract") && d_subject.equals("Animal"))
+		|| (d_type.equals("Surreal") && d_subject.equals("Anime")))
+		{
+			System.out.println("The audience hated your drawing");
+			art_rank = -2;
+			alterPopularity(-2);
+		}
+		incMoney(state.popularity, art_rank);
 		state.energy -= energy_consum;
 		incXP(xp_gain);
 		passTime(time_consum);
 		state.printStates();
+		}
+		
+	}
+	/*	alterPopularity method:
+	 * 		This method serves the purpose of altering the player's popularity
+	 * 		according to their most recent piece of art.
+	 * 
+	 * 	At 1, the user is the most popular they can be.
+	 * 	At 0, the user is neither popular nor unpopular.
+	 * 	At -1, the user is as unpopular as they can be.
+	 * 
+	 */
+	public void alterPopularity(int val) {
+		// if 0, don't change popularity
+		// if 1, increase popularity by .5
+		// if 2, increase popularity by 1
+		// if -1, decrease popularity by .5
+		// if -2, decrease popularity by 1
+		
+		
+		switch(val) {
+		case -2:
+			if((state.popularity - 1) < -1)
+				state.popularity = -1;
+			else
+				state.popularity -= 1;
+			break;
+		case -1:
+			if((state.popularity - 0.5) < -1)
+				state.popularity = -1;
+			else
+				state.popularity -= 0.5;
+			break;
+		case 0:
+			//nothin
+			break;
+		case 1:
+			if((state.popularity + 0.5) > 1)
+				state.popularity = 1;
+			else
+				state.popularity += 0.5;
+			break;
+		case 2:
+			if((state.popularity + 1) > 1)
+				state.popularity = 1;
+			else
+				state.popularity += 1;
+			break;
+			
+			
+		}
+
+		if(state.popularity == -1) 
+			state.pop_title = "Very unpopular";
+		else if(state.popularity == -0.5) 
+			state.pop_title = "Moderately unpopular";
+		else if(state.popularity == 0) 
+			state.pop_title = "Not popular or unpopular";
+		else if(state.popularity == 0.5) 
+			state.pop_title = "Moderately popular";
+		else if(state.popularity == 1) 
+			state.pop_title = "Very popular";
 		
 	}
 	
@@ -209,12 +327,14 @@ public class Actions {
 			System.out.println("I bought coffee!");
 			state.energy = 100;
 			state.money -= 5;
+			state.spent_money += 5;
 			state.coffee_used = true;
 		}
 		else {
 			System.out.println("I bought coffee!");
 			state.energy += 40;
 			state.money -= 5;
+			state.spent_money += 5;
 			state.coffee_used = true;
 		}
 	}
@@ -296,6 +416,136 @@ public class Actions {
 		
 		state.hour += hrs;
 		
+	}
+	
+	/* incMoney method:
+	 * 
+	 * 		This method serves the purpose of increasing the player's
+	 * 		money, according to how popular they are and how well
+	 * 		received their art was.
+	 */
+	public void incMoney(float popularity, int ranking) {
+		
+		if(popularity == -1) {
+			switch(ranking) {
+			case -2:
+				state.money += 0;
+				state.earned_money += 0;
+				break;
+			case -1:
+				state.money += 0;
+				state.earned_money += 0;
+				break;
+			case 0:
+				state.money += 1;
+				state.earned_money += 1;
+				break;
+			case 1:
+				state.money += 5;
+				state.earned_money += 5;
+				break;
+			case 2:
+				state.money += 10;
+				state.earned_money += 10;
+				break;
+			}
+		}
+		if(popularity == -0.5) {
+			switch(ranking) {
+			case -2:
+				state.money += 0;
+				state.earned_money += 0;
+				break;
+			case -1:
+				state.money += 1;
+				state.earned_money += 1;
+				break;
+			case 0:
+				state.money += 2;
+				state.earned_money += 2;
+				break;
+			case 1:
+				state.money += 7;
+				state.earned_money += 7;
+				break;
+			case 2:
+				state.money += 8;
+				state.earned_money += 8;
+				break;
+			}
+		}
+		if(popularity == 0) {
+			switch(ranking) {
+			case -2:
+				state.money += 1;
+				state.earned_money += 1;
+				break;
+			case -1:
+				state.money += 5;
+				state.earned_money += 5;
+				break;
+			case 0:
+				state.money += 10;
+				state.earned_money += 10;
+				break;
+			case 1:
+				state.money += 12;
+				state.earned_money += 12;
+				break;
+			case 2:
+				state.money += 15;
+				state.earned_money += 15;
+				break;
+			}
+		}
+		if(popularity == 0.5) {
+			switch(ranking) {
+			case -2:
+				state.money += 2;
+				state.earned_money += 2;
+				break;
+			case -1:
+				state.money += 5;
+				state.earned_money += 5;
+				break;
+			case 0:
+				state.money += 15;
+				state.earned_money += 15;
+				break;
+			case 1:
+				state.money += 20;
+				state.earned_money += 20;
+				break;
+			case 2:
+				state.money += 25;
+				state.earned_money += 25;
+				break;
+			}
+		}
+		if(popularity == 1) {
+			switch(ranking) {
+			case -2:
+				state.money += 3;
+				state.earned_money += 3;
+				break;
+			case -1:
+				state.money += 6;
+				state.earned_money += 6;
+				break;
+			case 0:
+				state.money += 20;
+				state.earned_money += 20;
+				break;
+			case 1:
+				state.money += 25;
+				state.earned_money += 25;
+				break;
+			case 2:
+				state.money += 30;
+				state.earned_money += 30;
+				break;
+			}
+		}
 	}
 	
 }
