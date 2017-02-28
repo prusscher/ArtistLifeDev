@@ -65,8 +65,10 @@ public class GameScreen implements Screen 	{
 	private TextButton sleep1; 	// sleep all night
 	private TextButton sleep2;	// sleep for 12 hours
 	
-	private Texture player;
-
+	private Texture scribbler3;
+	private Texture scribbler2;
+	private Texture scribbler1;
+	
 	private boolean action_popup 	= true;
 	private boolean stats_popup 	= true;
 	private boolean sleep_popup		= true;
@@ -85,8 +87,14 @@ public class GameScreen implements Screen 	{
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
 		
+		loadPlayerImages();
 		createUI(debug);
-		
+	}
+	
+	private void loadPlayerImages() {
+		scribbler3 = new Texture(Gdx.files.internal("scribbler3.gif"));
+		scribbler2 = new Texture(Gdx.files.internal("scribbler2.gif"));
+		scribbler1 = new Texture(Gdx.files.internal("scribbler.gif"));
 	}
 	
 	private void createUI(boolean debug) {
@@ -95,9 +103,9 @@ public class GameScreen implements Screen 	{
 			stage.setDebugAll(true);
 		
 		// Create the Screen Buttons
-		action = new TextButton("Action", skin);
-		pause = new TextButton("Pause", skin);
-		statistics = new TextButton("Stats",skin);
+		action 		= new TextButton("Action", skin);
+		pause 		= new TextButton("Pause", skin);
+		statistics 	= new TextButton("Stats",skin);
 		
 		action.setBounds((Gdx.graphics.getWidth() - 250) / 2, 10, 250, 40);
 		pause.setBounds(Gdx.graphics.getWidth() - 75, 0, 75, 75);
@@ -193,8 +201,7 @@ public class GameScreen implements Screen 	{
 		energy.setBounds(Gdx.graphics.getWidth() - 85, Gdx.graphics.getHeight() - 95, 75, 75);
 
 		// Test image, Checking to see if IntelliJ compiling works.
-		player = new Texture(Gdx.files.internal("scribbler.gif"));
-		testImage = new Image(player);
+		testImage = new Image(scribbler1);
 		testImage.setBounds(0, Gdx.graphics.getHeight() - 100, 100, 100);
 		
 		// ----- Create sleep options popup UI -----
@@ -357,22 +364,22 @@ public class GameScreen implements Screen 	{
 		energybar.setText("E: " + Integer.toString(state.energy) + "/100");
 		date.setText("Year " + state.date[0] + " Month " + state.date[1] + " Day " + state.date[2]);
 
-		//change character portrait according to character's energy
+		// **************************BIG ISSUE******************************88
+		// DONT ADD THE IMAGE AGAIN AND AGAIN, JUST RESET THE WIDGET'S IMAGE
+		// TACTICAL MEMORY LEAK INCOMING.
+		// Im not changing this right now... Its late
 		if((state.energy <= 50) && (state.energy > 20)) {
-			player = new Texture(Gdx.files.internal("scribbler2.gif"));
-			testImage = new Image(player);
+			testImage = new Image(scribbler2);
 			testImage.setBounds(0, Gdx.graphics.getHeight() - 100, 100, 100);
 			stage.addActor(testImage);
 		}
 		else if(state.energy <= 20) {
-			player = new Texture(Gdx.files.internal("scribbler3.gif"));
-			testImage = new Image(player);
+			testImage = new Image(scribbler3);
 			testImage.setBounds(0, Gdx.graphics.getHeight() - 100, 100, 100);
 			stage.addActor(testImage);
 		}
 		else if(state.energy > 50) {
-			player = new Texture(Gdx.files.internal("scribbler.gif"));
-			testImage = new Image(player);
+			testImage = new Image(scribbler1);
 			testImage.setBounds(0, Gdx.graphics.getHeight() - 100, 100, 100);
 			stage.addActor(testImage);
 		}
@@ -399,6 +406,12 @@ public class GameScreen implements Screen 	{
 		if(Gdx.input.isKeyPressed(Keys.BACKSPACE)){
 			game.setScreen(new MainMenuScreen(game));
 			this.dispose();
+		}
+		if(Gdx.input.isKeyPressed(Keys.SPACE) && Gdx.input.isKeyJustPressed(Keys.SPACE)){
+			System.out.println(stage.getActors().size);
+			for(Actor a : stage.getActors()) {
+				System.out.println(a.getClass().getName());
+			}
 		}
 	}
 
