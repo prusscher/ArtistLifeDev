@@ -81,7 +81,7 @@ public class GameScreen implements Screen 	{
 	private boolean sleep_popup		= true;
 	private boolean art_popup		= true;
 	
-	private boolean debug = false;
+	private boolean debug = true;
 	
 	public GameScreen(final MyGdxGame game) {
 		this.game = game;
@@ -242,7 +242,6 @@ public class GameScreen implements Screen 	{
 		sleep = new TextButton("Sleep", skin);
 		art = new TextButton("Make Art", skin);
 		buyCoffee = new TextButton("Buy Coffee (-$5 | +40 Energy)", skin);
-		
 		
 		sleep.addListener(new ChangeListener(){
 			@Override

@@ -69,7 +69,7 @@ public class MainMenuScreen implements Screen{
 		startContainer.setFillParent(true);
 		settingsContainer.setFillParent(true);
 		System.out.println(title.getWidth() + " " + title.getHeight());
-		titleContainer.setBounds(stage.getWidth()/2 - title.getWidth()/2, (stage.getHeight()/2 + title.getHeight()/2), title.getWidth(), title.getHeight());
+		titleContainer.setBounds(stage.getWidth()/2 - title.getWidth()/2, 140, title.getWidth(), title.getHeight());
 
 		startContainer.center();
 		settingsContainer.padLeft(2).left().padBottom(2).bottom();
@@ -106,9 +106,6 @@ public class MainMenuScreen implements Screen{
 	@Override
 	public void resize(int width, int height) {
 		stage.getViewport().update(width, height, true);
-		System.out.println(title.getWidth() + " " + title.getHeight());
-
-		titleContainer.setBounds(stage.getWidth()/2 - title.getWidth()/2, (stage.getHeight()/2 + title.getHeight()/2), title.getWidth(), title.getHeight());
 	}
 
 	@Override
