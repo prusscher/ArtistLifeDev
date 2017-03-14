@@ -391,7 +391,7 @@ public class Actions {
 				if(state.date[1] == 12) 
 					state.date[0] ++;
 				state.date[1] ++;
-				state.date[2] = 0;
+				state.date[2] = 1;
 			}
 			else {
 				state.date[2] ++;
@@ -404,7 +404,7 @@ public class Actions {
 				if(state.date[1] == 12) 
 					state.date[0] ++;
 				state.date[1] ++;
-				state.date[2] = 0;
+				state.date[2] = 1;
 			}
 			else {
 				state.date[2] ++;
