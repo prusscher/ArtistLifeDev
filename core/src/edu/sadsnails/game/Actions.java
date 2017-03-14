@@ -277,6 +277,7 @@ public class Actions {
 		// if it's a nap, check to see if you've napped already
 		// if it's a full night's sleep, it moves to the first hour
 		// 	of the next day
+		else{
 		if(type == 2) {
 			System.out.println("I successfully slept");
 			passTime(-1);
@@ -301,6 +302,7 @@ public class Actions {
 				}
 				passTime(5);
 			}
+		}
 		}
 	}
 		
