@@ -5,7 +5,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class MainMenuScreen implements Screen{
 	
@@ -34,7 +34,7 @@ public class MainMenuScreen implements Screen{
 	private FPSLogger fps;
 	
 	public MainMenuScreen(final MyGdxGame game) {
-		stage = new Stage(new ScreenViewport());
+		stage = new Stage(new FitViewport(400, 240));
 		Gdx.input.setInputProcessor(stage);
 		
 		this.game = game;
@@ -42,11 +42,12 @@ public class MainMenuScreen implements Screen{
 		fps = new FPSLogger();
 		
 		skin = new Skin(Gdx.files.internal("uiskin.json"));
+		skin.add("default-font", new BitmapFont(Gdx.files.internal("fonts/nes_small.fnt")));
 		
 		// Create TextButtons
-		startGame = new TextButton("Start Game", skin);
-		settings = new TextButton("Setting", skin);
-		title = new Label("Artist Life", skin);
+		startGame = new TextButton("START GAME", skin);
+		settings = new TextButton("SETTINGS", skin);
+		title = new Label("ARTIST LIFE", skin);
 		title.setFontScale(3);
 		
 		// Listeners
@@ -68,10 +69,10 @@ public class MainMenuScreen implements Screen{
 		startContainer.setFillParent(true);
 		settingsContainer.setFillParent(true);
 		System.out.println(title.getWidth() + " " + title.getHeight());
-		titleContainer.setBounds(Gdx.graphics.getWidth()/2 - title.getWidth()/2, (Gdx.graphics.getHeight()/2 + title.getHeight()/2), title.getWidth(), title.getHeight());
+		titleContainer.setBounds(stage.getWidth()/2 - title.getWidth()/2, (stage.getHeight()/2 + title.getHeight()/2), title.getWidth(), title.getHeight());
 
 		startContainer.center();
-		settingsContainer.padLeft(15).left().padBottom(15).bottom();
+		settingsContainer.padLeft(2).left().padBottom(2).bottom();
 		
 		stage.addActor(startContainer);
 		stage.addActor(settingsContainer);
@@ -107,7 +108,7 @@ public class MainMenuScreen implements Screen{
 		stage.getViewport().update(width, height, true);
 		System.out.println(title.getWidth() + " " + title.getHeight());
 
-		titleContainer.setBounds(Gdx.graphics.getWidth()/2 - title.getWidth()/2, (Gdx.graphics.getHeight()/2 + title.getHeight()/2), title.getWidth(), title.getHeight());
+		titleContainer.setBounds(stage.getWidth()/2 - title.getWidth()/2, (stage.getHeight()/2 + title.getHeight()/2), title.getWidth(), title.getHeight());
 	}
 
 	@Override

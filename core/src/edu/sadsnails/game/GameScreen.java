@@ -40,7 +40,10 @@ public class GameScreen implements Screen 	{
 	private Image testImage;
 	private TextButton pause;
 	private TextButton action;
-	private TextButton statistics;
+//	private TextButton statistics;
+	
+	private Texture grid;
+	private Image gridImage;
 	
 	private Table actions_popupTable;
 	private TextButton sleep;
@@ -53,13 +56,16 @@ public class GameScreen implements Screen 	{
 	private Table makeArt_popupTable;
 	protected SelectBox drawing_type;
 	protected SelectBox drawing_subject;
+	
+	// ------------THIS NEEDS TO BE MOVED TO ITS OWN CLASS FOR STORAGE AND CALLS -------------
 	protected String [] drawing_type_array
 			= {"Pixel", "Sketch", "Abstract", "Surreal", "Realistic", "Painting"};
 	protected String [] drawing_subject_array
-	= {"Anime", "Retro", "Funny", "Fantasy", "Animal", "Nature", "People"};
+			= {"Anime", "Retro", "Funny", "Fantasy", "Animal", "Nature", "People"};
+	
 	private TextButton submitArt;
-	private int selected_type_index;
-	private int selected_subject_index;
+	private int selected_type_index;	// These are actually useless
+	private int selected_subject_index;	// These are actually useless
 	
 	private Table sleep_popupTable;
 	private TextButton sleep1; 	// sleep all night
@@ -68,6 +74,7 @@ public class GameScreen implements Screen 	{
 	private Texture scribbler3;
 	private Texture scribbler2;
 	private Texture scribbler1;
+	private Texture testPlayerIcon;
 	
 	private boolean action_popup 	= true;
 	private boolean stats_popup 	= true;
@@ -84,7 +91,7 @@ public class GameScreen implements Screen 	{
 		
 		skin = new Skin(Gdx.files.internal("uiskin.json"));
 		
-		stage = new Stage(new ScreenViewport());
+		stage = new Stage(new FitViewport(400, 240));
 		Gdx.input.setInputProcessor(stage);
 		
 		loadPlayerImages();
@@ -92,24 +99,31 @@ public class GameScreen implements Screen 	{
 	}
 	
 	private void loadPlayerImages() {
-		scribbler3 = new Texture(Gdx.files.internal("scribbler3.gif"));
-		scribbler2 = new Texture(Gdx.files.internal("scribbler2.gif"));
-		scribbler1 = new Texture(Gdx.files.internal("scribbler.gif"));
+		scribbler3 = new Texture(Gdx.files.internal("images/playerIcon/scribbler3.gif"));
+		scribbler2 = new Texture(Gdx.files.internal("images/playerIcon/scribbler2.gif"));
+		scribbler1 = new Texture(Gdx.files.internal("images/playerIcon/scribbler.gif"));
+		testPlayerIcon = new Texture(Gdx.files.internal("images/playerIcon/testman.png"));
 	}
 	
 	private void createUI(boolean debug) {
 		
-		if(debug)
+		if(debug) {
 			stage.setDebugAll(true);
+			
+			// Create and add the Debug Grid to the stage
+			grid = new Texture(Gdx.files.internal("dev/grid.png"));
+			gridImage = new Image(grid);
+			gridImage.setBounds(0, 0, 400, 240);
+			stage.addActor(gridImage);
+			gridImage.setZIndex(0);
+		}
 		
 		// Create the Screen Buttons
 		action 		= new TextButton("Action", skin);
 		pause 		= new TextButton("Pause", skin);
-		statistics 	= new TextButton("Stats",skin);
 		
-		action.setBounds((Gdx.graphics.getWidth() - 250) / 2, 10, 250, 40);
-		pause.setBounds(Gdx.graphics.getWidth() - 75, 0, 75, 75);
-		statistics.setBounds(((Gdx.graphics.getWidth() - 250) / 2) + 300, 10, 50, 40);
+		action.setBounds((stage.getWidth() - 120) / 2, 2, 120, 20);
+		pause.setBounds(stage.getWidth() - 52, 2, 50, 20);
 		
 		// Button Listeners
 		action.addListener(new ChangeListener(){
@@ -141,68 +155,51 @@ public class GameScreen implements Screen 	{
 			}
 		});
 		
-		statistics.addListener(new ChangeListener(){
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				System.out.println("you check ur statistics hehe");
-				if(stats_popup) {
-					// ----- Create refreshing statistics popup UI -----
-					stats_popupTable = new Table();
-					float height1 = action.getHeight() + 200;
-					float width1 = action.getWidth() + 50;
-					
-					stats_popupTable.add(
-						new Label("XP: " + state.xp + "\n" + "\n" +
-								  "Level: " + state.level  + "\n" + "\n" +
-								  "Title: " + state.title + "\n" + "\n" +
-								  "Popularity: " + state.pop_title + "\n" + "\n" +
-								  "Year " + state.date[0] + " Month " + state.date[1] + " Day " + state.date[2] + "\n" + "\n" +
-								  "Hour: " + state.hour + "\n" + "\n" +
-								  "Energy: " + state.energy + "\n" + "\n" +
-								  "Current Funds: " + state.money + "\n" + "\n" +
-								  "Money Earned: " + state.earned_money + "\n" + "\n" +
-								  "Money Spent: " + state.spent_money, skin
-								  )
-							).width(width1).height(height1);
-					stats_popupTable.setBounds(action.getX(), action.getY() + 200, width1, 2*height1);
-					stage.addActor(stats_popupTable);
-				}
-				else
-					stats_popupTable.remove();
-
-				stats_popup = !stats_popup;
-				state.printStates();
-			}
-		});
-		
 		// ----- MAIN UI ELEMENTS -----
-		time = new Label("",skin);
-		clock = new Container<Label>(time);
-		clock.setBounds(0, 30, 40, 40);
 		
-		date = new Label("",skin);					
-		datecontainer = new Container<Label>(date); 
-		datecontainer.setBounds(55, 5, 50, 40);		
-		
-		level = new Label("",skin);
-		rank = new Container<Label>(level);
-		rank.setBounds(180, Gdx.graphics.getHeight() - 80, 50, 50);
+		// Upper Left Hand Corner
+		testImage = new Image(testPlayerIcon);
+		testImage.setBounds(0, stage.getHeight()-64, 64, 64);
 		
 		xp = new Label("",skin);
 		exp = new Container<Label>(xp);
-		exp.setBounds(110, Gdx.graphics.getHeight() - 40, 40, 40);
+		exp.align(Align.left);
+		exp.padLeft(2f);
+		exp.setBounds(64, stage.getHeight() - 20, 100, 20);
 		
+		level = new Label("",skin);
+		rank = new Container<Label>(level);
+		rank.align(Align.left);
+		rank.padLeft(2f);
+		rank.setBounds(64, stage.getHeight() - 40, 100, 20);
+		
+		// Lower Left Hand Corner
+		time = new Label("",skin);
+		clock = new Container<Label>(time);
+		clock.align(Align.left);
+		clock.padLeft(2f);
+		clock.setBounds(0, 0, 100, 20);
+		
+		date = new Label("",skin);					
+		datecontainer = new Container<Label>(date); 
+		datecontainer.align(Align.left);
+		datecontainer.padLeft(2f);
+		datecontainer.setBounds(0, 20, 100, 20);		
+		
+		// Upper Right Hand Corner
 		amount = new Label("",skin);
 		money = new Container<Label>(amount);
-		money.setBounds(Gdx.graphics.getWidth() - 85, Gdx.graphics.getHeight() - 60, 75, 75);
+		money.align(Align.right);
+		money.padRight(2f);
+		money.setBounds(stage.getWidth()-100, stage.getHeight() - 20, 100, 20);
 		
 		energybar = new Label("",skin);
 		energy = new Container<Label>(energybar);
-		energy.setBounds(Gdx.graphics.getWidth() - 85, Gdx.graphics.getHeight() - 95, 75, 75);
+		energy.align(Align.right);
+		energy.padRight(2f);
+		energy.setBounds(stage.getWidth()-100, stage.getHeight() - 40, 100, 20);
 
-		// Test image, Checking to see if IntelliJ compiling works.
-		testImage = new Image(scribbler1);
-		testImage.setBounds(0, Gdx.graphics.getHeight() - 100, 100, 100);
+
 		
 		// ----- Create sleep options popup UI -----
 		sleep_popupTable = new Table();
@@ -281,25 +278,17 @@ public class GameScreen implements Screen 	{
 		drawing_type.setItems(drawing_type_array);
 		drawing_subject.setItems(drawing_subject_array);
 		
-		makeArt_popupTable.add(new Label("Type of drawing:", skin));
-		makeArt_popupTable.row();
-		makeArt_popupTable.add(new Label("", skin)); //println
+		makeArt_popupTable.add(new Label("Type of drawing:", skin)).center().height(20);
 		makeArt_popupTable.row();
 		makeArt_popupTable.add(drawing_type).width(drawing_type.getWidth() + 100).height(drawing_type.getHeight());
 		makeArt_popupTable.row();
-		makeArt_popupTable.add(new Label("", skin)); //println
-		makeArt_popupTable.row();
-		makeArt_popupTable.add(new Label("Subject of drawing:", skin));
-		makeArt_popupTable.row();
-		makeArt_popupTable.add(new Label("", skin)); //println
+		makeArt_popupTable.add(new Label("Subject of drawing:", skin)).center().height(20);
 		makeArt_popupTable.row();
 		makeArt_popupTable.add(drawing_subject).width(drawing_type.getWidth() + 100).height(drawing_type.getHeight());
 		makeArt_popupTable.row();
-		makeArt_popupTable.add(new Label("", skin)); //println
-		makeArt_popupTable.row();
 		makeArt_popupTable.add(submitArt).width(drawing_type.getWidth() + 100).height(drawing_type.getHeight());
 		
-		makeArt_popupTable.setBounds(Gdx.graphics.getWidth() / 2 - 50, Gdx.graphics.getHeight() / 2, 100, 200);
+		makeArt_popupTable.setBounds(stage.getWidth() / 2 - 50, action.getY()+action.getHeight()+2, 100, 200);
 		
 		
 		submitArt.addListener(new ChangeListener(){
@@ -341,7 +330,6 @@ public class GameScreen implements Screen 	{
 		
 		actions_popupTable.setBounds(action.getX(), action.getY() + h + 10, w, 2*h);
 		
-		
 		// Add the UI to the stage
 		updateState();
 		stage.addActor(clock);
@@ -352,8 +340,18 @@ public class GameScreen implements Screen 	{
 		stage.addActor(testImage);
 		stage.addActor(action);
 		stage.addActor(pause);
-		stage.addActor(statistics);
 		stage.addActor(datecontainer);
+//		stage.addActor(statistics);
+		
+		clock.setZIndex(2);
+		exp.setZIndex(2);
+		energy.setZIndex(2);
+		money.setZIndex(2);
+		rank.setZIndex(2);
+		testImage.setZIndex(2);
+		action.setZIndex(2);
+		pause.setZIndex(2);
+		datecontainer.setZIndex(2);
 	}
 	
 	private void updateState() {
@@ -368,21 +366,21 @@ public class GameScreen implements Screen 	{
 		// DONT ADD THE IMAGE AGAIN AND AGAIN, JUST RESET THE WIDGET'S IMAGE
 		// TACTICAL MEMORY LEAK INCOMING.
 		// Im not changing this right now... Its late
-		if((state.energy <= 50) && (state.energy > 20)) {
-			testImage = new Image(scribbler2);
-			testImage.setBounds(0, Gdx.graphics.getHeight() - 100, 100, 100);
-			stage.addActor(testImage);
-		}
-		else if(state.energy <= 20) {
-			testImage = new Image(scribbler3);
-			testImage.setBounds(0, Gdx.graphics.getHeight() - 100, 100, 100);
-			stage.addActor(testImage);
-		}
-		else if(state.energy > 50) {
-			testImage = new Image(scribbler1);
-			testImage.setBounds(0, Gdx.graphics.getHeight() - 100, 100, 100);
-			stage.addActor(testImage);
-		}
+//		if((state.energy <= 50) && (state.energy > 20)) {
+//			testImage = new Image(scribbler2);
+//			testImage.setBounds(0, Gdx.graphics.getHeight() - 100, 100, 100);
+//			stage.addActor(testImage);
+//		}
+//		else if(state.energy <= 20) {
+//			testImage = new Image(scribbler3);
+//			testImage.setBounds(0, Gdx.graphics.getHeight() - 100, 100, 100);
+//			stage.addActor(testImage);
+//		}
+//		else if(state.energy > 50) {
+//			testImage = new Image(scribbler1);
+//			testImage.setBounds(0, Gdx.graphics.getHeight() - 100, 100, 100);
+//			stage.addActor(testImage);
+//		}
 		
 	
 	}
@@ -418,7 +416,7 @@ public class GameScreen implements Screen 	{
 	
 	@Override
 	public void resize(int width, int height) {
-		//stage.getViewport().update(width, height, true);
+		stage.getViewport().update(width, height, true);
 	}
 
 	@Override
