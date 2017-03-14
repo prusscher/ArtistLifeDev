@@ -105,7 +105,13 @@ public class MainMenuScreen implements Screen{
 	
 	@Override
 	public void resize(int width, int height) {
-		stage.getViewport().update(width, height, true);
+		if(width < 400 || height < 240){
+			
+			
+			stage.getViewport().update(400, 240, true);
+		} else {
+			stage.getViewport().update(width, height, true);
+		}
 	}
 
 	@Override

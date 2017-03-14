@@ -1,7 +1,7 @@
 package edu.sadsnails.game.desktop;
 
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
 import edu.sadsnails.game.MyGdxGame;
 import edu.sadsnails.game.Settings;
@@ -16,21 +16,21 @@ import edu.sadsnails.game.Settings;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		// Setup the window config
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		
-		config.title = "Artist Life";
-		
+		config.setTitle("Artist Life");
 		Settings settings = new Settings();
 		
-		config.width = settings.width();
-		config.height = settings.height();
+		config.setWindowSizeLimits(400, 240, 9999, 9999);
+		
+		config.setWindowedMode(settings.width(), settings.height());
 		
 		System.out.println("START: " + settings.width() + " " + settings.height());
 		
-		config.foregroundFPS = 60;
-		config.backgroundFPS = 15;
+		config.setIdleFPS(15);
+		config.useVsync(true);
 		
 		// Start the game
-		new LwjglApplication(new MyGdxGame(settings), config);
+		new Lwjgl3Application(new MyGdxGame(settings), config);
 	}
 }
