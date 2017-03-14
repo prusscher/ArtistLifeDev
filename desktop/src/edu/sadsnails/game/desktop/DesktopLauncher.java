@@ -2,6 +2,7 @@ package edu.sadsnails.game.desktop;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 
 import edu.sadsnails.game.MyGdxGame;
 import edu.sadsnails.game.Settings;

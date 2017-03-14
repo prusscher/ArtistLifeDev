@@ -1,16 +1,20 @@
 package edu.sadsnails.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -29,8 +33,16 @@ public class MainMenuScreen implements Screen{
 	private Container<Label> titleContainer;
 	private Label title;
 	
-	private Stage stage;
+	private boolean settingsVisible = false;
+	private Table settingsTable;
+	private Table fsTable;
+	private SelectBox<DisplayMode> resolutions;
+	private Button fsToggle;
+	private Slider master;
+	private Slider music;
+	private Slider sfx;
 	
+	private Stage stage;
 	private FPSLogger fps;
 	
 	public MainMenuScreen(final MyGdxGame game) {
@@ -58,7 +70,12 @@ public class MainMenuScreen implements Screen{
 		
 		settings.addListener(new ChangeListener(){
 			@Override
-			public void changed(ChangeEvent event, Actor actor) { }
+			public void changed(ChangeEvent event, Actor actor) {
+				settingsVisible = !settingsVisible;
+				settingsTable.setVisible(settingsVisible);
+				title.setVisible(!settingsVisible);
+				startGame.setVisible(!settingsVisible);
+			}
 		});
 		
 		// Setup Button Containers and Add to Screen
@@ -66,19 +83,108 @@ public class MainMenuScreen implements Screen{
 		settingsContainer = new Container<TextButton>(settings);
 		titleContainer = new Container<Label>(title);
 		
+		// Set the start
 		startContainer.setFillParent(true);
 		settingsContainer.setFillParent(true);
-		System.out.println(title.getWidth() + " " + title.getHeight());
 		titleContainer.setBounds(stage.getWidth()/2 - title.getWidth()/2, 140, title.getWidth(), title.getHeight());
 
+		// Center the start button and set the settings button to the lower left
 		startContainer.center();
 		settingsContainer.padLeft(2).left().padBottom(2).bottom();
 		
+		// Add the containers to the scene
 		stage.addActor(startContainer);
 		stage.addActor(settingsContainer);
 		stage.addActor(titleContainer);		
 		
-		stage.setDebugAll(true);
+		// -----------SETTINGS MENU
+		
+		// Create the table buttons and sliders and such
+		DisplayMode[] modes = game.setting.getModes();
+		
+		resolutions = new SelectBox<DisplayMode>(skin);
+		resolutions.setItems(modes);
+		resolutions.setSelectedIndex(0);
+		
+		fsToggle = new Button(skin);
+		
+		master = new Slider(0f, 100f, .5f, false, skin);
+		music = new Slider(0f, 100f, .5f, false, skin);
+		sfx = new Slider(0f, 100f, .5f, false, skin);
+		
+		master.setWidth(180);
+		music.setWidth(180);
+		sfx.setWidth(180);
+		
+		master.setValue(game.setting.masterVol());
+		music.setValue(game.setting.musicVol());
+		sfx.setValue(game.setting.sfxVol());
+		
+		// ----- Create the settings table -----
+		settingsTable = new Table();
+		settingsTable.add(new Label("Resolution", skin)).height(20);
+		settingsTable.row();
+		settingsTable.add(resolutions).height(20);
+		settingsTable.row();
+		
+		fsTable = new Table();
+		fsTable.add(new Label("Fullscreen ", skin)).height(20);
+		fsTable.add(fsToggle).width(20); // Fullscreen Toggle
+		
+		settingsTable.add(fsTable);
+		settingsTable.row();
+		settingsTable.add(new Label("Master Volume", skin)).height(20);
+		settingsTable.row();
+		settingsTable.add(master).height(20);
+		settingsTable.row();
+		settingsTable.add(new Label("Music Volume", skin)).height(20);
+		settingsTable.row();
+		settingsTable.add(music).height(20);
+		settingsTable.row();
+		settingsTable.add(new Label("Sfx Volume", skin)).height(20);
+		settingsTable.row();
+		settingsTable.add(sfx).height(20);
+		
+		settingsTable.setBounds(100, 27, 200, 180);
+		// ----- complete creating table -----
+
+		// Slider Listeners and Button Listeners
+		resolutions.addListener(new ChangeListener(){
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				DisplayMode mode = resolutions.getSelected();
+				game.setting.setWindowMode(mode);
+			}
+		});
+		fsToggle.addListener(new ChangeListener(){
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				System.out.println("Fullscreen Toggle: " + fsToggle.isChecked());
+			}
+		});
+		master.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				game.setting.setMasterVol(master.getValue());
+			}
+		});
+		music.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				game.setting.setMusicVol(music.getValue());
+			}
+		});
+		sfx.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				game.setting.setSfxVol(sfx.getValue());
+			}
+		});
+		
+		stage.addActor(settingsTable);
+		settingsTable.setVisible(settingsVisible);
+		
+		stage.setDebugAll(false);
 	}
 	
 	@Override
@@ -105,13 +211,7 @@ public class MainMenuScreen implements Screen{
 	
 	@Override
 	public void resize(int width, int height) {
-		if(width < 400 || height < 240){
-			
-			
-			stage.getViewport().update(400, 240, true);
-		} else {
-			stage.getViewport().update(width, height, true);
-		}
+		stage.getViewport().update(width, height, true);
 	}
 
 	@Override

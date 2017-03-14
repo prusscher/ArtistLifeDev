@@ -12,6 +12,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 public class Settings {
 	private int width;
     private int height;
+    private int fullscreen;
     private float musicVolume;
     private float sfxVolume;
     private float masterVolume;
@@ -104,7 +105,6 @@ public class Settings {
     			masterVolume = tMaster;
     		}
     		
-    		
 	    	set.putFloat("MasterVolume", masterVolume);
 	    	set.putFloat("MusicVolume", musicVolume);
 	    	set.putFloat("SfxVolume", sfxVolume);
@@ -125,6 +125,7 @@ public class Settings {
     	
 	    	set.putInt("Width", width);
 	    	set.putInt("Height", height);
+	    	set.putInt("Fullscreen", 0);
 	    	set.putFloat("MasterVolume", masterVolume);
 	    	set.putFloat("MusicVolume", musicVolume);
 	    	set.putFloat("SfxVolume", sfxVolume);
@@ -145,9 +146,23 @@ public class Settings {
     public float sfxVol() 		{ return sfxVolume; }
     public float masterVol() 	{ return masterVolume; }
     
+    public void setWindowMode(DisplayMode mode) { 
+    	System.out.println(fullscreen);
+    	Gdx.graphics.setWindowedMode(mode.width, mode.height);
+    }
+    
+    public void toggleFullscreen() {
+    	if(fullscreen == 1)
+    		fullscreen = 0;
+    	else
+    		fullscreen = 1;
+    }
+    
     public void setMusicVol(float vol) 	{ musicVolume = vol; }
     public void setSfxVol(float vol) 	{ sfxVolume = vol; }
     public void setMasterVol(float vol) { masterVolume = vol; }
+    
+    public DisplayMode[] getModes()	{ return modes; }
     
     public void close() {
     	System.out.println("CLOSING APP, SAVING SETTINGS");

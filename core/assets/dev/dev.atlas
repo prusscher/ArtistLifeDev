@@ -1,0 +1,27 @@
+
+dev.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+grid
+  rotate: false
+  xy: 1, 1
+  size: 400, 240
+  orig: 400, 240
+  offset: 0, 0
+  index: -1
+bordertest
+  rotate: false
+  xy: 403, 216
+  size: 25, 25
+  split: 12, 12, 12, 12
+  orig: 25, 25
+  offset: 0, 0
+  index: -1
+notborder
+  rotate: false
+  xy: 403, 216
+  size: 25, 25
+  orig: 25, 25
+  offset: 0, 0
+  index: -1
