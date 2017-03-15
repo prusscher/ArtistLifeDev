@@ -355,23 +355,23 @@ public class Actions {
 			state.toNext *= 3;
 			
 			switch (state.level){
-			case 1: state.title = "Stubborn Snail";
+			case 1: state.title = "1";
 					break;
-			case 2: state.title = "Determined Doodler";
+			case 2: state.title = "2";
 					break;
-			case 3: state.title = "Seasoned Sketcher";
+			case 3: state.title = "3";
 					break;
-			case 4: state.title = "Accomplished Artiste";
+			case 4: state.title = "4";
 					break;
-			case 5: state.title = "Level Five Clever Text";
+			case 5: state.title = "5";
 					break;
-			case 6: state.title = "Level Six Clever And Cool Text";
+			case 6: state.title = "6";
 					break;
-			case 7: state.title = "Actually Aesthetic";
+			case 7: state.title = "7";
 					break;
-			case 8: state.title = "A R T I S T";
+			case 8: state.title = "8";
 					break;
-			default: state.title = "you broke me. :(";
+			default: state.title = "0 WRONG";
 					 break;
 			}
 			

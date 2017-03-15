@@ -5,11 +5,16 @@ import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -17,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class MainMenuScreen implements Screen{
@@ -42,6 +48,14 @@ public class MainMenuScreen implements Screen{
 	private Slider music;
 	private Slider sfx;
 	
+	Animation<TextureRegion> walkAnimation;
+    Texture walkSheet;
+    
+    private Image water;
+    
+    // A variable for tracking elapsed time for the animation
+    float stateTime;
+    
 	private Stage stage;
 	private FPSLogger fps;
 	
@@ -91,6 +105,10 @@ public class MainMenuScreen implements Screen{
 		// Center the start button and set the settings button to the lower left
 		startContainer.center();
 		settingsContainer.padLeft(2).left().padBottom(2).bottom();
+		
+		startContainer.setZIndex(2);
+		titleContainer.setZIndex(2);
+		settingsContainer.setZIndex(2);
 		
 		// Add the containers to the scene
 		stage.addActor(startContainer);
@@ -185,6 +203,30 @@ public class MainMenuScreen implements Screen{
 		settingsTable.setVisible(settingsVisible);
 		
 		stage.setDebugAll(false);
+		
+		int FRAME_COLS = 15, FRAME_ROWS = 1;
+		
+		walkSheet = new Texture(Gdx.files.internal("images/mainMenu/mainmenuwater_sheet.png"));
+		
+		TextureRegion[][] tmp = TextureRegion.split(walkSheet, 
+                walkSheet.getWidth() / FRAME_COLS,
+                walkSheet.getHeight() / FRAME_ROWS);
+
+        TextureRegion[] walkFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
+        int index = 0;
+        for (int i = 0; i < FRAME_ROWS; i++) {
+            for (int j = 0; j < FRAME_COLS; j++) {
+                walkFrames[index++] = tmp[i][j];
+            }
+        }
+		
+        walkAnimation = new Animation<TextureRegion>(0.100f, walkFrames);
+	
+        water = new Image(walkAnimation.getKeyFrame(stateTime, true));
+        water.setBounds(0, 0, 400, 240);
+        water.setZIndex(0);
+        
+        stage.addActor(water);
 	}
 	
 	@Override
@@ -199,8 +241,14 @@ public class MainMenuScreen implements Screen{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 				
 		fps.log();
-		
-		stage.act();
+		stateTime += Gdx.graphics.getDeltaTime(); // Accumulate elapsed animation time
+
+        // Get current frame of animation for the current stateTime
+        TextureRegion currentFrame = walkAnimation.getKeyFrame(stateTime, true);
+        water.setDrawable(new SpriteDrawable(new Sprite(currentFrame)));
+        water.toBack();
+        
+        stage.act();
 		stage.draw();
 	}
 	
@@ -235,5 +283,6 @@ public class MainMenuScreen implements Screen{
 	@Override
 	public void dispose() {
 		stage.dispose();
+        walkSheet.dispose();
 	}
 }

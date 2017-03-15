@@ -60,7 +60,7 @@ public class State {
 		
 		level = 0;
 		
-		title = "Starry Eyed Scribbler";
+		title = "1";
 		
 		popularity = 0;
 		
