@@ -3,6 +3,7 @@ package edu.sadsnails.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,19 +11,26 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeBitmapFontData;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.badlogic.gdx.tools.bmfont.BitmapFontWriter;
+import com.badlogic.gdx.tools.bmfont.BitmapFontWriter.FontInfo;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class MainMenuScreen implements Screen{
@@ -67,13 +75,29 @@ public class MainMenuScreen implements Screen{
 		
 		fps = new FPSLogger();
 		
+		// FREE TYPE FONT TEST
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/PressStart2P.ttf"));
+		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+		parameter.size = 8;
+		parameter.shadowColor = Color.BLACK;
+		parameter.shadowOffsetX = 1;
+		parameter.shadowOffsetY = 1;
+		BitmapFont font12 = generator.generateFont(parameter); // font size 12 pixels
+		generator.dispose(); // don't forget to dispose to avoid memory leaks!
+		// Done
 		skin = new Skin(Gdx.files.internal("uiskin.json"));
-		skin.add("default-font", new BitmapFont(Gdx.files.internal("fonts/nes_small.fnt")));
+//		skin.add("default-font", new BitmapFont(Gdx.files.internal("fonts/nes_small.fnt")));
+		skin.add("default-font", font12);
 		
 		// Create TextButtons
-		startGame = new TextButton("START GAME", skin);
-		settings = new TextButton("SETTINGS", skin);
-		title = new Label("ARTIST LIFE", skin);
+		TextButtonStyle style = skin.get("default", TextButtonStyle.class);
+//		style.font = font12;
+		LabelStyle labelstyle = skin.get("default", LabelStyle.class);
+		labelstyle.font = font12;
+		
+		startGame = new TextButton("START GAME", style);
+		settings = new TextButton("SETTINGS", style);
+		title = new Label("ARTIST LIFE", labelstyle);
 		title.setFontScale(3);
 		
 		// Listeners
@@ -204,7 +228,7 @@ public class MainMenuScreen implements Screen{
 		
 		stage.setDebugAll(false);
 		
-		int FRAME_COLS = 15, FRAME_ROWS = 1;
+		int FRAME_COLS = 6, FRAME_ROWS = 10;
 		
 		walkSheet = new Texture(Gdx.files.internal("images/mainMenu/mainmenuwater_sheet.png"));
 		
@@ -240,7 +264,7 @@ public class MainMenuScreen implements Screen{
 		Gdx.gl.glClearColor(.1f, .1f, .1f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 				
-		fps.log();
+//		fps.log();
 		stateTime += Gdx.graphics.getDeltaTime(); // Accumulate elapsed animation time
 
         // Get current frame of animation for the current stateTime
