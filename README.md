@@ -1,6 +1,9 @@
 # ArtistLifeDev
 Game for CS3141. Developer Repository for Team 4.
 
+# Sprint 2 Deliverable
+https://github.com/prusscher/ArtistLifeDev/releases/tag/0.1.2
+
 # Sprint 1 Deliverable
 https://github.com/prusscher/ArtistLifeDev/releases/tag/0.1.0
 
