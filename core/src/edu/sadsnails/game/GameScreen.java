@@ -119,9 +119,10 @@ public class GameScreen implements Screen 	{
 		loadPlayerImages();
 		createUI(debug);
 		
-		gameMusic.setVolume(game.setting.musicVol()*game.setting.masterVol());
+		gameMusic.setVolume((game.setting.musicVol()*(game.setting.masterVol()/100))/100);
+		System.out.println((game.setting.musicVol()*(game.setting.masterVol()/100))/100);
 		gameMusic.setLooping(true);
-		gameMusic.play();
+		//gameMusic.play();
 	}
 	
 	private void loadPlayerImages() {
@@ -153,7 +154,7 @@ public class GameScreen implements Screen 	{
 		action.addListener(new ChangeListener(){
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				buttonSound.play(game.setting.sfxVol()*game.setting.masterVol());
+				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
 				if(!popupDisplayed) {
 					popupDisplayed = true;
 					actionMenuDisplayed = true;
@@ -172,7 +173,7 @@ public class GameScreen implements Screen 	{
 		pause.addListener(new ChangeListener(){
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				buttonSound.play(game.setting.sfxVol()*game.setting.masterVol());
+				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
 				if(!popupDisplayed) {
 					popupDisplayed = true;
 					pauseMenuDisplayed = true;
@@ -277,7 +278,7 @@ public class GameScreen implements Screen 	{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				System.out.println("ArtButton");
-				buttonSound.play(game.setting.sfxVol()*game.setting.masterVol());
+				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
 				closePopups();
 				popupDisplayed = true;
 				a_ArtMenuDisplayed = true;
@@ -288,7 +289,7 @@ public class GameScreen implements Screen 	{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				System.out.println("NapButton");
-				buttonSound.play(game.setting.sfxVol()*game.setting.masterVol());
+				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
 				actions.sleep(1);
 				updateState();
 				closePopups();
@@ -298,7 +299,7 @@ public class GameScreen implements Screen 	{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				System.out.println("sleepButton");	
-				buttonSound.play(game.setting.sfxVol()*game.setting.masterVol());
+				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
 				actions.sleep(2);
 				updateState();
 				closePopups();
@@ -308,7 +309,7 @@ public class GameScreen implements Screen 	{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				System.out.println("itemButton");
-				buttonSound.play(game.setting.sfxVol()*game.setting.masterVol());
+				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
 				closePopups();
 			}
 		});
@@ -316,7 +317,7 @@ public class GameScreen implements Screen 	{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				System.out.println("customizeButton");
-				buttonSound.play(game.setting.sfxVol()*game.setting.masterVol());
+				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
 				closePopups();
 			}
 		});
@@ -324,7 +325,7 @@ public class GameScreen implements Screen 	{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				System.out.println("submitButton: " + typeSelBox.getSelected() + " " + subjectSelBox.getSelected());
-				buttonSound.play(game.setting.sfxVol()*game.setting.masterVol());
+				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
 				actions.makeArt(typeSelBox.getSelectedIndex(), subjectSelBox.getSelectedIndex());
 				updateState();
 				closePopups();
@@ -339,7 +340,7 @@ public class GameScreen implements Screen 	{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				System.out.println("settingsButton");
-				buttonSound.play(game.setting.sfxVol()*game.setting.masterVol());
+				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
 				popupDisplayed = true;
 				p_SettingsMenuDisplayed = true;
 				settingsTable.setVisible(true);
@@ -352,7 +353,7 @@ public class GameScreen implements Screen 	{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				Screen thisScreen = game.getScreen();
-				buttonSound.play(game.setting.sfxVol()*game.setting.masterVol());
+				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
 				game.setScreen(new MainMenuScreen(game));
 				thisScreen.dispose();
 			}
@@ -360,7 +361,8 @@ public class GameScreen implements Screen 	{
 		quitToDeskButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				buttonSound.play(game.setting.sfxVol()*game.setting.masterVol());
+				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
+				game.getScreen().dispose();
 				Gdx.app.exit();
 			}
 		});
@@ -485,12 +487,15 @@ public class GameScreen implements Screen 	{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				game.setting.setMasterVol(master.getValue());
+				gameMusic.setVolume(((game.setting.musicVol()*(game.setting.masterVol()/100))/100)/100);
+				System.out.println((game.setting.musicVol()*(game.setting.masterVol()/100))/100);
 			}
 		});
 		music.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				game.setting.setMusicVol(music.getValue());
+				gameMusic.setVolume((game.setting.musicVol()*(game.setting.masterVol()/100))/100);
 			}
 		});
 		sfx.addListener(new ChangeListener() {
@@ -585,6 +590,7 @@ public class GameScreen implements Screen 	{
 
 	@Override
 	public void dispose() {
+		state.save();
 		stage.dispose();
 	}
 }

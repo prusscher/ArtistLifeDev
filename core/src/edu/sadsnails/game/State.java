@@ -1,5 +1,7 @@
 package edu.sadsnails.game;
 
+import java.io.File;
+
 public class State {
 	
 	/* -----------------------------------------------------------------
@@ -31,9 +33,9 @@ public class State {
 	protected int energy;		// current amount of energy: maybe exceed 100
 	
 	// Money
-	protected double money;		
-	protected double spent_money;
-	protected double earned_money;
+	protected float money;		
+	protected float spent_money;
+	protected float earned_money;
 	
 	protected String pop_title;
 	
@@ -51,32 +53,96 @@ public class State {
 		  {"5", "6"} };
 	
 	// ---
+	private String prefsFolder;
+	private String fileName;
+	private Pair pair;
 	
 	public State() {
-		//init statistics
+		
+		// Get to the settings directory and create a new file
+    	prefsFolder = System.getenv("LOCALAPPDATA") + "\\sadsnails\\saves";
+    	fileName = prefsFolder + "\\save.txt";
+    	File dir = new File(prefsFolder);
+    	boolean result = false;
+		
+    	// Check if the directory exists
+    	if(!dir.exists()) {
+    		// Can't find the directory, creating it
+    		System.out.println("Creating Directory: " + prefsFolder);
+    		
+    		try {
+	    		dir.mkdirs();
+	    		result = true;
+    		} catch (SecurityException e) { 
+    			System.out.println("PROBLEM: Can't create the directory, creating default settings");
+    		}
+    		
+    		if(result) {
+    			System.out.println("We Good: " + prefsFolder + " created");
+    		}
+    	}
+    	
+    	// Create the settings object and read the settings config file
+    	pair = new Pair();
+    	boolean fileExists = pair.read(fileName);
+    	
+    	System.out.println(pair);
+    	
+    	// Set Initial state
+    	// Default State
 		xp = 0;
-		
 		toNext = 30;
-		
 		level = 0;
-		
 		title = "1";
-		
 		popularity = 0;
-		
 		date = new int[3];
 			date[0] = 1;
 			date[1] = 1;
 			date[2] = 1;
-			
 		hour = 1;
-		
 		energy = 100;
-		
 		money = 0; spent_money = 0; earned_money = 0;
+		pop_title = "Not popular or unpopular";	
+    	
+		// Read File and reset variables to the save file
+    	if(fileExists && pair.size() == 14) {
+    		// Load previous state
+    		xp 				= pair.getInt("xp");
+    		toNext 			= pair.getInt("toNext");
+    		level 			= pair.getInt("level");
+    		title 			= pair.getString("title");
+    		popularity 		= pair.getFloat("popularity");
+    		date[0] 		= pair.getInt("date0");
+    		date[1] 		= pair.getInt("date1");
+    		date[2] 		= pair.getInt("date2");
+    		hour 			= pair.getInt("hour");
+    		energy 			= pair.getInt("energy");
+    		money 			= pair.getFloat("money");
+    		spent_money 	= pair.getFloat("spent_money");
+    		earned_money 	= pair.getFloat("earned_money");
+    		pop_title 		= pair.getString("pop_title");	
+    	}
+    	
+		save(); // Save the file
+	}
+	
+	public void save() {
+		pair.putInt("xp", xp);
+		pair.putInt("toNext", toNext);
+		pair.putInt("level", level);
+		pair.putFloat("popularity", popularity);
+		pair.putString("title", title);
+		pair.putInt("date0", date[0]);
+		pair.putInt("date1", date[1]);
+		pair.putInt("date2", date[2]);
+		pair.putInt("hour", 1);
+		pair.putInt("energy", 100);
+		pair.putFloat("money", money);
+		pair.putFloat("spent_money", spent_money);
+		pair.putFloat("earned_money", earned_money);
+		pair.putString("pop_title", pop_title);
 		
-		pop_title = "Not popular or unpopular";
-		
+		pair.write(fileName);
 	}
 	
 	public void printStates() {

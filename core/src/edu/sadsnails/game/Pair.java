@@ -42,9 +42,12 @@ public class Pair {
 			write = new BufferedWriter(new FileWriter(filename));
 			
 			// Write all the Key:Value pairs
-			for(int j = 0; j < key.size(); j++)
-				write.write(key.get(j) + ":" + value.get(j).toString() + "\n");
-			
+			for(int j = 0; j < key.size(); j++) {
+				if(value.get(j).getClass().equals(String.class))
+					write.write(key.get(j) + ":\"" + value.get(j).toString() + "\"\n");
+				else
+					write.write(key.get(j) + ":" + value.get(j).toString() + "\n");
+			}
 			// Close the file
 			write.close();
 			
@@ -85,7 +88,7 @@ public class Pair {
 				} else if(in[1].contains(".") && !checkIfString(in[1])) {
 					value.add(new Float(Float.parseFloat(in[1])));
 				} else {
-					value.add(in[1]);
+					value.add(in[1].substring(1, in[1].length()-1));
 				}
 			}
 			
