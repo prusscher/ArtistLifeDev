@@ -3,6 +3,9 @@ package edu.sadsnails.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -13,7 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.TestGenerator;
 
 public class GameScreen implements Screen 	{
 	MyGdxGame game;
@@ -24,6 +26,8 @@ public class GameScreen implements Screen 	{
 	protected Actions actions;
 	protected State state;
 	
+// ----- Main UI Elements ----
+	// Game UI Labels
 	private Label time;
 	private Label level;
 	private Label xp;
@@ -31,14 +35,59 @@ public class GameScreen implements Screen 	{
 	private Label energy;
 	private Label date;
 	
+	// Player Icon
 	private Image testImage;
 	
+	// Main UI Action and Pause Button
 	private TextButton pause;
 	private TextButton action;
+// ----- End of Main UI elements -----
 	
+// ----- Action Menu Elements -----
+	private VerticalGroup ActionUI;
+	private TextButton artButton;
+	private TextButton napButton;
+	private TextButton sleepButton;
+	private TextButton itemButton;
+	private TextButton customizeButton;
+		// ----- Art Creation sub-menu
+		private VerticalGroup artUI;
+		private SelectBox<String> typeSelBox;
+		private SelectBox<String> subjectSelBox;
+		private TextButton submitArtButton;
+		// ----- end of sub-menu
+// ----- End of Action Menu Elements -----
+		
+// ----- Pause Menu Elements
+	private VerticalGroup PauseUI;
+	private TextButton settingsButton;
+	private TextButton quitToMMButton;
+	private TextButton quitToDeskButton;
+		// Settings Sub-menu
+		private Table settingsTable;
+		private Table fsTable;
+		private SelectBox<DisplayMode> resolutions;
+		private Button fsToggle;
+		private Slider master;
+		private Slider music;
+		private Slider sfx;
+// ----- End Of Action Menu Elements -----
+		
+	
+	// UI State Variables
+	private boolean popupDisplayed = false;
+	
+	private boolean actionMenuDisplayed = false;
+	private boolean a_ArtMenuDisplayed = false;
+	private boolean a_ItemMenuDisplayed = false;
+	private boolean a_CustomMenuDisplayed = false;
+	
+	private boolean pauseMenuDisplayed = false;
+	private boolean p_SettingsMenuDisplayed = false;
+	
+	// Debug Grid Image
 	private Texture grid;
 	private Image gridImage;
-	
 	
 	// ------------THIS NEEDS TO BE MOVED TO ITS OWN CLASS FOR STORAGE AND CALLS -------------
 	protected String [] drawing_type_array
@@ -50,6 +99,9 @@ public class GameScreen implements Screen 	{
 	private Texture scribbler2;
 	private Texture scribbler1;
 	private Texture testPlayerIcon;
+	
+	private Sound buttonSound;
+	private Music gameMusic;
 	
 	private boolean debug = false;
 	
@@ -66,6 +118,10 @@ public class GameScreen implements Screen 	{
 		
 		loadPlayerImages();
 		createUI(debug);
+		
+		gameMusic.setVolume(game.setting.musicVol()*game.setting.masterVol());
+		gameMusic.setLooping(true);
+		gameMusic.play();
 	}
 	
 	private void loadPlayerImages() {
@@ -73,6 +129,9 @@ public class GameScreen implements Screen 	{
 //		scribbler2 = new Texture(Gdx.files.internal("images/playerIcon/scribbler2.gif"));
 //		scribbler1 = new Texture(Gdx.files.internal("images/playerIcon/scribbler.gif"));
 		testPlayerIcon = new Texture(Gdx.files.internal("images/playerIcon/testman.png"));
+		buttonSound = Gdx.audio.newSound(Gdx.files.internal("sound/button.wav"));
+		gameMusic = Gdx.audio.newMusic(Gdx.files.internal("music/Furious-Freak.mp3"));
+		
 	}
 	
 	private void createUI(boolean debug) {
@@ -94,14 +153,42 @@ public class GameScreen implements Screen 	{
 		action.addListener(new ChangeListener(){
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				
+				buttonSound.play(game.setting.sfxVol()*game.setting.masterVol());
+				if(!popupDisplayed) {
+					popupDisplayed = true;
+					actionMenuDisplayed = true;
+					ActionUI.setVisible(true);
+				} else if(pauseMenuDisplayed || p_SettingsMenuDisplayed) {
+					closePopups();
+					popupDisplayed = true;
+					actionMenuDisplayed = true;
+					ActionUI.setVisible(true);
+				} else {
+					closePopups();
+				}
 			}
 		});
 
 		pause.addListener(new ChangeListener(){
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				
+				buttonSound.play(game.setting.sfxVol()*game.setting.masterVol());
+				if(!popupDisplayed) {
+					popupDisplayed = true;
+					pauseMenuDisplayed = true;
+					PauseUI.setVisible(true);
+				} else if(actionMenuDisplayed || a_ArtMenuDisplayed || a_CustomMenuDisplayed || a_ItemMenuDisplayed) {
+					closePopups();
+					popupDisplayed = true;
+					pauseMenuDisplayed = true;
+					PauseUI.setVisible(true);
+				} else if(p_SettingsMenuDisplayed) {
+					closePopups();
+					pause.setText("Pause");
+					action.setVisible(true);
+				} else {
+					closePopups();
+				}
 			}
 		});
 		
@@ -174,12 +261,248 @@ public class GameScreen implements Screen 	{
 		MainUI.setZIndex(2);
 		// ----- end of MainUI -----
 		
-		// Popup UI Goes Here
-		// Ill do this in a bit
+	// ----- Popup UI Goes Here -----
+		// Popup UI Element creation
+		artButton = new TextButton("MAKE ART", skin);
+		napButton = new TextButton("NAP", skin);
+		sleepButton = new TextButton("SLEEP", skin);
+		itemButton = new TextButton("ITEMS", skin);
+		customizeButton = new TextButton("CUSTOMIZE", skin);
 		
+		typeSelBox = new SelectBox<String>(skin);
+		subjectSelBox = new SelectBox<String>(skin);
+		submitArtButton = new TextButton("SUBMIT", skin);
 		
+		artButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				System.out.println("ArtButton");
+				buttonSound.play(game.setting.sfxVol()*game.setting.masterVol());
+				closePopups();
+				popupDisplayed = true;
+				a_ArtMenuDisplayed = true;
+				artUI.setVisible(true);
+			}
+		});
+		napButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				System.out.println("NapButton");
+				buttonSound.play(game.setting.sfxVol()*game.setting.masterVol());
+				actions.sleep(1);
+				updateState();
+				closePopups();
+			}
+		});
+		sleepButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				System.out.println("sleepButton");	
+				buttonSound.play(game.setting.sfxVol()*game.setting.masterVol());
+				actions.sleep(2);
+				updateState();
+				closePopups();
+			}
+		});
+		itemButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				System.out.println("itemButton");
+				buttonSound.play(game.setting.sfxVol()*game.setting.masterVol());
+				closePopups();
+			}
+		});
+		customizeButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				System.out.println("customizeButton");
+				buttonSound.play(game.setting.sfxVol()*game.setting.masterVol());
+				closePopups();
+			}
+		});
+		submitArtButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				System.out.println("submitButton: " + typeSelBox.getSelected() + " " + subjectSelBox.getSelected());
+				buttonSound.play(game.setting.sfxVol()*game.setting.masterVol());
+				actions.makeArt(typeSelBox.getSelectedIndex(), subjectSelBox.getSelectedIndex());
+				updateState();
+				closePopups();
+			}
+		});
 		
+		settingsButton = new TextButton("SETTINGS", skin);
+		quitToMMButton = new TextButton("Quit to Main Menu", skin);
+		quitToDeskButton = new TextButton("Quit to Desktop", skin);
 		
+		settingsButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				System.out.println("settingsButton");
+				buttonSound.play(game.setting.sfxVol()*game.setting.masterVol());
+				popupDisplayed = true;
+				p_SettingsMenuDisplayed = true;
+				settingsTable.setVisible(true);
+				PauseUI.setVisible(false);
+				pause.setText("Exit ");
+				action.setVisible(false);
+			}
+		});
+		quitToMMButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				Screen thisScreen = game.getScreen();
+				buttonSound.play(game.setting.sfxVol()*game.setting.masterVol());
+				game.setScreen(new MainMenuScreen(game));
+				thisScreen.dispose();
+			}
+		});
+		quitToDeskButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				buttonSound.play(game.setting.sfxVol()*game.setting.masterVol());
+				Gdx.app.exit();
+			}
+		});
+		
+		// ACTION MENU
+		ActionUI = new VerticalGroup();
+		ActionUI.setBounds(138, 22, 120, 120);
+		ActionUI.fill();
+		ActionUI.bottom();
+		
+		ActionUI.addActor(artButton);
+		Table sleepTable = new Table();
+			sleepTable.setWidth(120);
+			sleepTable.add(napButton).height(20).width(60);
+			sleepTable.add(sleepButton).height(20).width(60);
+		ActionUI.addActor(sleepTable);	
+		ActionUI.addActor(itemButton);
+		ActionUI.addActor(customizeButton);
+		
+		stage.addActor(ActionUI);
+		ActionUI.setZIndex(3);
+		ActionUI.setVisible(false);
+		// End of action menu
+		
+		// MAKE ART MENU
+		artUI = new VerticalGroup();
+		artUI.setBounds(138, 22, 120, 120);
+		artUI.fill();
+		artUI.center();
+		artUI.top();
+		typeSelBox.setItems(drawing_type_array);
+		subjectSelBox.setItems(drawing_subject_array);
+		
+		artUI.addActor(new Label("Type", skin));
+		artUI.addActor(typeSelBox);
+		artUI.addActor(new Label("Subject", skin));
+		artUI.addActor(subjectSelBox);
+		artUI.addActor(submitArtButton);
+		
+		stage.addActor(artUI);
+		artUI.setZIndex(3);
+		artUI.setVisible(false);
+		// end of make art menu
+		
+		// PAUSE MENU
+		PauseUI = new VerticalGroup();
+		PauseUI.setBounds(138, 22, 120, 120);
+		PauseUI.fill();
+		
+		PauseUI.addActor(settingsButton);
+		PauseUI.addActor(quitToMMButton);
+		PauseUI.addActor(quitToDeskButton);
+		
+		stage.addActor(PauseUI);
+		PauseUI.setZIndex(3);
+		PauseUI.setVisible(pauseMenuDisplayed);
+		
+		// Settings Menu
+		DisplayMode[] modes = game.setting.getModes();
+		
+		resolutions = new SelectBox<DisplayMode>(skin);
+		resolutions.setItems(modes);
+		resolutions.setSelectedIndex(0);
+		
+		fsToggle = new Button(skin);
+		
+		master = new Slider(0f, 100f, .5f, false, skin);
+		music = new Slider(0f, 100f, .5f, false, skin);
+		sfx = new Slider(0f, 100f, .5f, false, skin);
+		
+		master.setWidth(180);
+		music.setWidth(180);
+		sfx.setWidth(180);
+		
+		master.setValue(game.setting.masterVol());
+		music.setValue(game.setting.musicVol());
+		sfx.setValue(game.setting.sfxVol());
+		
+		// ----- Create the settings table -----
+		settingsTable = new Table();
+		settingsTable.add(new Label("Resolution", skin)).height(20);
+		settingsTable.row();
+		settingsTable.add(resolutions).height(20);
+		settingsTable.row();
+		
+		fsTable = new Table();
+		fsTable.add(new Label("Fullscreen ", skin)).height(20);
+		fsTable.add(fsToggle).width(20); // Fullscreen Toggle
+		
+		settingsTable.add(fsTable);
+		settingsTable.row();
+		settingsTable.add(new Label("Master Volume", skin)).height(20);
+		settingsTable.row();
+		settingsTable.add(master).height(20);
+		settingsTable.row();
+		settingsTable.add(new Label("Music Volume", skin)).height(20);
+		settingsTable.row();
+		settingsTable.add(music).height(20);
+		settingsTable.row();
+		settingsTable.add(new Label("Sfx Volume", skin)).height(20);
+		settingsTable.row();
+		settingsTable.add(sfx).height(20);
+		
+		settingsTable.setBounds(100, 27, 200, 180);
+		// ----- complete creating table -----
+
+		// Slider Listeners and Button Listeners
+		resolutions.addListener(new ChangeListener(){
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				DisplayMode mode = resolutions.getSelected();
+				game.setting.setWindowMode(mode);
+			}
+		});
+		fsToggle.addListener(new ChangeListener(){
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				System.out.println("Fullscreen Toggle: " + fsToggle.isChecked());
+			}
+		});
+		master.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				game.setting.setMasterVol(master.getValue());
+			}
+		});
+		music.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				game.setting.setMusicVol(music.getValue());
+			}
+		});
+		sfx.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				game.setting.setSfxVol(sfx.getValue());
+			}
+		});
+		
+		stage.addActor(settingsTable);
+		settingsTable.setVisible(p_SettingsMenuDisplayed);
+		// end of settings menu items
 		
 		// -------- DEV STUFF ---------
 		// Rear Grid
@@ -189,6 +512,24 @@ public class GameScreen implements Screen 	{
 		stage.addActor(gridImage);
 		gridImage.setZIndex(0);
 		gridImage.setVisible(false);
+	}
+	
+	private void closePopups() {
+		popupDisplayed = false;
+		
+		actionMenuDisplayed = false;
+		a_ArtMenuDisplayed = false;
+		a_CustomMenuDisplayed = false;
+		a_ItemMenuDisplayed = false;
+		
+		pauseMenuDisplayed = false;
+		p_SettingsMenuDisplayed = false;
+		
+		artUI.setVisible(false);
+		settingsTable.setVisible(false);
+		
+		ActionUI.setVisible(false);
+		PauseUI.setVisible(false);
 	}
 	
 	private void updateState() {
@@ -247,140 +588,3 @@ public class GameScreen implements Screen 	{
 		stage.dispose();
 	}
 }
-
-/*
-//----- Create sleep options popup UI -----
-
-		makeArt_popupTable = new Table();
-		
-		drawing_type = new SelectBox(skin);
-		drawing_subject = new SelectBox(skin);
-		
-		sleep_popupTable = new Table();
-		
-		float height = action.getHeight();
-		float width = action.getWidth() + 100;
-		
-		sleep1 = new TextButton("Take a nap", skin);
-		sleep2 = new TextButton("Sleep until tomorrow", skin);
-		
-		sleep_popupTable.add(sleep1).width(width).height(50);
-		sleep_popupTable.row();
-		sleep_popupTable.add(sleep2).width(width).height(50);
-		
-		sleep_popupTable.setBounds(action.getX() - 50, action.getY() + 100, width, 2*height);
-		
-		sleep1.addListener(new ChangeListener(){
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				sleep_popup = !sleep_popup;
-				sleep_popupTable.remove();				
-				actions.sleep(1);
-				updateState();
-			}
-		});
-		
-		sleep2.addListener(new ChangeListener(){
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				sleep_popup = !sleep_popup;
-				sleep_popupTable.remove();				
-				actions.sleep(2);
-				updateState();
-			}
-		});
-		
-		// ----- Create actions popup UI -----		
-		actions_popupTable = new Table();
-		
-		sleep = new TextButton("Sleep", skin);
-		art = new TextButton("Make Art", skin);
-		buyCoffee = new TextButton("Buy Coffee (-$5 | +40 Energy)", skin);
-		
-		sleep.addListener(new ChangeListener(){
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				action_popup = !action_popup;
-				actions_popupTable.remove();
-				stage.addActor(sleep_popupTable);
-				//actions.sleep();
-				//updateState();
-			}
-		});
-		
-		// ----- create makeArt interface ----
-		// makeArt menu integration still in progress
-		art.addListener(new ChangeListener(){
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				action_popup = !action_popup;
-				actions_popupTable.remove();
-				stage.addActor(makeArt_popupTable);
-				//actions.makeArt();
-				//updateState();
-			}
-		});
-		
-		makeArt_popupTable = new Table(skin);
-		
-		drawing_type = new SelectBox(skin);
-		drawing_subject = new SelectBox(skin);
-		
-		submitArt = new TextButton("Submit", skin);
-		
-		drawing_type.setItems(drawing_type_array);
-		drawing_subject.setItems(drawing_subject_array);
-		
-		makeArt_popupTable.add(new Label("Type of drawing:", skin)).center().height(20);
-		makeArt_popupTable.row();
-		makeArt_popupTable.add(drawing_type).width(drawing_type.getWidth() + 100).height(drawing_type.getHeight());
-		makeArt_popupTable.row();
-		makeArt_popupTable.add(new Label("Subject of drawing:", skin)).center().height(20);
-		makeArt_popupTable.row();
-		makeArt_popupTable.add(drawing_subject).width(drawing_type.getWidth() + 100).height(drawing_type.getHeight());
-		makeArt_popupTable.row();
-		makeArt_popupTable.add(submitArt).width(drawing_type.getWidth() + 100).height(drawing_type.getHeight());
-		
-		makeArt_popupTable.setBounds(stage.getWidth() / 2 - 50, action.getY()+action.getHeight()+2, 100, 200);
-		
-		
-		submitArt.addListener(new ChangeListener(){
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				selected_type_index = drawing_type.getSelectedIndex();
-				selected_subject_index = drawing_subject.getSelectedIndex();
-				
-				//System.out.println(drawing_type_array[selected_type_index]);
-				//System.out.println(drawing_subject_array[selected_subject_index]);
-				actions.makeArt(selected_type_index, selected_subject_index);
-				
-				makeArt_popupTable.remove();
-				action_popup = !action_popup;
-				actions_popupTable.remove();
-				updateState();
-			}
-		});
-		// ----- end of makeArt interface -----
-		
-		buyCoffee.addListener(new ChangeListener(){
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				action_popup = !action_popup;
-				actions_popupTable.remove();
-				actions.buyBooster();
-				updateState();
-			}
-		});
-		
-		float h = action.getHeight() + 20;
-		float w = action.getWidth();
-
-		actions_popupTable.add(buyCoffee).width(w).height(h);
-		actions_popupTable.row();
-		actions_popupTable.add(sleep).width(w).height(h);
-		actions_popupTable.row();
-		actions_popupTable.add(art).width(w).height(h);
-		
-		actions_popupTable.setBounds(action.getX(), action.getY() + h + 10, w, 2*h);
-		
-*/
