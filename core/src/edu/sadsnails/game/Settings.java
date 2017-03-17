@@ -4,7 +4,7 @@ import java.io.File;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics.DisplayMode;
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 /**
  * Created by Parker on 2/22/2017.
@@ -54,7 +54,7 @@ public class Settings {
     	boolean fileExists = set.read(fileName);
     	
     	// Get Available Display Modes
-    	modes = Lwjgl3ApplicationConfiguration.getDisplayModes();
+    	modes = LwjglApplicationConfiguration.getDisplayModes();
     	
     	if(fileExists && set.size() > 0 || !result) { 
     		// Get the variables from the settings file

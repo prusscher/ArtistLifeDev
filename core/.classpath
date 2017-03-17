@@ -13,5 +13,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="C:/Users/Parker/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-freetype/1.9.5/71eba1332b3c2436d3b8e24296a0feb1c01d9e67/gdx-freetype-1.9.5.jar" sourcepath="C:/Users/Parker/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-freetype/1.9.5/ad7f98d441627f849932bb903034183d77e87ef2/gdx-freetype-1.9.5-sources.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Parker/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-tools/1.9.5/109d3aa13706864faa22d469421e11db99957cef/gdx-tools-1.9.5.jar" sourcepath="C:/Users/Parker/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-tools/1.9.5/409db3d11d2c132dd107f2b1c13cd692b1f0fc45/gdx-tools-1.9.5-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Parker/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-backend-lwjgl/1.9.5/ad5223b755809a92f44e7f6208f4af6a3b39dcc0/gdx-backend-lwjgl-1.9.5.jar" sourcepath="C:/Users/Parker/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx-backend-lwjgl/1.9.5/746874b7c5ec7d49eae06d891417af0f7dd29ff6/gdx-backend-lwjgl-1.9.5-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
