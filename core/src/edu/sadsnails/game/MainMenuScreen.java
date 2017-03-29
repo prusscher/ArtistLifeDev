@@ -82,7 +82,8 @@ public class MainMenuScreen implements Screen{
 		BitmapFont font12 = generator.generateFont(parameter); // font size 12 pixels
 		generator.dispose(); // don't forget to dispose to avoid memory leaks!
 		// Done
-		skin = new Skin(Gdx.files.internal("uiskin.json"));
+		
+		skin = game.assets.uiskin;
 //		skin.add("default-font", new BitmapFont(Gdx.files.internal("fonts/nes_small.fnt")));
 		skin.add("default-font", font12);
 		
@@ -227,7 +228,7 @@ public class MainMenuScreen implements Screen{
 		
 		int FRAME_COLS = 6, FRAME_ROWS = 10;
 		
-		walkSheet = new Texture(Gdx.files.internal("images/mainMenu/mainmenuwater_sheet.png"));
+		walkSheet = game.assets.manager.get("images/mainMenu/mainmenuwater_sheet.png");
 		
 		TextureRegion[][] tmp = TextureRegion.split(walkSheet, 
                 walkSheet.getWidth() / FRAME_COLS,
@@ -245,9 +246,9 @@ public class MainMenuScreen implements Screen{
 	
         water = new Image(walkAnimation.getKeyFrame(stateTime, true));
         water.setBounds(0, 0, 400, 240);
-        water.setZIndex(0);
         
         stage.addActor(water);
+        water.setZIndex(0);
 	}
 	
 	@Override
@@ -304,6 +305,5 @@ public class MainMenuScreen implements Screen{
 	@Override
 	public void dispose() {
 		stage.dispose();
-        walkSheet.dispose();
 	}
 }

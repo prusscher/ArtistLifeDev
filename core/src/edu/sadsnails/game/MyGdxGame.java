@@ -5,19 +5,25 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class MyGdxGame extends Game {
+
+	//public AssetManager manager;
 	public SpriteBatch batch;
 	public BitmapFont font;
 	public Settings setting;
+	public Assets assets;
 	
 	public MyGdxGame(Settings setting) {
 		super();
 		this.setting = setting;
 	}
-	
+
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
 		font = new BitmapFont();
+		assets = new Assets();
+		assets.load();
+		assets.manager.finishLoading();
 		this.setScreen(new MainMenuScreen(this));
 	}
 
@@ -27,7 +33,7 @@ public class MyGdxGame extends Game {
 		// Renders the current game screen
 		super.render();
 	}
-	
+
 	@Override
 	public void dispose () {
 		batch.dispose();
@@ -35,5 +41,4 @@ public class MyGdxGame extends Game {
 		setting.close();
 	}
 
-	
 }

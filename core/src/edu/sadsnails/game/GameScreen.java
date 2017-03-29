@@ -16,16 +16,17 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import edu.sadsnails.game.actors.*;
 
 public class GameScreen implements Screen 	{
 	MyGdxGame game;
-	
+
 	private Skin skin;
 	private Stage stage;
-	
+
 	protected Actions actions;
 	protected State state;
-	
+
 // ----- Main UI Elements ----
 	// Game UI Labels
 	private Label time;
@@ -34,15 +35,15 @@ public class GameScreen implements Screen 	{
 	private Label money;
 	private Label energy;
 	private Label date;
-	
+
 	// Player Icon
 	private Image testImage;
-	
+
 	// Main UI Action and Pause Button
 	private TextButton pause;
 	private TextButton action;
 // ----- End of Main UI elements -----
-	
+
 // ----- Action Menu Elements -----
 	private VerticalGroup ActionUI;
 	private TextButton artButton;
@@ -57,7 +58,7 @@ public class GameScreen implements Screen 	{
 		private TextButton submitArtButton;
 		// ----- end of sub-menu
 // ----- End of Action Menu Elements -----
-		
+
 // ----- Pause Menu Elements
 	private VerticalGroup PauseUI;
 	private TextButton settingsButton;
@@ -72,84 +73,85 @@ public class GameScreen implements Screen 	{
 		private Slider music;
 		private Slider sfx;
 // ----- End Of Action Menu Elements -----
-		
-	
+
+
 	// UI State Variables
 	private boolean popupDisplayed = false;
-	
+
 	private boolean actionMenuDisplayed = false;
 	private boolean a_ArtMenuDisplayed = false;
 	private boolean a_ItemMenuDisplayed = false;
 	private boolean a_CustomMenuDisplayed = false;
-	
+
 	private boolean pauseMenuDisplayed = false;
 	private boolean p_SettingsMenuDisplayed = false;
-	
+
 	// Debug Grid Image
 	private Texture grid;
 	private Image gridImage;
-	
+
 	// ------------THIS NEEDS TO BE MOVED TO ITS OWN CLASS FOR STORAGE AND CALLS -------------
 	protected String [] drawing_type_array
 			= {"Pixel", "Sketch", "Abstract", "Surreal", "Realistic", "Painting"};
 	protected String [] drawing_subject_array
 			= {"Anime", "Retro", "Funny", "Fantasy", "Animal", "Nature", "People"};
-	
+
 	private Texture scribbler3;
 	private Texture scribbler2;
 	private Texture scribbler1;
 	private Texture testPlayerIcon;
-	
+
 	private Sound buttonSound;
 	private Music gameMusic;
-	
+
 	private boolean debug = false;
-	
+
 	public GameScreen(final MyGdxGame game) {
 		this.game = game;
-		
+
 		state = new State();
 		actions = new Actions(state);
-		
-		skin = new Skin(Gdx.files.internal("uiskin.json"));
-		
+
+		skin = game.assets.uiskin;
+
 		stage = new Stage(new FitViewport(400, 240));
 		Gdx.input.setInputProcessor(stage);
-		
+
 		loadPlayerImages();
 		createUI(debug);
+
+		BaseActor test = new BaseActor(game);
+		test.setBounds(100, 20, 200, 200);
+		stage.addActor(test);
+		test.setZIndex(1);
 		
 		gameMusic.setVolume((game.setting.musicVol()*(game.setting.masterVol()/100))/100);
 		System.out.println((game.setting.musicVol()*(game.setting.masterVol()/100))/100);
 		gameMusic.setLooping(true);
 		//gameMusic.play();
 	}
-	
+
 	private void loadPlayerImages() {
-//		scribbler3 = new Texture(Gdx.files.internal("images/playerIcon/scribbler3.gif"));
-//		scribbler2 = new Texture(Gdx.files.internal("images/playerIcon/scribbler2.gif"));
-//		scribbler1 = new Texture(Gdx.files.internal("images/playerIcon/scribbler.gif"));
-		testPlayerIcon = new Texture(Gdx.files.internal("images/playerIcon/testman.png"));
-		buttonSound = Gdx.audio.newSound(Gdx.files.internal("sound/button.wav"));
-		gameMusic = Gdx.audio.newMusic(Gdx.files.internal("music/Furious-Freak.mp3"));
-		
+		testPlayerIcon = game.assets.manager.get("images/playerIcon/testman.png");
+		buttonSound = game.assets.manager.get("sound/button.wav");
+		gameMusic = game.assets.manager.get("music/Furious-Freak.mp3");
 	}
 	
 	private void createUI(boolean debug) {
 		if(debug)
 			stage.setDebugAll(true);
-		
+
 		// ----- MAIN UI BUTTONS -----
 		action 		= new TextButton("Action", skin);
 		pause 		= new TextButton("Pause", skin);
-		
+
 		action.setFillParent(false);
 		action.setWidth(120);
 		action.setHeight(20);
 		pause.setFillParent(false);
 		pause.setWidth(50);
 		pause.setHeight(20);
-		
+
 		// Button Listeners
 		action.addListener(new ChangeListener(){
 			@Override
@@ -192,26 +194,26 @@ public class GameScreen implements Screen 	{
 				}
 			}
 		});
-		
+
 		// ----- MAIN UI ELEMENTS -----
-		
+
 		// Upper Left Hand Corner
 		testImage = new Image(testPlayerIcon);
 		xp = new Label("",skin);
 		level = new Label("",skin);
-		
+
 		// Lower Left Hand Corner
 		time = new Label("",skin);
-		date = new Label("",skin);		
-		
+		date = new Label("",skin);
+
 		// Upper Right Hand Corner
 		money = new Label("",skin);
 		energy = new Label("",skin);
-		
+
 		// ----- Main UI Layout -----
 		VerticalGroup MainUI = new VerticalGroup();
 		MainUI.setBounds(0, 0, 400, 240);
-		
+
 		// Top Main UI Container
 		Table top = new Table();
 			top.setWidth(400);
@@ -231,14 +233,14 @@ public class GameScreen implements Screen 	{
 				meGroup.align(Align.right);
 				meGroup.padRight(2f);
 			top.add(meGroup).width(100).top().padTop(2f);
-			
+
 		MainUI.addActor(top);
-		
+
 		// Middle Spacer
 		Table spacer = new Table();
 			spacer.add().height(134).width(400);
 		MainUI.addActor(spacer);
-		
+
 		// Bottom UI Container
 		Table bottom = new Table();
 			bottom.setWidth(400);
@@ -251,17 +253,17 @@ public class GameScreen implements Screen 	{
 			bottom.add(dtGroup).width(100).bottom().left().padRight(40);
 			bottom.add(action).width(120).bottom();
 			bottom.add(pause).width(50).bottom().right().padRight(2f).padLeft(90f);
-			
+
 		MainUI.addActor(bottom);
-			
+
 		// Update the labels with the correct value
 		updateState();
-		
+
 		// Add the MainUI to the stage
 		stage.addActor(MainUI);
 		MainUI.setZIndex(2);
 		// ----- end of MainUI -----
-		
+
 	// ----- Popup UI Goes Here -----
 		// Popup UI Element creation
 		artButton = new TextButton("MAKE ART", skin);
@@ -269,11 +271,11 @@ public class GameScreen implements Screen 	{
 		sleepButton = new TextButton("SLEEP", skin);
 		itemButton = new TextButton("ITEMS", skin);
 		customizeButton = new TextButton("CUSTOMIZE", skin);
-		
+
 		typeSelBox = new SelectBox<String>(skin);
 		subjectSelBox = new SelectBox<String>(skin);
 		submitArtButton = new TextButton("SUBMIT", skin);
-		
+
 		artButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -298,7 +300,7 @@ public class GameScreen implements Screen 	{
 		sleepButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				System.out.println("sleepButton");	
+				System.out.println("sleepButton");
 				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
 				actions.sleep(2);
 				updateState();
@@ -331,11 +333,11 @@ public class GameScreen implements Screen 	{
 				closePopups();
 			}
 		});
-		
+
 		settingsButton = new TextButton("SETTINGS", skin);
 		quitToMMButton = new TextButton("Quit to Main Menu", skin);
 		quitToDeskButton = new TextButton("Quit to Desktop", skin);
-		
+
 		settingsButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -366,27 +368,27 @@ public class GameScreen implements Screen 	{
 				Gdx.app.exit();
 			}
 		});
-		
+
 		// ACTION MENU
 		ActionUI = new VerticalGroup();
 		ActionUI.setBounds(138, 22, 120, 120);
 		ActionUI.fill();
 		ActionUI.bottom();
-		
+
 		ActionUI.addActor(artButton);
 		Table sleepTable = new Table();
 			sleepTable.setWidth(120);
 			sleepTable.add(napButton).height(20).width(60);
 			sleepTable.add(sleepButton).height(20).width(60);
-		ActionUI.addActor(sleepTable);	
+		ActionUI.addActor(sleepTable);
 		ActionUI.addActor(itemButton);
 		ActionUI.addActor(customizeButton);
-		
+
 		stage.addActor(ActionUI);
 		ActionUI.setZIndex(3);
 		ActionUI.setVisible(false);
 		// End of action menu
-		
+
 		// MAKE ART MENU
 		artUI = new VerticalGroup();
 		artUI.setBounds(138, 22, 120, 120);
@@ -395,63 +397,63 @@ public class GameScreen implements Screen 	{
 		artUI.top();
 		typeSelBox.setItems(drawing_type_array);
 		subjectSelBox.setItems(drawing_subject_array);
-		
+
 		artUI.addActor(new Label("Type", skin));
 		artUI.addActor(typeSelBox);
 		artUI.addActor(new Label("Subject", skin));
 		artUI.addActor(subjectSelBox);
 		artUI.addActor(submitArtButton);
-		
+
 		stage.addActor(artUI);
 		artUI.setZIndex(3);
 		artUI.setVisible(false);
 		// end of make art menu
-		
+
 		// PAUSE MENU
 		PauseUI = new VerticalGroup();
 		PauseUI.setBounds(138, 22, 120, 120);
 		PauseUI.fill();
-		
+
 		PauseUI.addActor(settingsButton);
 		PauseUI.addActor(quitToMMButton);
 		PauseUI.addActor(quitToDeskButton);
-		
+
 		stage.addActor(PauseUI);
 		PauseUI.setZIndex(3);
 		PauseUI.setVisible(pauseMenuDisplayed);
-		
+
 		// Settings Menu
 		DisplayMode[] modes = game.setting.getModes();
-		
+
 		resolutions = new SelectBox<DisplayMode>(skin);
 		resolutions.setItems(modes);
 		resolutions.setSelectedIndex(0);
-		
+
 		fsToggle = new Button(skin);
-		
+
 		master = new Slider(0f, 100f, .5f, false, skin);
 		music = new Slider(0f, 100f, .5f, false, skin);
 		sfx = new Slider(0f, 100f, .5f, false, skin);
-		
+
 		master.setWidth(180);
 		music.setWidth(180);
 		sfx.setWidth(180);
-		
+
 		master.setValue(game.setting.masterVol());
 		music.setValue(game.setting.musicVol());
 		sfx.setValue(game.setting.sfxVol());
-		
+
 		// ----- Create the settings table -----
 		settingsTable = new Table();
 		settingsTable.add(new Label("Resolution", skin)).height(20);
 		settingsTable.row();
 		settingsTable.add(resolutions).height(20);
 		settingsTable.row();
-		
+
 		fsTable = new Table();
 		fsTable.add(new Label("Fullscreen ", skin)).height(20);
 		fsTable.add(fsToggle).width(20); // Fullscreen Toggle
-		
+
 		settingsTable.add(fsTable);
 		settingsTable.row();
 		settingsTable.add(new Label("Master Volume", skin)).height(20);
@@ -465,7 +467,7 @@ public class GameScreen implements Screen 	{
 		settingsTable.add(new Label("Sfx Volume", skin)).height(20);
 		settingsTable.row();
 		settingsTable.add(sfx).height(20);
-		
+
 		settingsTable.setBounds(100, 27, 200, 180);
 		// ----- complete creating table -----
 
@@ -504,39 +506,39 @@ public class GameScreen implements Screen 	{
 				game.setting.setSfxVol(sfx.getValue());
 			}
 		});
-		
+
 		stage.addActor(settingsTable);
 		settingsTable.setVisible(p_SettingsMenuDisplayed);
 		// end of settings menu items
-		
+
 		// -------- DEV STUFF ---------
 		// Rear Grid
-		grid = new Texture(Gdx.files.internal("dev/grid.png"));
+		grid = game.assets.manager.get("dev/grid.png");
 		gridImage = new Image(grid);
 		gridImage.setBounds(0, 0, 400, 240);
 		stage.addActor(gridImage);
 		gridImage.setZIndex(0);
 		gridImage.setVisible(false);
 	}
-	
+
 	private void closePopups() {
 		popupDisplayed = false;
-		
+
 		actionMenuDisplayed = false;
 		a_ArtMenuDisplayed = false;
 		a_CustomMenuDisplayed = false;
 		a_ItemMenuDisplayed = false;
-		
+
 		pauseMenuDisplayed = false;
 		p_SettingsMenuDisplayed = false;
-		
+
 		artUI.setVisible(false);
 		settingsTable.setVisible(false);
-		
+
 		ActionUI.setVisible(false);
 		PauseUI.setVisible(false);
 	}
-	
+
 	private void updateState() {
 		time.setText(Integer.toString(state.hour) + ":00");
 		level.setText("Level: " + state.title);
@@ -545,10 +547,10 @@ public class GameScreen implements Screen 	{
 		energy.setText("E: " + Integer.toString(state.energy) + "/100");
 		date.setText("" + state.date[2] + "/" + state.date[1] + "/" + state.date[0]);
 //		date.setText("Year " + state.date[0] + " Month " + state.date[1] + " Day " + state.date[2]);
-		
+
 		// Change the player image here
 	}
-	
+
 	@Override
 	public void show() { }
 
@@ -556,7 +558,7 @@ public class GameScreen implements Screen 	{
 	public void render(float delta) {
 		Gdx.gl.glClearColor(.2f, .2f, .2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
+
 		// Draw The Scene2d stage
 		stage.act();
 		stage.draw();
@@ -573,7 +575,7 @@ public class GameScreen implements Screen 	{
 		}
 	}
 
-	
+
 	@Override
 	public void resize(int width, int height) {
 		stage.getViewport().update(width, height, true);

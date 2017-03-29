@@ -2,11 +2,9 @@ package edu.sadsnails.game.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 
 import edu.sadsnails.game.MyGdxGame;
 import edu.sadsnails.game.Settings;
-
 
 /**
  * DesktopLauncher.java
