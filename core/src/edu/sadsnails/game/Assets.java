@@ -21,8 +21,15 @@ public class Assets {
 	{
 		// Textures
 		manager.load("dev/grid.png", Texture.class);
+		manager.load("dev/BaseActor.png", Texture.class);
+		manager.load("dev/ColorAnim.png", Texture.class);
+		
 		manager.load("images/mainMenu/mainmenuwater_sheet.png", Texture.class);
+		
+		manager.load("images/player/man.png", Texture.class);
+		
 		manager.load("images/playerIcon/testman.png", Texture.class);
+		
 		manager.load("images/rooms/room1.png", Texture.class);	
 		
 		// Sounds
