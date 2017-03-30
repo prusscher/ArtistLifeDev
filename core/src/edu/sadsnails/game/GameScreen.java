@@ -53,6 +53,19 @@ public class GameScreen implements Screen 	{
 	private TextButton customizeButton;
 		// ----- Art Creation sub-menu
 		private VerticalGroup artUI;
+		private VerticalGroup customizeUI;
+			// CustomizeUI sub-menu
+			private HorizontalGroup customize;
+			private HorizontalGroup play;
+			private VerticalGroup left;
+			private VerticalGroup right;
+			private Image player;
+			private TextButton left1;
+			private TextButton left2;
+			private TextButton left3;
+			private TextButton right1;
+			private TextButton right2;
+			private TextButton right3;
 		private SelectBox<String> typeSelBox;
 		private SelectBox<String> subjectSelBox;
 		private TextButton submitArtButton;
@@ -321,6 +334,9 @@ public class GameScreen implements Screen 	{
 				System.out.println("customizeButton");
 				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
 				closePopups();
+				popupDisplayed = true;
+				a_CustomMenuDisplayed = true;
+				customizeUI.setVisible(true);
 			}
 		});
 		submitArtButton.addListener(new ChangeListener() {
@@ -408,6 +424,61 @@ public class GameScreen implements Screen 	{
 		artUI.setZIndex(3);
 		artUI.setVisible(false);
 		// end of make art menu
+		
+		// MAKE CUSTOMIZE MENU
+		customizeUI = new VerticalGroup();
+		customizeUI.setBounds(128, 22, 140, 140);
+		customizeUI.fill();
+		customizeUI.center();
+		customizeUI.top();
+		
+		left1 = new TextButton("<", skin);
+		left2 = new TextButton("<", skin);
+		left3 = new TextButton("<", skin);
+		right1 = new TextButton(">", skin);
+		right2 = new TextButton(">", skin);
+		right3 = new TextButton(">", skin);
+		
+		left1.setWidth(20);
+		left1.setHeight(20);
+		left2.setWidth(20);
+		left2.setHeight(20);
+		left3.setWidth(20);
+		left3.setHeight(20);
+		right1.setWidth(20);
+		right1.setHeight(20);
+		right2.setWidth(20);
+		right2.setHeight(20);
+		right3.setWidth(20);
+		right3.setHeight(20);
+		
+		customize = new HorizontalGroup();
+		customize.center();
+		play = new HorizontalGroup();
+		left = new VerticalGroup();
+		player = new Image(testPlayerIcon);
+		right = new VerticalGroup();
+		customizeUI.addActor(customize);
+		customizeUI.addActor(play);
+		play.addActor(left);
+		play.addActor(player);
+		play.addActor(right);
+		
+		left.addActor(left1);
+		left.addActor(left2);
+		left.addActor(left3);
+		right.addActor(right1);
+		right.addActor(right2);
+		right.addActor(right3);
+
+		
+		customize.addActor(new Label("Customize", skin));
+
+
+		stage.addActor(customizeUI);
+		customizeUI.setZIndex(3);
+		customizeUI.setVisible(false);
+		// end of customize menu
 
 		// PAUSE MENU
 		PauseUI = new VerticalGroup();
@@ -533,6 +604,7 @@ public class GameScreen implements Screen 	{
 		p_SettingsMenuDisplayed = false;
 
 		artUI.setVisible(false);
+		customizeUI.setVisible(false);
 		settingsTable.setVisible(false);
 
 		ActionUI.setVisible(false);
