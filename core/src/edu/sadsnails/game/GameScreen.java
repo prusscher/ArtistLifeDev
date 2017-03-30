@@ -133,10 +133,15 @@ public class GameScreen implements Screen 	{
 		loadPlayerImages();
 		createUI(debug);
 
-		BaseActor test = new BaseActor(game);
-		test.setBounds(100, 20, 200, 200);
-		stage.addActor(test);
-		test.setZIndex(1);
+		Room room = new Room(game);
+		room.setBounds(80, 0, 240, 240);
+		stage.addActor(room);
+		room.setZIndex(0);
+		
+		Player player = new Player(game);
+		player.setBounds(176, 96, 48, 48);
+		stage.addActor(player);
+		player.setZIndex(1);
 		
 		gameMusic.setVolume((game.setting.musicVol()*(game.setting.masterVol()/100))/100);
 		System.out.println((game.setting.musicVol()*(game.setting.masterVol()/100))/100);
