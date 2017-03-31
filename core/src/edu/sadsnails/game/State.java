@@ -1,6 +1,7 @@
 package edu.sadsnails.game;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class State {
 	
@@ -52,6 +53,7 @@ public class State {
 		  {"3", "4"} , 
 		  {"5", "6"} };
 	
+	protected ArrayList<String> textLog = new ArrayList<String>();
 	// ---
 	private String prefsFolder;
 	private String fileName;
@@ -103,7 +105,7 @@ public class State {
 		energy = 100;
 		money = 0; spent_money = 0; earned_money = 0;
 		pop_title = "Not popular or unpopular";	
-    	
+    	textLog.add("You'll see recent events here!");
 		// Read File and reset variables to the save file
     	if(fileExists && pair.size() == 14) {
     		// Load previous state

@@ -1,5 +1,9 @@
 package edu.sadsnails.game;
 
+import java.io.ByteArrayOutputStream;
+import java.io.Console;
+import java.io.PrintStream;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
@@ -35,6 +39,12 @@ public class GameScreen implements Screen 	{
 	private Label money;
 	private Label energy;
 	private Label date;
+	private Label logText;
+	private Label logText2;
+	private Label logText3;
+	private Label logText4;
+	private Label logText5;
+
 
 	// Player Icon
 	private Image testImage;
@@ -42,6 +52,7 @@ public class GameScreen implements Screen 	{
 	// Main UI Action and Pause Button
 	private TextButton pause;
 	private TextButton action;
+	private TextButton log;
 // ----- End of Main UI elements -----
 
 // ----- Action Menu Elements -----
@@ -87,6 +98,10 @@ public class GameScreen implements Screen 	{
 		private Slider sfx;
 // ----- End Of Action Menu Elements -----
 
+// ----- Text Log Elements
+	private VerticalGroup logUI;
+		private Table logTable;
+
 
 	// UI State Variables
 	private boolean popupDisplayed = false;
@@ -98,6 +113,8 @@ public class GameScreen implements Screen 	{
 
 	private boolean pauseMenuDisplayed = false;
 	private boolean p_SettingsMenuDisplayed = false;
+	
+	private boolean textLogDisplayed = false;
 
 	// Debug Grid Image
 	private Texture grid;
@@ -146,7 +163,7 @@ public class GameScreen implements Screen 	{
 		gameMusic.setVolume((game.setting.musicVol()*(game.setting.masterVol()/100))/100);
 		System.out.println((game.setting.musicVol()*(game.setting.masterVol()/100))/100);
 		gameMusic.setLooping(true);
-		//gameMusic.play();
+		gameMusic.play();
 	}
 
 	private void loadPlayerImages() {
@@ -162,6 +179,7 @@ public class GameScreen implements Screen 	{
 		// ----- MAIN UI BUTTONS -----
 		action 		= new TextButton("Action", skin);
 		pause 		= new TextButton("Pause", skin);
+		log			= new TextButton("Log", skin);
 
 		action.setFillParent(false);
 		action.setWidth(120);
@@ -169,6 +187,9 @@ public class GameScreen implements Screen 	{
 		pause.setFillParent(false);
 		pause.setWidth(50);
 		pause.setHeight(20);
+		log.setFillParent(false);
+		log.setWidth(50);
+		log.setHeight(20);
 
 		// Button Listeners
 		action.addListener(new ChangeListener(){
@@ -212,6 +233,29 @@ public class GameScreen implements Screen 	{
 				}
 			}
 		});
+		
+		log.addListener(new ChangeListener(){
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
+				if(!popupDisplayed) {
+					popupDisplayed = true;
+					textLogDisplayed = true;
+					logUI.setVisible(true);
+				} else if(actionMenuDisplayed || a_ArtMenuDisplayed || a_CustomMenuDisplayed || a_ItemMenuDisplayed) {
+					closePopups();
+					popupDisplayed = true;
+					textLogDisplayed = true;
+					logUI.setVisible(true);
+				} else if(pauseMenuDisplayed || p_SettingsMenuDisplayed) {
+					closePopups();
+					log.setText("Log");
+					action.setVisible(true);
+				} else {
+					closePopups();
+				}
+			}
+		});
 
 		// ----- MAIN UI ELEMENTS -----
 
@@ -227,7 +271,15 @@ public class GameScreen implements Screen 	{
 		// Upper Right Hand Corner
 		money = new Label("",skin);
 		energy = new Label("",skin);
+		
+		// in log menu
+		logText = new Label("",skin);
+		logText2 = new Label("",skin);
+		logText3 = new Label("",skin);
+		logText4 = new Label("",skin);
+		logText5 = new Label("",skin);
 
+		
 		// ----- Main UI Layout -----
 		VerticalGroup MainUI = new VerticalGroup();
 		MainUI.setBounds(0, 0, 400, 240);
@@ -251,12 +303,11 @@ public class GameScreen implements Screen 	{
 				meGroup.align(Align.right);
 				meGroup.padRight(2f);
 			top.add(meGroup).width(100).top().padTop(2f);
-
 		MainUI.addActor(top);
 
 		// Middle Spacer
 		Table spacer = new Table();
-			spacer.add().height(134).width(400);
+		spacer.add().height(134).width(400);
 		MainUI.addActor(spacer);
 
 		// Bottom UI Container
@@ -269,9 +320,9 @@ public class GameScreen implements Screen 	{
 				dtGroup.align(Align.left);
 				dtGroup.padLeft(2f);
 			bottom.add(dtGroup).width(100).bottom().left().padRight(40);
+			bottom.add(log).width(50).bottom().left();
 			bottom.add(action).width(120).bottom();
 			bottom.add(pause).width(50).bottom().right().padRight(2f).padLeft(90f);
-
 		MainUI.addActor(bottom);
 
 		// Update the labels with the correct value
@@ -586,7 +637,31 @@ public class GameScreen implements Screen 	{
 		stage.addActor(settingsTable);
 		settingsTable.setVisible(p_SettingsMenuDisplayed);
 		// end of settings menu items
+		
+		
+		// ------- TEXT LOG MENU -------
+		logUI = new VerticalGroup();
+		logUI.setBounds(138, 22, 120, 120);
+		logUI.fill();
+		logUI.center();
+		
+		logTable = new Table();
+		logTable.add(logText).height(9);
+		logTable.row();
+		logTable.add(logText2).height(9);
+		logTable.row();
+		logTable.add(logText3).height(9);
+		logTable.row();
+		logTable.add(logText4).height(9);
+		logTable.row();
+		logTable.add(logText5).height(9);
+		logUI.addActor(logTable);
 
+		stage.addActor(logUI);
+		logUI.setZIndex(3);
+		logUI.setVisible(textLogDisplayed);
+		
+		
 		// -------- DEV STUFF ---------
 		// Rear Grid
 		grid = game.assets.manager.get("dev/grid.png");
@@ -614,6 +689,7 @@ public class GameScreen implements Screen 	{
 
 		ActionUI.setVisible(false);
 		PauseUI.setVisible(false);
+		logUI.setVisible(false);
 	}
 
 	private void updateState() {
@@ -623,8 +699,17 @@ public class GameScreen implements Screen 	{
 		money.setText("$" + Double.toString(state.money) + "0");
 		energy.setText("E: " + Integer.toString(state.energy) + "/100");
 		date.setText("" + state.date[2] + "/" + state.date[1] + "/" + state.date[0]);
+		//logText.setText("PLACEHOLDER");
+		logText.setText(state.textLog.get(0));
+		if (state.textLog.size() > 1)
+		logText2.setText(state.textLog.get(1));
+		if (state.textLog.size() > 2)
+		logText3.setText(state.textLog.get(2));
+		if (state.textLog.size() > 3)
+		logText4.setText(state.textLog.get(3));
+		if (state.textLog.size() > 4)
+		logText5.setText(state.textLog.get(4));
 //		date.setText("Year " + state.date[0] + " Month " + state.date[1] + " Day " + state.date[2]);
-
 		// Change the player image here
 	}
 

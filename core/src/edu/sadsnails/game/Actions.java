@@ -39,6 +39,7 @@ public class Actions {
 	public void makeArt(int type, int subject) {
 		
 		System.out.println("I made art");
+		state.textLog.add(0, "I made art");
 		type++; subject++;
 		switch(type){
 		case 1:
@@ -106,6 +107,7 @@ public class Actions {
 		
 		if(energy_consum >= state.energy) {
 			System.out.println("This task will take more energy than you have");
+			state.textLog.add(0, "This task will take more energy than you have");
 			time_consum = 0;
 			energy_consum = 0;
 			xp_gain = 0;
@@ -131,6 +133,7 @@ public class Actions {
 		|| (d_type.equals("Painting") && d_subject.equals("People")))
 		{
 			System.out.println("The audience really liked your drawing");
+			state.textLog.add(0, "The audience really liked your drawing");
 			art_rank = 2;
 			alterPopularity(2);
 		}
@@ -150,6 +153,7 @@ public class Actions {
 		|| (d_type.equals("Painting") && d_subject.equals("Fantasy")))
 		{
 			System.out.println("The audience liked your drawing a little");
+			state.textLog.add(0, "The audience liked your drawing a little");
 			art_rank = 1;
 			alterPopularity(1);
 		}
@@ -162,6 +166,7 @@ public class Actions {
 		|| (d_type.equals("Surreal") && d_subject.equals("Nature")))
 		{
 			System.out.println("The audience did not feel strongly one way or the other about your drawing");
+			state.textLog.add(0, "The audience did not feel strongly one way or the other about your drawing");
 			art_rank = 0;
 			alterPopularity(0);
 		}
@@ -173,6 +178,7 @@ public class Actions {
 		|| (d_type.equals("Painting") && d_subject.equals("Funny")))
 		{
 			System.out.println("The audience did not really like your drawing");
+			state.textLog.add(0, "The audience did not really like your drawing");
 			art_rank = -1;
 			alterPopularity(-1);
 		}
@@ -184,6 +190,7 @@ public class Actions {
 		|| (d_type.equals("Surreal") && d_subject.equals("Anime")))
 		{
 			System.out.println("The audience hated your drawing");
+			state.textLog.add(0, "The audience hated your drawing");
 			art_rank = -2;
 			alterPopularity(-2);
 		}
@@ -272,6 +279,7 @@ public class Actions {
 		// if energy is 100 you cannot sleep
 		if(state.energy == 100) {
 			System.out.println("You can't sleep when you're wide awake!");
+			state.textLog.add(0, "You can't sleep when you're wide awake!");
 		}
 		// try to sleep
 		// if it's a nap, check to see if you've napped already
@@ -280,6 +288,7 @@ public class Actions {
 		else{
 		if(type == 2) {
 			System.out.println("I successfully slept");
+			state.textLog.add(0, "I successfully slept");
 			passTime(-1);
 			state.energy = 100;
 		}
@@ -288,8 +297,10 @@ public class Actions {
 		// if you have not napped, raise energy by 50
 		// and move clock forward 5 hours
 		else {
-			if(state.has_napped)
+			if(state.has_napped){
 				System.out.println("I have already napped today");
+				state.textLog.add(0, "I have already napped today");
+			}
 
 			else {
 				if(state.energy + 50 >= 100) {
@@ -317,16 +328,20 @@ public class Actions {
 	 *  etc.
 	 */
 	public void buyBooster() {
-		if(state.coffee_used) 
+		if(state.coffee_used) {
 			System.out.println("I have already had coffee today");
+			state.textLog.add(0, "I have already had coffee today"); }
 		else if(state.money < 5) {
 			System.out.println("I do not have enough money for this");
+			state.textLog.add(0, "I do not have enough money for this");
 		}
 		else if(state.energy == 100) {
 			System.out.println("I cannot drink coffee when I am wide awake");
+			state.textLog.add(0, "I'm too awake for this coffee");
 		}
 		else if((state.energy + 40) > 100) {
 			System.out.println("I bought coffee!");
+			state.textLog.add(0, "I bought coffee!");
 			state.energy = 100;
 			state.money -= 5;
 			state.spent_money += 5;
@@ -334,6 +349,7 @@ public class Actions {
 		}
 		else {
 			System.out.println("I bought coffee!");
+			state.textLog.add(0, "I bought coffee!");
 			state.energy += 40;
 			state.money -= 5;
 			state.spent_money += 5;
@@ -376,6 +392,7 @@ public class Actions {
 			}
 			
 			System.out.println("You've leveled up! You are now level " +state.level + "! People have started to call you the " + state.title);
+			state.textLog.add(0, "You've leveled up! You are now level " +state.level + "! People have started to call you the " + state.title);
 		}
 		else
 			state.xp 	+= xpAmount;
