@@ -8,6 +8,8 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.TextureData;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -109,11 +111,11 @@ public class GameScreen implements Screen 	{
 	protected String [] drawing_subject_array
 			= {"Anime", "Retro", "Funny", "Fantasy", "Animal", "Nature", "People"};
 
-	private Texture scribbler3;
-	private Texture scribbler2;
-	private Texture scribbler1;
+	private Texture playerIcons;
 	private Texture testPlayerIcon;
-
+	
+	private TextureRegion[] icons;
+	
 	private Sound buttonSound;
 	private Music gameMusic;
 
@@ -130,7 +132,7 @@ public class GameScreen implements Screen 	{
 		stage = new Stage(new FitViewport(400, 240));
 		Gdx.input.setInputProcessor(stage);
 
-		loadPlayerImages();
+		load();
 		createUI(debug);
 
 		Room room = new Room(game);
@@ -148,11 +150,23 @@ public class GameScreen implements Screen 	{
 		gameMusic.setLooping(true);
 		//gameMusic.play();
 	}
-
-	private void loadPlayerImages() {
+	
+	private void load() {
 		testPlayerIcon = game.assets.manager.get("images/playerIcon/testman.png");
 		buttonSound = game.assets.manager.get("sound/button.wav");
 		gameMusic = game.assets.manager.get("music/Furious-Freak.mp3");
+		
+		loadPlayerIcons();
+	}
+	
+	private void loadPlayerIcons() {
+		playerIcons = game.assets.manager.get("images/playerIcon/CharacterPortrait.png");
+		TextureRegion[][] allIcons = TextureRegion.split(playerIcons, playerIcons.getWidth()/2, playerIcons.getHeight()/40);
+		
+		System.out.println(allIcons.length + " " + allIcons[0].length);
+		
+		testImage = new Image(allIcons[3][0]);
+		
 	}
 	
 	private void createUI(boolean debug) {
@@ -216,7 +230,7 @@ public class GameScreen implements Screen 	{
 		// ----- MAIN UI ELEMENTS -----
 
 		// Upper Left Hand Corner
-		testImage = new Image(testPlayerIcon);
+		//testImage = new Image(testPlayerIcon);
 		xp = new Label("",skin);
 		level = new Label("",skin);
 
@@ -437,6 +451,7 @@ public class GameScreen implements Screen 	{
 		customizeUI.center();
 		customizeUI.top();
 		
+		// Create buttons
 		left1 = new TextButton("<", skin);
 		left2 = new TextButton("<", skin);
 		left3 = new TextButton("<", skin);
@@ -444,41 +459,57 @@ public class GameScreen implements Screen 	{
 		right2 = new TextButton(">", skin);
 		right3 = new TextButton(">", skin);
 		
-		left1.setWidth(20);
-		left1.setHeight(20);
-		left2.setWidth(20);
-		left2.setHeight(20);
-		left3.setWidth(20);
-		left3.setHeight(20);
-		right1.setWidth(20);
-		right1.setHeight(20);
-		right2.setWidth(20);
-		right2.setHeight(20);
-		right3.setWidth(20);
-		right3.setHeight(20);
+		float buttonW = 30f;
+		float bottonH = 20f;
 		
+		left1.setWidth(buttonW);
+		left1.setHeight(bottonH);
+		left2.setWidth(buttonW);
+		left2.setHeight(bottonH);
+		left3.setWidth(buttonW);
+		left3.setHeight(bottonH);
+		right1.setWidth(buttonW);
+		right1.setHeight(bottonH);
+		right2.setWidth(buttonW);
+		right2.setHeight(bottonH);
+		right3.setWidth(buttonW);
+		right3.setHeight(bottonH);
+		
+		// Create the groups
 		customize = new HorizontalGroup();
 		customize.center();
+		customize.setHeight(40);
+		
+		customize.addActor(new Label("Customize", skin));
+		
 		play = new HorizontalGroup();
 		left = new VerticalGroup();
 		player = new Image(testPlayerIcon);
-		right = new VerticalGroup();
-		customizeUI.addActor(customize);
-		customizeUI.addActor(play);
-		play.addActor(left);
-		play.addActor(player);
-		play.addActor(right);
+//		player = testImage;
 		
+		right = new VerticalGroup();
+		
+		play.setWidth(64);
+		play.setHeight(64);
+		left.setWidth(40);
+		left.align(Align.center);
+		right.setWidth(40);
+		right.align(Align.center);
+		
+		// Add the buttons to the left and right containers
 		left.addActor(left1);
 		left.addActor(left2);
 		left.addActor(left3);
 		right.addActor(right1);
 		right.addActor(right2);
 		right.addActor(right3);
-
 		
-		customize.addActor(new Label("Customize", skin));
-
+		play.addActor(left);
+		play.addActor(player);
+		play.addActor(right);
+		
+		customizeUI.addActor(customize);
+		customizeUI.addActor(play);
 
 		stage.addActor(customizeUI);
 		customizeUI.setZIndex(3);
