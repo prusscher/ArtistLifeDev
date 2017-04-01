@@ -7,16 +7,34 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import edu.sadsnails.game.MyGdxGame;
 
 public class Player extends BaseActor {
-
+	
+	private Animation<TextureRegion> idle;
+	private Animation<TextureRegion> drawing;
+	private Animation<TextureRegion> walking;
+	
 	public Player(MyGdxGame game) {
 		super(game);
 		
-		TextureRegion colorFrames = new TextureRegion((Texture) this.game.assets.manager.get("images/player/man.png"));
+		Texture texToAnim = this.game.assets.manager.get("images/player/idle.png");
 		
-		Animation<TextureRegion> color = new Animation<TextureRegion>(.25f, colorFrames);
-		color.setPlayMode(Animation.PlayMode.NORMAL);
+		TextureRegion[][] tmp = TextureRegion.split(texToAnim, texToAnim.getWidth()/2, texToAnim.getHeight());
 		
-		animation = color;
+		System.out.println(tmp.length);
+		
+		TextureRegion[] frames = new TextureRegion[2];
+		for(int y = 0; y < 2; y++)
+			frames[y] = tmp[0][y];
+		
+		idle = new Animation<TextureRegion>(.75f, frames);
+		idle.setPlayMode(Animation.PlayMode.LOOP);
+		
+		animation = idle;
+	
+	
 	}
-
+	
+	public void makeArt() {
+		//animation = drawing;
+	}
+	
 }

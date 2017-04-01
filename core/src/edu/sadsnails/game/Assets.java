@@ -27,8 +27,13 @@ public class Assets {
 		manager.load("images/mainMenu/mainmenuwater_sheet.png", Texture.class);
 		
 		manager.load("images/player/man.png", Texture.class);
+		manager.load("images/player/idle.png", Texture.class);
 		
 		manager.load("images/playerIcon/testman.png", Texture.class);
+		manager.load("images/playerIcon/base.png", Texture.class);
+		manager.load("images/playerIcon/faces.png", Texture.class);
+		manager.load("images/playerIcon/hair.png", Texture.class);
+		manager.load("images/playerIcon/shirts.png", Texture.class);
 		
 		manager.load("images/rooms/room1.png", Texture.class);	
 		
