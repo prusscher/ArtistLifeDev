@@ -108,7 +108,6 @@ public class Settings {
 	    	set.putFloat("MasterVolume", masterVolume);
 	    	set.putFloat("MusicVolume", musicVolume);
 	    	set.putFloat("SfxVolume", sfxVolume);
-	    	set.putString("TestString", "I started correctly, lol");
     	} else { // If settings file doesnt exist create a new one
     		System.out.println("No Settings File: Creating and setting defaults");
     		
@@ -129,7 +128,6 @@ public class Settings {
 	    	set.putFloat("MasterVolume", masterVolume);
 	    	set.putFloat("MusicVolume", musicVolume);
 	    	set.putFloat("SfxVolume", sfxVolume);
-	    	set.putString("TestString", "Just created, lol");
     	}	
     	
     	System.out.println("Done Loading Settings: Screen [" + width + ", " + height + "]");
