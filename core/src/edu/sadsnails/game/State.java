@@ -15,25 +15,25 @@ public class State {
 	 * -----------------------------------------------------------------*/
 
 	// Experience
-	protected int xp; 			// the current amount of experience we have
+	private int xp; 			// the current amount of experience we have
 	protected int toNext;		// the next XP milestone before your level increases
 
 	// Level
 	protected int level;		// current level in drawing skill [0 -> 8]
-	protected String title;		//the title associated with your current level
+	private String title;		//the title associated with your current level
 	
 	// Popularity
 	protected float popularity;	// current popularity [-1 <-> 1]
 	
 	// Time
-	protected int [] date;		// the current date: year(0) | month(1) | day(2)	
-	protected int hour;			// current time: 24-hour clock
+	private int [] date;		// the current date: year(0) | month(1) | day(2)	
+	private int hour;			// current time: 24-hour clock
 	
 	// Energy
-	protected int energy;		// current amount of energy: maybe exceed 100
+	private int energy;		// current amount of energy: maybe exceed 100
 	
 	// Money
-	protected float money;		
+	private float money;		
 	protected float spent_money;
 	protected float earned_money;
 	
@@ -90,34 +90,34 @@ public class State {
     	
     	// Set Initial state
     	// Default State
-		xp = 0;
+		setXp(0);
 		toNext = 30;
 		level = 0;
-		title = "1";
+		setTitle("1");
 		popularity = 0;
-		date = new int[3];
-			date[0] = 1;
-			date[1] = 1;
-			date[2] = 1;
-		hour = 1;
-		energy = 100;
-		money = 0; spent_money = 0; earned_money = 0;
+		setDate(new int[3]);
+			getDate()[0] = 1;
+			getDate()[1] = 1;
+			getDate()[2] = 1;
+		setHour(1);
+		setEnergy(100);
+		setMoney(0); spent_money = 0; earned_money = 0;
 		pop_title = "Not popular or unpopular";	
     	
 		// Read File and reset variables to the save file
     	if(fileExists && pair.size() == 14) {
     		// Load previous state
-    		xp 				= pair.getInt("xp");
+    		setXp(pair.getInt("xp"));
     		toNext 			= pair.getInt("toNext");
     		level 			= pair.getInt("level");
-    		title 			= pair.getString("title");
+    		setTitle(pair.getString("title"));
     		popularity 		= pair.getFloat("popularity");
-    		date[0] 		= pair.getInt("date0");
-    		date[1] 		= pair.getInt("date1");
-    		date[2] 		= pair.getInt("date2");
-    		hour 			= pair.getInt("hour");
-    		energy 			= pair.getInt("energy");
-    		money 			= pair.getFloat("money");
+    		getDate()[0] 		= pair.getInt("date0");
+    		getDate()[1] 		= pair.getInt("date1");
+    		getDate()[2] 		= pair.getInt("date2");
+    		setHour(pair.getInt("hour"));
+    		setEnergy(pair.getInt("energy"));
+    		setMoney(pair.getFloat("money"));
     		spent_money 	= pair.getFloat("spent_money");
     		earned_money 	= pair.getFloat("earned_money");
     		pop_title 		= pair.getString("pop_title");	
@@ -127,17 +127,17 @@ public class State {
 	}
 	
 	public void save() {
-		pair.putInt("xp", xp);
+		pair.putInt("xp", getXp());
 		pair.putInt("toNext", toNext);
 		pair.putInt("level", level);
 		pair.putFloat("popularity", popularity);
-		pair.putString("title", title);
-		pair.putInt("date0", date[0]);
-		pair.putInt("date1", date[1]);
-		pair.putInt("date2", date[2]);
+		pair.putString("title", getTitle());
+		pair.putInt("date0", getDate()[0]);
+		pair.putInt("date1", getDate()[1]);
+		pair.putInt("date2", getDate()[2]);
 		pair.putInt("hour", 1);
 		pair.putInt("energy", 100);
-		pair.putFloat("money", money);
+		pair.putFloat("money", getMoney());
 		pair.putFloat("spent_money", spent_money);
 		pair.putFloat("earned_money", earned_money);
 		pair.putString("pop_title", pop_title);
@@ -157,5 +157,53 @@ public class State {
 //		System.out.println("Money Earned : " + earned_money);
 //		System.out.println("Money Spent : " + spent_money);
 		
+	}
+
+	public int getHour() {
+		return hour;
+	}
+
+	public void setHour(int hour) {
+		this.hour = hour;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public int getXp() {
+		return xp;
+	}
+
+	public void setXp(int xp) {
+		this.xp = xp;
+	}
+
+	public float getMoney() {
+		return money;
+	}
+
+	public void setMoney(float money) {
+		this.money = money;
+	}
+
+	public int getEnergy() {
+		return energy;
+	}
+
+	public void setEnergy(int energy) {
+		this.energy = energy;
+	}
+
+	public int [] getDate() {
+		return date;
+	}
+
+	public void setDate(int [] date) {
+		this.date = date;
 	}
 }
