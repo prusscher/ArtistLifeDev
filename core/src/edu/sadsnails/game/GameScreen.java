@@ -94,6 +94,7 @@ public class GameScreen implements Screen 	{
 			debug = !debug;
 			stage.setDebugAll(debug);
 			MainUI.gridImage.setVisible(debug);
+			System.out.println("\n\n-----LOG-----\n" +state.getLog());
 		}
 	}
 

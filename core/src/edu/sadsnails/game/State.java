@@ -57,6 +57,8 @@ public class State {
 	private String fileName;
 	private Pair pair;
 	
+	private String log;
+	
 	public State() {
 		
 		// Get to the settings directory and create a new file
@@ -122,6 +124,8 @@ public class State {
     		earned_money 	= pair.getFloat("earned_money");
     		pop_title 		= pair.getString("pop_title");	
     	}
+    	
+    	log = "\n";
     	
 		save(); // Save the file
 	}
@@ -205,5 +209,21 @@ public class State {
 
 	public void setDate(int [] date) {
 		this.date = date;
+	}
+	
+	public void clearLog() {
+		log = "\n";
+	}
+	
+	public String getLog() {
+		return log;
+	}
+	
+	/**
+	 * Add a string to the current text log. Adds a newline after every new string
+	 * @param logText String to add to text log
+	 */
+	public void log(String logText) {
+		log += logText + "\n\n";
 	}
 }

@@ -39,6 +39,7 @@ public class Actions {
 	public void makeArt(int type, int subject) {
 		
 		System.out.println("I made art");
+		state.log("I made art");
 		type++; subject++;
 		switch(type){
 		case 1:
@@ -103,9 +104,11 @@ public class Actions {
 		}
 		
 		System.out.println("Type: " + d_type + " \nSubject: " + d_subject);
+		state.log("Type: " + d_type + " \nSubject: " + d_subject);
 		
 		if(energy_consum >= state.getEnergy()) {
 			System.out.println("This task will take more energy than you have");
+			state.log("This task will take more energy than you have");
 			time_consum = 0;
 			energy_consum = 0;
 			xp_gain = 0;
@@ -131,6 +134,7 @@ public class Actions {
 		|| (d_type.equals("Painting") && d_subject.equals("People")))
 		{
 			System.out.println("The audience really liked your drawing");
+			state.log("The audience really liked your drawing");
 			art_rank = 2;
 			alterPopularity(2);
 		}
@@ -150,6 +154,7 @@ public class Actions {
 		|| (d_type.equals("Painting") && d_subject.equals("Fantasy")))
 		{
 			System.out.println("The audience liked your drawing a little");
+			state.log("The audience liked your drawing a little");
 			art_rank = 1;
 			alterPopularity(1);
 		}
@@ -162,6 +167,7 @@ public class Actions {
 		|| (d_type.equals("Surreal") && d_subject.equals("Nature")))
 		{
 			System.out.println("The audience did not feel strongly one way or the other about your drawing");
+			state.log("The audience did not feel strongly one way or the other about your drawing");
 			art_rank = 0;
 			alterPopularity(0);
 		}
@@ -173,6 +179,7 @@ public class Actions {
 		|| (d_type.equals("Painting") && d_subject.equals("Funny")))
 		{
 			System.out.println("The audience did not really like your drawing");
+			state.log("The audience did not really like your drawing");
 			art_rank = -1;
 			alterPopularity(-1);
 		}
@@ -184,6 +191,7 @@ public class Actions {
 		|| (d_type.equals("Surreal") && d_subject.equals("Anime")))
 		{
 			System.out.println("The audience hated your drawing");
+			state.log("The audience hated your drawing");
 			art_rank = -2;
 			alterPopularity(-2);
 		}
@@ -272,6 +280,7 @@ public class Actions {
 		// if energy is 100 you cannot sleep
 		if(state.getEnergy() == 100) {
 			System.out.println("You can't sleep when you're wide awake!");
+			state.log("You can't sleep when you're wide awake!");
 		}
 		// try to sleep
 		// if it's a nap, check to see if you've napped already
@@ -280,6 +289,7 @@ public class Actions {
 		else{
 		if(type == 2) {
 			System.out.println("I successfully slept");
+			state.log("I successfully slept");
 			passTime(-1);
 			state.setEnergy(100);
 		}
@@ -288,10 +298,10 @@ public class Actions {
 		// if you have not napped, raise energy by 50
 		// and move clock forward 5 hours
 		else {
-			if(state.has_napped)
+			if(state.has_napped) {
 				System.out.println("I have already napped today");
-
-			else {
+				state.log("I have already napped today");
+			} else {
 				if(state.getEnergy() + 50 >= 100) {
 					state.setEnergy(100);
 					state.has_napped = true;

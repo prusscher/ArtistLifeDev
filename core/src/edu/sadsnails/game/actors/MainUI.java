@@ -1,5 +1,7 @@
 package edu.sadsnails.game.actors;
 
+import org.lwjgl.util.Color;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Graphics.DisplayMode;
@@ -13,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
@@ -41,7 +44,7 @@ public class MainUI {
 	private Label money;
 	private Label energy;
 	private Label date;
-
+	
 	// Player Icon
 	private PlayerIcon playerIcon;
 
@@ -52,48 +55,55 @@ public class MainUI {
 
 	// ----- Action Menu Elements -----
 	private VerticalGroup ActionUI;
-	private TextButton artButton;
-	private TextButton napButton;
-	private TextButton sleepButton;
-	private TextButton itemButton;
-	private TextButton customizeButton;
+		private TextButton artButton;
+		private TextButton napButton;
+		private TextButton sleepButton;
+		private TextButton itemButton;
+		private TextButton customizeButton;
+		private TextButton logButton;
+	
+	// ---- Log UI Elements
+	private ScrollPane logPane;
+	private Label logLabel;
+		
 	// ----- Art Creation sub-menu
 	private VerticalGroup artUI;
 	private VerticalGroup customizeUI;
-	// CustomizeUI sub-menu
-	private HorizontalGroup customize;
-	private HorizontalGroup play;
-	private VerticalGroup left;
-	private VerticalGroup right;
-	private PlayerIcon player;
-	private TextButton left1;
-	private TextButton left2;
-	private TextButton left3;
-	private TextButton right1;
-	private TextButton right2;
-	private TextButton right3;
-	private TextButton customizeSubmit;
-	private SelectBox<String> typeSelBox;
-	private SelectBox<String> subjectSelBox;
-	private TextButton submitArtButton;
+		// CustomizeUI sub-menu
+		private HorizontalGroup customize;
+		private HorizontalGroup play;
+			private VerticalGroup left;
+			private VerticalGroup right;
+			private PlayerIcon player;
+				private TextButton left1;
+				private TextButton left2;
+				private TextButton left3;
+				private TextButton right1;
+				private TextButton right2;
+				private TextButton right3;
+			private TextButton customizeSubmit;
+		private SelectBox<String> typeSelBox;
+		private SelectBox<String> subjectSelBox;
+		private TextButton submitArtButton;
 	// ----- end of sub-menu
 	// ----- End of Action Menu Elements -----
 
 	// ----- Pause Menu Elements
 	private VerticalGroup PauseUI;
-	private TextButton settingsButton;
-	private TextButton quitToMMButton;
-	private TextButton quitToDeskButton;
-	// Settings Sub-menu
-	private Table settingsTable;
-	private Table fsTable;
-	private SelectBox<DisplayMode> resolutions;
-	private Button fsToggle;
-	private Slider master;
-	private Slider music;
-	private Slider sfx;
-	// ----- End Of Action Menu Elements -----
-
+		private TextButton settingsButton;
+		private TextButton quitToMMButton;
+		private TextButton quitToDeskButton;
+	
+		// Settings Sub-menu
+		private Table settingsTable;
+		private Table fsTable;
+		private SelectBox<DisplayMode> resolutions;
+		private Button fsToggle;
+		private Slider master;
+		private Slider music;
+		private Slider sfx;
+	// ----- End Of Action Menu Elements -----	
+		
 	// UI State Variables
 	private boolean popupDisplayed = false;
 
@@ -101,7 +111,8 @@ public class MainUI {
 	private boolean a_ArtMenuDisplayed = false;
 	private boolean a_ItemMenuDisplayed = false;
 	private boolean a_CustomMenuDisplayed = false;
-
+	private boolean a_LogDisplayed = false;
+	
 	private boolean pauseMenuDisplayed = false;
 	private boolean p_SettingsMenuDisplayed = false;
 
@@ -275,9 +286,6 @@ public class MainUI {
 
 		MainUI.addActor(bottom);
 
-		// Update the labels with the correct value
-		updateState();
-
 		// Add the MainUI to the stage
 		stage.addActor(MainUI);
 		MainUI.setZIndex(2);
@@ -390,7 +398,29 @@ public class MainUI {
 				Gdx.app.exit();
 			}
 		});
-
+		
+		// LOG UI
+		logButton = new TextButton("LOG", skin);
+		logButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+					closePopups();
+					popupDisplayed = true;
+					a_LogDisplayed = true;
+				
+					logPane.setVisible(a_LogDisplayed);
+			}
+		});
+		
+		logLabel = new Label("\n", skin);
+		logLabel.setWrap(true);
+		logPane = new ScrollPane(logLabel, skin);
+		logPane.setColor(.1f, .1f, .1f, .8f);
+		logPane.setBounds(100, 60, 200, 120);
+		logPane.setVisible(false);
+		
+		stage.addActor(logPane);
+		
 		// ACTION MENU
 		ActionUI = new VerticalGroup();
 		ActionUI.setBounds(138, 22, 120, 120);
@@ -404,6 +434,7 @@ public class MainUI {
 		sleepTable.add(sleepButton).height(20).width(60);
 		ActionUI.addActor(sleepTable);
 		ActionUI.addActor(itemButton);
+		ActionUI.addActor(logButton);
 		ActionUI.addActor(customizeButton);
 
 		stage.addActor(ActionUI);
@@ -626,6 +657,9 @@ public class MainUI {
 		stage.addActor(gridImage);
 		gridImage.setZIndex(0);
 		gridImage.setVisible(false);
+		
+		// Update the labels with the correct value
+		updateState();
 	}
 
 	private void closePopups() {
@@ -635,7 +669,11 @@ public class MainUI {
 		a_ArtMenuDisplayed = false;
 		a_CustomMenuDisplayed = false;
 		a_ItemMenuDisplayed = false;
-
+		a_LogDisplayed = false;
+		a_LogDisplayed = false;
+		
+		logPane.setVisible(false);
+		
 		pauseMenuDisplayed = false;
 		p_SettingsMenuDisplayed = false;
 
@@ -655,8 +693,6 @@ public class MainUI {
 		energy.setText("E: " + Integer.toString(screen.getState().getEnergy()) + "/100");
 		int[] curDate = screen.getState().getDate();
 		date.setText("" + curDate[2] + "/" + curDate[1] + "/" + curDate[0]);
-		//			date.setText("Year " + state.date[0] + " Month " + state.date[1] + " Day " + state.date[2]);
-
-		// Change the player image here
+		logLabel.setText(screen.getState().getLog());
 	}
 }
