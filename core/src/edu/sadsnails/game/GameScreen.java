@@ -12,9 +12,15 @@ import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.AddAction;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
+
+import java.nio.file.Watchable;
+
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -132,6 +138,13 @@ public class GameScreen implements Screen 	{
 	public Player getPlayer() { return player; }
 	
 	public MainUI getUI() { return ui; }
+	
+	public void dimForSleep() {
+		this.stage.addAction(sequence(fadeOut(4f), moveBy(0, 0, 6f), fadeIn(4f)));
+	}
+	public void dimForNap() {
+		this.stage.addAction(sequence(alpha(.2f, 4f), moveBy(0, 0, 6f), alpha(1f, 4f)));
+	}
 	
 	@Override
 	public void dispose() {

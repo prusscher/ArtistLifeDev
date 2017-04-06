@@ -59,8 +59,10 @@ public class BaseActor extends Actor {
 	}
 	
 	public void setAnimation(Animation<TextureRegion> animation) {  
-        if (animation != null)
-        	this.animation = animation;  
+        if (animation != null) {
+        	this.animation = animation;
+        	stateTime = 0;
+        }
     } 
 	
 }

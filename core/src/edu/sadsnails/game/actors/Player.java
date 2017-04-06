@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.actions.AfterAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
+import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
@@ -21,6 +22,9 @@ public class Player extends BaseActor {
 	private Animation<TextureRegion> walk;
 	private Animation<TextureRegion> drawing;
 	
+	private int[] artLoc = {93, 93};
+	private int[] sleepLoc = {240, 96};
+	
 	private Room room;
 	
 	Pool<MoveToAction> pool = new Pool<MoveToAction>() { protected MoveToAction newObject () { return new MoveToAction(); }};
@@ -33,15 +37,12 @@ public class Player extends BaseActor {
 		// Load the player animations 
 		idle = loadSheet((Texture) this.game.assets.manager.get("images/player/idle.png"), 2, 2, 1, .75f, true);
 		lookaround = loadSheet((Texture) this.game.assets.manager.get("images/player/lookaround.png"),4, 4, 1, .75f, true);
-		squat = loadSheet((Texture) this.game.assets.manager.get("images/player/squat.png"), 31, 7, 5, .125f, true); 
+		squat = loadSheet((Texture) this.game.assets.manager.get("images/player/squat.png"), 31, 7, 5, .125f, false); 
 		walk = loadSheet((Texture) this.game.assets.manager.get("images/player/walk.png"), 4, 4, 1, .2f, true);
 		
-		squat.setPlayMode(Animation.PlayMode.NORMAL);
-		
-		System.out.println(squat.getAnimationDuration());
+		//squat.setPlayMode(Animation.PlayMode.NORMAL);
+		this.setAnimation(idle);
 	}
-	
-	private float totalDelta = 0;
 	
 	@Override
 	public void act(float delta) {
@@ -66,71 +67,141 @@ public class Player extends BaseActor {
 				addAction(idleAction());
 			}
 		} 
-		totalDelta += delta;
-		if(totalDelta > 1f) {
-			System.out.println(animation.getAnimationDuration());
-			totalDelta = 0;
-		}
 	}
 	
-	private MoveToAction walkAction() {
+	/**
+	 * ParallelAction that moves the player to a random location and sets the current animation to the walk anim.
+	 * @return ParallelAction move to random location
+	 */
+	private ParallelAction walkAction() {
 		MoveToAction m = pool.obtain();
 		int[] loc = room.randomLoc();
 		m.setPosition(loc[0], loc[1]);
 		float time = .1f * (float)dist(getX(), getY(), loc[0], loc[1]);
 		m.setDuration(time);
-		animation = walk;
-		return m;
+		return parallel(m, run(new Runnable() { public void run () { setAnimation(walk);}}));
 	}
 	
-	private MoveToAction idleAction() {
+	/**
+	 * ParallelAction that moves the player to a specified location and sets the current animation to the walk anim.
+	 * @return ParallelAction move to random location
+	 */
+	private ParallelAction walkAction(int x, int y) {
+		MoveToAction m = pool.obtain();
+		m.setPosition(x, y);
+		float time = .1f * (float)dist(getX(), getY(), x, y);
+		m.setDuration(time);
+		return parallel(m, run(new Runnable() { public void run () { setAnimation(walk);}}));
+	}
+	
+	/**
+	 * ParallelAction that causes the player to idle for a random amount of time between 2 and 4 seconds
+	 * @return ParallelAction idle at the current location of the player
+	 */
+	private ParallelAction idleAction() {
 		MoveToAction m = pool.obtain();
 		m.setPosition(getX(), getY());
-		m.setDuration(game.rng.nextFloat()*4);
-		animation = idle;
-		return m;
+		m.setDuration(2 + game.rng.nextFloat()*2);
+		return parallel(m, run(new Runnable() { public void run () { setAnimation(idle);}}));
 	}
 	
-	private MoveToAction lookAction() {
+	/**
+	 * ParallelAction that causes the player to look around for a random amount of time between 1 and 2 seconds
+	 * @return ParallelAction look around at the current location of the player
+	 */
+	private ParallelAction lookAction() {
 		MoveToAction m = pool.obtain();
 		m.setPosition(getX(), getY());
-		m.setDuration(game.rng.nextFloat()*2);
-		animation = lookaround;
-		return m;
+		m.setDuration(1+ game.rng.nextFloat()*1);
+		return parallel(m, run(new Runnable() { public void run () { setAnimation(lookaround);}}));
 	}
 	
-	private MoveToAction squatAction() {
-		MoveToAction m = new MoveToAction();
+	/**
+	 * ParallelAction that causes the player to squat at their current location
+	 * @return ParallelAction squat at the current location
+	 */
+	private ParallelAction squatAction() {
+		MoveToAction m = pool.obtain();
 		m.setPosition(getX(), getY());
 		m.setDuration(squat.getAnimationDuration());
-		animation = squat;
-		return m;
+		return parallel(m, run(new Runnable() { public void run () { setAnimation(squat);}}));
 	}
 	
-	private MoveToAction artAction() {
-		MoveToAction m = new MoveToAction();
-		m.setPosition(93, 93);
-		m.setDuration(.05f * (float)dist(getX(), getY(), 93, 93));
-		//m.setDuration(2f);
-		animation = walk;
-		return m;
+	/**
+	 * ParallelAction that causes the player to squat at a specified location
+	 * @return ParallelAction squat at the specified location
+	 */
+	private ParallelAction squatAction(int x, int y) {
+		MoveToAction m = pool.obtain();
+		m.setPosition(x, y);
+		m.setDuration(squat.getAnimationDuration());
+		return parallel(m, run(new Runnable() { public void run () { setAnimation(squat);}}));
 	}
 	
+	/**
+	 * ParallelAction that causes the player to squat at a specified location
+	 * @return ParallelAction squat at the specified location
+	 */
+	private ParallelAction sleepAction(int x, int y, float duration, final int type, final GameScreen screen) {
+		MoveToAction m = pool.obtain();
+		m.setPosition(x, y);
+		m.setDuration(duration);
+		return parallel(m, run(new Runnable() { 
+			public void run () { 
+				screen.getActions().sleep(type); 
+				screen.getUI().updateState(); 
+				if(type == 2) 
+					screen.dimForSleep(); 
+				else 
+					screen.dimForNap(); 
+				}
+			}));
+	}
+	
+	/**
+	 * Get the distance between two points
+	 * @param x1 x of the first point
+	 * @param y1 y of the first point
+	 * @param x2 x of the second point
+	 * @param y2 y of the second point
+	 * @return The distance between the two points
+	 */
 	private double dist(float x1, float y1, float x2, float y2) { return Math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1)); }
 	
+	/**
+	 * Call to have the player move to the art location, make art, perform the art Action, and move back to a location in the room
+	 * @param type the type of art to be made
+	 * @param subject the subject of the art to be made
+	 */
 	public void makeArt(final int type, final int subject) {
+		// Clear all the players current actions
 		clearActions();
 		
-		//RunnableAction r = new RunnableAction();
+		// Get a reference to the current GameScreen
 		final GameScreen screen = (GameScreen) game.getScreen();
-		//r.setRunnable(new Runnable() { @Override public void run () {screen.getActions().makeArt(type, subject); }});
-		
-		addAction(sequence(artAction(), squatAction(), run(new Runnable() { 
+
+		// Add the action to walk to the art location, make art, call the makeArt Action, and return to the room
+		addAction(sequence(walkAction(artLoc[0], artLoc[1]), squatAction(artLoc[0], artLoc[1]), run(new Runnable() { 
 			public void run () { 
 				screen.getActions().makeArt(type, subject); 
 				screen.getUI().updateState();
 			}}), 
 			walkAction()));
+	}
+	
+	/**
+	 * Call to have the player sleep for the specified type of sleep
+	 * @param type the type of sleep the player should perform
+	 */
+	public void sleep(final int type) {
+		// Clear all the players current actions
+		clearActions();
+		
+		// Get a reference to the current GameScreen
+		final GameScreen screen = (GameScreen) game.getScreen();
+		
+		// Add the action to walk to the sleep location, sleep, and call the sleep Action
+		addAction(sequence(walkAction(sleepLoc[0], sleepLoc[1]), sleepAction(sleepLoc[0], sleepLoc[1], 16, type, screen), walkAction()));	
 	}
 	
 	private Animation<TextureRegion> loadSheet(Texture texToAnim, int numFrames, int width, int height, float time, boolean loop) {

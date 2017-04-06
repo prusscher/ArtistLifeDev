@@ -320,8 +320,11 @@ public class MainUI {
 			public void changed(ChangeEvent event, Actor actor) {
 				System.out.println("NapButton");
 				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
-				screen.getActions().sleep(1);
-				updateState();
+				
+				// Call player actor to nap
+				GameScreen screen = (GameScreen)game.getScreen();
+				screen.getPlayer().sleep(1);
+				
 				closePopups();
 			}
 		});
@@ -330,8 +333,11 @@ public class MainUI {
 			public void changed(ChangeEvent event, Actor actor) {
 				System.out.println("sleepButton");
 				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
-				screen.getActions().sleep(2);
-				updateState();
+				
+				// Call player actor to sleep
+				GameScreen screen = (GameScreen)game.getScreen();
+				screen.getPlayer().sleep(2);
+				
 				closePopups();
 			}
 		});
