@@ -176,7 +176,10 @@ public class MainUI {
 		// ----- MAIN UI BUTTONS -----
 		action 		= new TextButton("Action", skin);
 		pause 		= new TextButton("Pause", skin);
-
+		
+		action.setName("Action Button");
+		pause.setName("Pause Button");
+		
 		action.setFillParent(false);
 		action.setWidth(120);
 		action.setHeight(20);
@@ -231,59 +234,71 @@ public class MainUI {
 
 		// Upper Left Hand Corner
 		xp = new Label("",skin);
+		xp.setName("XP Label");
 		level = new Label("",skin);
-
+		level.setName("Level Label");
+		
 		// Lower Left Hand Corner
 		time = new Label("",skin);
+		time.setName("Time Label");
 		date = new Label("",skin);
+		date.setName("Date Label");
 
 		// Upper Right Hand Corner
 		money = new Label("",skin);
+		money.setName("Money Label");
 		energy = new Label("",skin);
+		energy.setName("Energy Label");
 
 		// ----- Main UI Layout -----
 		VerticalGroup MainUI = new VerticalGroup();
 		MainUI.setBounds(0, 0, 400, 240);
+		MainUI.setName("Main UI Vertical Group");
 
 		// Top Main UI Container
 		Table top = new Table();
-		top.setWidth(400);
-		top.add(playerIcon);
-		Table xlGroup = new Table();
-		xlGroup.add(xp).height(20).align(Align.left);
-		xlGroup.row();
-		xlGroup.add(level).height(20).align(Align.left);
-		xlGroup.align(Align.left);
-		xlGroup.padLeft(2f);
-		top.add(xlGroup).width(100).top().padTop(2f);
-		top.add().width(136);
-		Table meGroup = new Table();
-		meGroup.add(money).height(20).right();
-		meGroup.row();
-		meGroup.add(energy).height(20).right();
-		meGroup.align(Align.right);
-		meGroup.padRight(2f);
-		top.add(meGroup).width(100).top().padTop(2f);
+			top.setName("Top Main UI Table");
+			top.setWidth(400);
+			top.add(playerIcon);
+			Table xlGroup = new Table();
+				xlGroup.add(xp).height(20).align(Align.left);
+				xlGroup.row();
+				xlGroup.add(level).height(20).align(Align.left);
+				xlGroup.align(Align.left);
+				xlGroup.padLeft(2f);
+				top.add(xlGroup).width(100).top().padTop(2f);
+			
+			top.add().width(136);
+			
+			Table meGroup = new Table();
+				meGroup.add(money).height(20).right();
+				meGroup.row();
+				meGroup.add(energy).height(20).right();
+				meGroup.align(Align.right);
+				meGroup.padRight(2f);
+				top.add(meGroup).width(100).top().padTop(2f);
 
 		MainUI.addActor(top);
 
 		// Middle Spacer
 		Table spacer = new Table();
-		spacer.add().height(134).width(400);
-		MainUI.addActor(spacer);
+			spacer.setName("Middle Main UI Spacer");
+			spacer.add().height(134).width(400);
+			MainUI.addActor(spacer);
 
 		// Bottom UI Container
 		Table bottom = new Table();
-		bottom.setWidth(400);
-		Table dtGroup = new Table();
-		dtGroup.add(date).height(20).align(Align.left);
-		dtGroup.row();
-		dtGroup.add(time).height(20).align(Align.left);
-		dtGroup.align(Align.left);
-		dtGroup.padLeft(2f);
-		bottom.add(dtGroup).width(100).bottom().left().padRight(40);
-		bottom.add(action).width(120).bottom();
-		bottom.add(pause).width(50).bottom().right().padRight(2f).padLeft(90f);
+			bottom.setWidth(400);
+			bottom.setName("Bottom Main UI Table");
+			Table dtGroup = new Table();
+				dtGroup.add(date).height(20).align(Align.left);
+				dtGroup.row();
+				dtGroup.add(time).height(20).align(Align.left);
+				dtGroup.align(Align.left);
+				dtGroup.padLeft(2f);
+			bottom.add(dtGroup).width(100).bottom().left().padRight(40);
+			bottom.add(action).width(120).bottom();
+			bottom.add(pause).width(50).bottom().right().padRight(2f).padLeft(90f);
 
 		MainUI.addActor(bottom);
 
@@ -299,11 +314,22 @@ public class MainUI {
 		sleepButton = new TextButton("SLEEP", skin);
 		itemButton = new TextButton("ITEMS", skin);
 		customizeButton = new TextButton("CUSTOMIZE", skin);
-
+		
+		// Set Button Names
+		artButton.setName("Art Button");
+		napButton.setName("Nap Button");
+		sleepButton.setName("Nap Button");
+		itemButton.setName("Item Button");
+		customizeButton.setName("Customize Button");
+		
 		typeSelBox = new SelectBox<String>(skin);
 		subjectSelBox = new SelectBox<String>(skin);
 		submitArtButton = new TextButton("SUBMIT", skin);
-
+		
+		typeSelBox.setName("Art Type Selectbox");
+		subjectSelBox.setName("Art Subject Selectbox");
+		submitArtButton.setName("Art Submit Button");
+		
 		artButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -434,39 +460,40 @@ public class MainUI {
 		
 		// ACTION MENU
 		ActionUI = new VerticalGroup();
-		ActionUI.setBounds(138, 22, 120, 120);
-		ActionUI.fill();
-		ActionUI.bottom();
-
-		ActionUI.addActor(artButton);
-		Table sleepTable = new Table();
-		sleepTable.setWidth(120);
-		sleepTable.add(napButton).height(20).width(60);
-		sleepTable.add(sleepButton).height(20).width(60);
-		ActionUI.addActor(sleepTable);
-		ActionUI.addActor(itemButton);
-		ActionUI.addActor(logButton);
-		ActionUI.addActor(customizeButton);
+			ActionUI.setBounds(138, 22, 120, 120);
+			ActionUI.fill();
+			ActionUI.bottom();
+	
+			ActionUI.addActor(artButton);
+			Table sleepTable = new Table();
+				sleepTable.setWidth(120);
+				sleepTable.add(napButton).height(20).width(60);
+				sleepTable.add(sleepButton).height(20).width(60);
+			ActionUI.addActor(sleepTable);
+			ActionUI.addActor(itemButton);
+			ActionUI.addActor(logButton);
+			ActionUI.addActor(customizeButton);
 
 		stage.addActor(ActionUI);
+		
 		ActionUI.setZIndex(3);
 		ActionUI.setVisible(false);
 		// End of action menu
 
 		// MAKE ART MENU
 		artUI = new VerticalGroup();
-		artUI.setBounds(138, 22, 120, 120);
-		artUI.fill();
-		artUI.center();
-		artUI.top();
-		typeSelBox.setItems(drawing_type_array);
-		subjectSelBox.setItems(drawing_subject_array);
-
-		artUI.addActor(new Label("Type", skin));
-		artUI.addActor(typeSelBox);
-		artUI.addActor(new Label("Subject", skin));
-		artUI.addActor(subjectSelBox);
-		artUI.addActor(submitArtButton);
+			artUI.setBounds(138, 22, 120, 120);
+			artUI.fill();
+			artUI.center();
+			artUI.top();
+			typeSelBox.setItems(drawing_type_array);
+			subjectSelBox.setItems(drawing_subject_array);
+	
+			artUI.addActor(new Label("Type", skin));
+			artUI.addActor(typeSelBox);
+			artUI.addActor(new Label("Subject", skin));
+			artUI.addActor(subjectSelBox);
+			artUI.addActor(submitArtButton);
 
 		stage.addActor(artUI);
 		artUI.setZIndex(3);

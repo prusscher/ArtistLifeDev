@@ -22,8 +22,8 @@ public class Player extends BaseActor {
 	private Animation<TextureRegion> walk;
 	private Animation<TextureRegion> drawing;
 	
-	private int[] artLoc = {93, 93};
-	private int[] sleepLoc = {240, 96};
+	private int[] artLoc = {210, 110};
+	private int[] sleepLoc = {145, 105};
 	
 	private Room room;
 	
@@ -50,8 +50,6 @@ public class Player extends BaseActor {
 		
 		if(!hasActions()) {
 			int a = game.rng.nextInt(100);
-			
-			System.out.println("Player Action: " + a);
 			
 			if(a <= 40) { // MOVE TO RANDOM LOCAITON
 				addAction(walkAction());

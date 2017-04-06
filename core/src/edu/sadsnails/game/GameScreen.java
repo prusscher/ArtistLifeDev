@@ -41,6 +41,8 @@ public class GameScreen implements Screen 	{
 	public Music gameMusic;
 	
 	private Room room;
+	private Bed bed;
+	private Desk desk;
 	private Player player;
 	
 	private boolean debug = false;
@@ -72,17 +74,45 @@ public class GameScreen implements Screen 	{
 	
 	private void addActors() {
 		room = new Room(game);
+		room.setName("room");
 		room.setBounds(80, 0, 240, 240);
 		stage.addActor(room);
 		room.setZIndex(0);
-	
+		
+		bed = new Bed(game);
+		bed.setName("bed");
+		bed.setBounds(125, 95, 64, 64);
+		stage.addActor(bed);
+		bed.setZIndex(2);
+		
+		desk = new Desk(game);
+		desk.setName("desk");
+		desk.setBounds(210, 95, 64, 64);
+		stage.addActor(desk);
+		desk.setZIndex(2);
+		
 		player = new Player(game, room);
+		player.setName("player");
 		player.setBounds(176, 96, 48, 48);
 		player.setX(176);
 		player.setY(96);
 		System.out.println("PLAYER LOCATION: " + player.getX() + " " + player.getY() + " " + player.getOriginX() + " " + player.getOriginY());
 		stage.addActor(player);
-		player.setZIndex(1);
+		player.setZIndex(3);
+		
+		Shadow shadow = new Shadow(game, player);
+		shadow.setBounds(176, 96, 48, 48);
+		stage.addActor(shadow);
+		shadow.setZIndex(2);
+		
+		bed.toBack();
+		desk.toBack();
+		shadow.toBack();
+		room.toBack();
+		
+		for(Actor a : stage.getActors()) {
+			System.out.println(a.getName() + " " + a.getClass().getSimpleName() + " " + "\tZ: " + a.getZIndex());
+		}
 	}
 	
 	@Override
@@ -102,7 +132,7 @@ public class GameScreen implements Screen 	{
 			game.setScreen(new MainMenuScreen(game));
 			this.dispose();
 		}
-		if(Gdx.input.isKeyPressed(Keys.SPACE) && Gdx.input.isKeyJustPressed(Keys.SPACE)){
+		if(Gdx.input.isKeyPressed(Keys.F11) && Gdx.input.isKeyJustPressed(Keys.F11)){
 			debug = !debug;
 			stage.setDebugAll(debug);
 			MainUI.gridImage.setVisible(debug);

@@ -31,6 +31,7 @@ public class Assets {
 		manager.load("images/player/lookaround.png", Texture.class);
 		manager.load("images/player/squat.png", Texture.class);
 		manager.load("images/player/walk.png", Texture.class);
+		manager.load("images/player/playerShadow.png", Texture.class);
 		
 		manager.load("images/playerIcon/testman.png", Texture.class);
 		manager.load("images/playerIcon/base.png", Texture.class);
@@ -39,6 +40,9 @@ public class Assets {
 		manager.load("images/playerIcon/shirts.png", Texture.class);
 
 		manager.load("images/rooms/room1.png", Texture.class);	
+		
+		manager.load("images/items/bed.png", Texture.class);
+		manager.load("images/items/desk.png", Texture.class);
 		
 		// Sounds
 		manager.load("sound/button.wav", Sound.class);
