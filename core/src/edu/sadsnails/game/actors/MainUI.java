@@ -116,16 +116,17 @@ public class MainUI {
 	private boolean pauseMenuDisplayed = false;
 	private boolean p_SettingsMenuDisplayed = false;
 
-	// Debug Grid Image
+	// Debug Stuff
 	private Texture grid;
 	public static Image gridImage;
-
+	public static Label mousePos;
+	
 	private Sound buttonSound;
 	private Music gameMusic;
 
 	private Skin skin;
 	private Stage stage;
-
+	
 	private GameScreen screen;
 	
 	// ------------THIS NEEDS TO BE MOVED TO ITS OWN CLASS FOR STORAGE AND CALLS -------------
@@ -358,8 +359,12 @@ public class MainUI {
 			public void changed(ChangeEvent event, Actor actor) {
 				System.out.println("submitButton: " + typeSelBox.getSelected() + " " + subjectSelBox.getSelected());
 				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
-				screen.getActions().makeArt(typeSelBox.getSelectedIndex(), subjectSelBox.getSelectedIndex());
-				updateState();
+				//screen.getActions().makeArt(typeSelBox.getSelectedIndex(), subjectSelBox.getSelectedIndex());
+				
+				// Call player actor to make art
+				GameScreen screen = (GameScreen)game.getScreen();
+				screen.getPlayer().makeArt(typeSelBox.getSelectedIndex(), subjectSelBox.getSelectedIndex());
+
 				closePopups();
 			}
 		});
@@ -651,6 +656,12 @@ public class MainUI {
 
 		// -------- DEV STUFF ---------
 		// Rear Grid
+		mousePos = new Label("x: , y: ", skin);
+		mousePos.setBounds(0, 60, 100, 20);
+		mousePos.setVisible(false);
+		stage.addActor(mousePos);
+		mousePos.setZIndex(4);
+		
 		grid = game.assets.manager.get("dev/grid.png");
 		gridImage = new Image(grid);
 		gridImage.setBounds(0, 0, 400, 240);
@@ -685,7 +696,7 @@ public class MainUI {
 		PauseUI.setVisible(false);
 	}
 
-	private void updateState() {
+	public void updateState() {
 		time.setText(Integer.toString(screen.getState().getHour()) + ":00");
 		level.setText("Level: " + screen.getState().getTitle());
 		xp.setText("XP: " + Integer.toString(screen.getState().getXp()));

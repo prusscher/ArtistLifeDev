@@ -34,6 +34,9 @@ public class GameScreen implements Screen 	{
 	public Sound buttonSound;
 	public Music gameMusic;
 	
+	private Room room;
+	private Player player;
+	
 	private boolean debug = false;
 
 	public GameScreen(final MyGdxGame game) {
@@ -62,13 +65,16 @@ public class GameScreen implements Screen 	{
 	}
 	
 	private void addActors() {
-		Room room = new Room(game);
+		room = new Room(game);
 		room.setBounds(80, 0, 240, 240);
 		stage.addActor(room);
 		room.setZIndex(0);
-		
-		Player player = new Player(game);
+	
+		player = new Player(game, room);
 		player.setBounds(176, 96, 48, 48);
+		player.setX(176);
+		player.setY(96);
+		System.out.println("PLAYER LOCATION: " + player.getX() + " " + player.getY() + " " + player.getOriginX() + " " + player.getOriginY());
 		stage.addActor(player);
 		player.setZIndex(1);
 	}
@@ -94,7 +100,15 @@ public class GameScreen implements Screen 	{
 			debug = !debug;
 			stage.setDebugAll(debug);
 			MainUI.gridImage.setVisible(debug);
-			System.out.println("\n\n-----LOG-----\n" +state.getLog());
+			MainUI.mousePos.setVisible(debug);
+			System.out.println(player.getActions().toString());
+		}
+		
+		// Debug: Set the mouse Pos
+		if(debug) {
+			int relX = (int)(((double)Gdx.input.getX() / Gdx.graphics.getWidth()) * 400);
+			int relY = 240 - (int)(((double)Gdx.input.getY() / Gdx.graphics.getHeight()) * 240);
+			MainUI.mousePos.setText("x: " + relX + ", y: " + relY);
 		}
 	}
 
@@ -114,6 +128,10 @@ public class GameScreen implements Screen 	{
 	
 	public Actions getActions() { return actions; }
 	public State getState() { return state; }
+	public Room getRoom() { return room; }
+	public Player getPlayer() { return player; }
+	
+	public MainUI getUI() { return ui; }
 	
 	@Override
 	public void dispose() {

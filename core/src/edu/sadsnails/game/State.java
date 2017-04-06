@@ -1,6 +1,7 @@
 package edu.sadsnails.game;
 
 import java.io.File;
+import java.util.Random;
 
 public class State {
 	
@@ -162,7 +163,7 @@ public class State {
 //		System.out.println("Money Spent : " + spent_money);
 		
 	}
-
+	
 	public int getHour() {
 		return hour;
 	}

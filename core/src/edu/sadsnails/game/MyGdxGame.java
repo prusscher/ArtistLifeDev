@@ -1,5 +1,7 @@
 package edu.sadsnails.game;
 
+import java.util.Random;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,6 +13,7 @@ public class MyGdxGame extends Game {
 	public BitmapFont font;
 	public Settings setting;
 	public Assets assets;
+	public Random rng;
 	
 	public MyGdxGame(Settings setting) {
 		super();
@@ -24,6 +27,7 @@ public class MyGdxGame extends Game {
 		assets = new Assets();
 		assets.load();
 		assets.manager.finishLoading();
+		rng = new Random();
 		this.setScreen(new MainMenuScreen(this));
 	}
 
@@ -40,5 +44,4 @@ public class MyGdxGame extends Game {
 		font.dispose();
 		setting.close();
 	}
-
 }
