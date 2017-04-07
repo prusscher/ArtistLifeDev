@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 import com.badlogic.gdx.utils.Pool;
 
+import edu.sadsnails.game.Actions;
 import edu.sadsnails.game.GameScreen;
 import edu.sadsnails.game.MyGdxGame;
 
@@ -37,7 +38,7 @@ public class Player extends BaseActor {
 		// Load the player animations 
 		idle = loadSheet((Texture) this.game.assets.manager.get("images/player/idle.png"), 2, 2, 1, .75f, true);
 		lookaround = loadSheet((Texture) this.game.assets.manager.get("images/player/lookaround.png"),4, 4, 1, .75f, true);
-		squat = loadSheet((Texture) this.game.assets.manager.get("images/player/squat.png"), 31, 7, 5, .125f, false); 
+		squat = loadSheet((Texture) this.game.assets.manager.get("images/player/squat.png"), 31, 7, 5, .125f, true); 
 		walk = loadSheet((Texture) this.game.assets.manager.get("images/player/walk.png"), 4, 4, 1, .2f, true);
 		
 		//squat.setPlayMode(Animation.PlayMode.NORMAL);
@@ -119,21 +120,40 @@ public class Player extends BaseActor {
 	 * @return ParallelAction squat at the current location
 	 */
 	private ParallelAction squatAction() {
-		MoveToAction m = pool.obtain();
-		m.setPosition(getX(), getY());
-		m.setDuration(squat.getAnimationDuration());
-		return parallel(m, run(new Runnable() { public void run () { setAnimation(squat);}}));
+		return squatAction(getX(), getY());
 	}
 	
 	/**
 	 * ParallelAction that causes the player to squat at a specified location
 	 * @return ParallelAction squat at the specified location
 	 */
-	private ParallelAction squatAction(int x, int y) {
+	private ParallelAction squatAction(float x, float y) {
 		MoveToAction m = pool.obtain();
 		m.setPosition(x, y);
 		m.setDuration(squat.getAnimationDuration());
 		return parallel(m, run(new Runnable() { public void run () { setAnimation(squat);}}));
+	}
+	
+	private SequenceAction artAction(final int type, final int subject) {
+		final GameScreen screen = (GameScreen) game.getScreen();
+		
+		MoveToAction m = pool.obtain();
+		m.setPosition(artLoc[0], artLoc[1]);
+		
+		// Set the time of the art making to the appropriate length
+		m.setDuration(screen.getActions().getTime(type)*squat.getAnimationDuration());	
+		
+		return sequence(
+					parallel(m, run(new Runnable() { 
+						public void run () { 
+							setAnimation(squat);
+						}})), 
+					run(new Runnable() { 
+						public void run () { 
+							screen.getActions().makeArt(type, subject); 
+							screen.getUI().updateState();
+						}})
+					);
 	}
 	
 	/**
@@ -148,7 +168,8 @@ public class Player extends BaseActor {
 			public void run () { 
 				screen.getActions().sleep(type); 
 				screen.getUI().updateState(); 
-				if(type == 2) 
+				screen.getActions();
+				if(type == Actions.SLEEP) 
 					screen.dimForSleep(); 
 				else 
 					screen.dimForNap(); 
@@ -179,12 +200,7 @@ public class Player extends BaseActor {
 		final GameScreen screen = (GameScreen) game.getScreen();
 
 		// Add the action to walk to the art location, make art, call the makeArt Action, and return to the room
-		addAction(sequence(walkAction(artLoc[0], artLoc[1]), squatAction(artLoc[0], artLoc[1]), run(new Runnable() { 
-			public void run () { 
-				screen.getActions().makeArt(type, subject); 
-				screen.getUI().updateState();
-			}}), 
-			walkAction()));
+		addAction(sequence(walkAction(artLoc[0], artLoc[1]), artAction(type, subject), walkAction()));
 	}
 	
 	/**

@@ -349,7 +349,7 @@ public class MainUI {
 				
 				// Call player actor to nap
 				GameScreen screen = (GameScreen)game.getScreen();
-				screen.getPlayer().sleep(1);
+				screen.getPlayer().sleep(Actions.NAP);
 				
 				closePopups();
 			}
@@ -362,7 +362,7 @@ public class MainUI {
 				
 				// Call player actor to sleep
 				GameScreen screen = (GameScreen)game.getScreen();
-				screen.getPlayer().sleep(2);
+				screen.getPlayer().sleep(Actions.SLEEP);
 				
 				closePopups();
 			}

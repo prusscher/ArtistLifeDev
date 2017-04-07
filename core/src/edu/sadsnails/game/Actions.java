@@ -19,6 +19,9 @@ public class Actions {
 	
 	private int art_rank;
 	
+	public static final int NAP = 1;
+	public static final int SLEEP = 1;
+	
 	public Actions(State state){
 		this.state = state;
 		d_type = new String("type");
@@ -37,7 +40,6 @@ public class Actions {
 	 * 
 	 */
 	public void makeArt(int type, int subject) {
-		
 		System.out.println("I made art");
 		state.log("I made art");
 		type++; subject++;
@@ -201,8 +203,28 @@ public class Actions {
 		passTime(time_consum);
 		state.printStates();
 		}
-		
 	}
+	
+	public int getTime(int type) {
+		type++;
+		switch(type){
+			case 1:
+				return 2;
+			case 2:
+				return 1;
+			case 3:
+				return 3;
+			case 4:
+				return 5;
+			case 5:
+				return 7;
+			case 6:
+				return 10;
+			default:
+				return 1;
+		}
+	}
+	
 	/*	alterPopularity method:
 	 * 		This method serves the purpose of altering the player's popularity
 	 * 		according to their most recent piece of art.
