@@ -5,27 +5,12 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.TextureData;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.AddAction;
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
-import java.nio.file.Watchable;
-
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import edu.sadsnails.game.actors.*;
-import edu.sadsnails.game.widgets.PlayerIcon;
 
 public class GameScreen implements Screen 	{
 	MyGdxGame game;
@@ -53,10 +38,9 @@ public class GameScreen implements Screen 	{
 		state = new State();
 		actions = new Actions(state);
 
-		// CREATE UI HERE
+		// Load Game Sounds and load Main Game UI to stage
 		loadSounds();
-		ui = new MainUI(game, this);
-		stage = ui.getStage();
+		setStage();
 		
 		// Add all of the actors to the stage
 		addActors();
@@ -70,6 +54,11 @@ public class GameScreen implements Screen 	{
 		System.out.println((game.setting.musicVol()*(game.setting.masterVol()/100))/100);
 		gameMusic.setLooping(true);
 		//gameMusic.play();
+	}
+	
+	private void setStage() {
+		ui = new MainUI(game, this);
+		stage = ui.getStage();
 	}
 	
 	private void addActors() {

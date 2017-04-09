@@ -1,12 +1,11 @@
 package edu.sadsnails.game.actors;
 
-import org.lwjgl.util.Color;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -26,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 import edu.sadsnails.game.Actions;
 import edu.sadsnails.game.GameScreen;
@@ -729,14 +729,92 @@ public class MainUI {
 		PauseUI.setVisible(false);
 	}
 
+	/**
+	 * Update the UI's labels to match the Game's current state values
+	 */
 	public void updateState() {
-		time.setText(Integer.toString(screen.getState().getHour()) + ":00");
-		level.setText("Level: " + screen.getState().getTitle());
-		xp.setText("XP: " + Integer.toString(screen.getState().getXp()));
-		money.setText("$" + Double.toString(screen.getState().getMoney()) + "0");
-		energy.setText("E: " + Integer.toString(screen.getState().getEnergy()) + "/100");
+		float uptime = .05f;			// Amount of Time the up animation is performed
+		float downtime = .35f;			// Amount of Time the down animation is performed
+		Color colorUp = Color.YELLOW;	// Color for when a value is increased
+		Color colorDown = Color.RED;	// Color for when a value is decreased
+		Color color2 = Color.WHITE;		// Color to return to (Default Color. Its White btw)
+		
+		// Check to see if the Time has changed and we are not initializing the label
+		if(!time.getText().toString().equals(Integer.toString(screen.getState().getHour()) + ":00") && !level.getText().toString().equals("")) {
+			// Set the time label and add the animation
+			time.setText(Integer.toString(screen.getState().getHour()) + ":00");
+			time.addAction(sequence(parallel(moveBy(0, 4f, uptime), color(colorUp)), parallel(moveBy(0, -4f, .5f), color(color2, downtime))));
+		} else if(time.getText().toString().equals("")) {
+			// First time setting the label, dont add the animation
+			time.setText(Integer.toString(screen.getState().getHour()) + ":00");
+		}
+		
+		// Check to see if the Level has changed and we are not initializing the label
+		if(!level.getText().toString().equals(screen.getState().getTitle()) && !level.getText().toString().equals("")) {
+			level.setText("Level: " + screen.getState().getTitle());
+			level.addAction(sequence(parallel(moveBy(0, 4f, uptime), color(colorUp)), parallel(moveBy(0, -4f, .5f), color(color2, downtime))));
+		} else if(level.getText().toString().equals("")) {
+			// Initialize the level label
+			level.setText("Level: " + screen.getState().getTitle());
+		}
+		
+		// Check to see if the XP has changed and we are not initializing the label
+		if(!xp.getText().toString().equals("XP: " + Integer.toString(screen.getState().getXp())) && !xp.getText().toString().equals("")) {
+			xp.setText("XP: " + Integer.toString(screen.getState().getXp()));
+			xp.addAction(sequence(parallel(moveBy(0, 4f, uptime), color(colorUp)), parallel(moveBy(0, -4f, .5f), color(color2, downtime))));
+		} else if(xp.getText().toString().equals("")) {
+			// Initialize the XP label
+			xp.setText("XP: " + Integer.toString(screen.getState().getXp()));
+		}
+		
+		// Check to see if the Money has changed and we are not initializing the label
+		if(!money.getText().toString().equals("$" + Double.toString(screen.getState().getMoney()) + "0") && !money.getText().toString().equals("")) {
+			
+			// Check to see if the player's money went up. This is a mess but it works
+			// Makes the change animation Yellow or Green depending on the change in money
+			if(Double.parseDouble(money.getText().substring(1).toString()) <= screen.getState().getMoney())
+				money.addAction(sequence(parallel(moveBy(0, 4f, uptime), color(colorUp)), parallel(moveBy(0, -4f, .5f), color(color2, downtime))));
+			else
+				money.addAction(sequence(parallel(moveBy(0, 4f, uptime), color(colorDown)), parallel(moveBy(0, -4f, .5f), color(color2, downtime))));
+			
+			// Set the label to the new money
+			money.setText("$" + Double.toString(screen.getState().getMoney()) + "0");
+			
+		} else if(money.getText().toString().equals("")) {
+			// Initialize the Money Label
+			money.setText("$" + Double.toString(screen.getState().getMoney()) + "0");
+		}
+		
+		// Check to see if the Energy has changed and we are not initializing the label
+		if(!energy.getText().toString().equals("E: " + Integer.toString(screen.getState().getEnergy()) + "/100") && !energy.getText().toString().equals("")) {
+			
+			// Changes the animation to Yellow or Red depending on the change in the energy value
+			if(Integer.parseInt(energy.getText().substring(3).split("/")[0].toString()) < screen.getState().getEnergy())
+				energy.addAction(sequence(parallel(moveBy(0, 4f, uptime), color(colorUp)), parallel(moveBy(0, -4f, .5f), color(color2, downtime))));
+			else
+				energy.addAction(sequence(parallel(moveBy(0, 4f, uptime), color(colorDown)), parallel(moveBy(0, -4f, .5f), color(color2, downtime))));
+			
+			// Set the energy label
+			energy.setText("E: " + Integer.toString(screen.getState().getEnergy()) + "/100");
+		} else if(energy.getText().toString().equals("")) {
+			// Initialize the energy label if it isnt set
+			energy.setText("E: " + Integer.toString(screen.getState().getEnergy()) + "/100");
+		}
+		
+		// Get the current date.
 		int[] curDate = screen.getState().getDate();
-		date.setText("" + curDate[2] + "/" + curDate[1] + "/" + curDate[0]);
+			
+		// Check to see if the Date has changed and we are not initializing the label
+		if(!date.getText().toString().equals("" + curDate[2] + "/" + curDate[1] + "/" + curDate[0]) && !date.getText().toString().equals("")) {
+			// Set the date label and add the change animation
+			date.setText("" + curDate[2] + "/" + curDate[1] + "/" + curDate[0]);
+			date.addAction(sequence(parallel(moveBy(0, 4f, uptime), color(colorUp)), parallel(moveBy(0, -4f, .5f), color(color2, downtime))));
+		} else if(date.getText().toString().equals("")) {
+			// Initialize the date label
+			date.setText("" + curDate[2] + "/" + curDate[1] + "/" + curDate[0]);
+		}
+		
+		// Set the log text
 		logLabel.setText(screen.getState().getLog());
 	}
 }

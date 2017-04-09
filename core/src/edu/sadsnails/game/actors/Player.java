@@ -3,15 +3,12 @@ package edu.sadsnails.game.actors;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.actions.AfterAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
-import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 import com.badlogic.gdx.utils.Pool;
 
-import edu.sadsnails.game.Actions;
 import edu.sadsnails.game.GameScreen;
 import edu.sadsnails.game.MyGdxGame;
 
@@ -160,21 +157,27 @@ public class Player extends BaseActor {
 	 * ParallelAction that causes the player to squat at a specified location
 	 * @return ParallelAction squat at the specified location
 	 */
-	private ParallelAction sleepAction(int x, int y, float duration, final int type, final GameScreen screen) {
+	private SequenceAction sleepAction(int x, int y, float duration, final int type, final GameScreen screen) {
 		MoveToAction m = pool.obtain();
 		m.setPosition(x, y);
 		m.setDuration(duration);
-		return parallel(m, run(new Runnable() { 
+		
+		Runnable callToSleep = new Runnable() { 
 			public void run () { 
 				screen.getActions().sleep(type); 
-				screen.getUI().updateState(); 
-				screen.getActions();
-				if(type == Actions.SLEEP) 
+				if(type == 2) 
 					screen.dimForSleep(); 
 				else 
 					screen.dimForNap(); 
 				}
-			}));
+			};
+		
+		Runnable updateStats = new Runnable() { 
+			public void run() { 
+				screen.getUI().updateState(); 
+			}};
+			
+		return sequence(parallel(m, run(callToSleep)), run(updateStats));
 	}
 	
 	/**
