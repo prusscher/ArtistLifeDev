@@ -3,6 +3,7 @@ package edu.sadsnails.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
@@ -57,7 +58,7 @@ public class MainMenuScreen implements Screen{
     Texture walkSheet;
     
     private Image water;
-    
+    private Music menuMusic;
     // A variable for tracking elapsed time for the animation
     float stateTime;
     
@@ -71,6 +72,7 @@ public class MainMenuScreen implements Screen{
 		this.game = game;
 		
 		fps = new FPSLogger();
+		loadSounds();
 		
 		// FREE TYPE FONT TEST
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/PressStart2P.ttf"));
@@ -101,6 +103,7 @@ public class MainMenuScreen implements Screen{
 		// Listeners
 		startGame.addListener(new ChangeListener(){
 			@Override
+			
 			public void changed(ChangeEvent event, Actor actor) { changeView(new GameScreen(game)); }
 		});
 		
@@ -251,6 +254,15 @@ public class MainMenuScreen implements Screen{
         water.setZIndex(0);
 	}
 	
+	private void loadSounds() {
+		menuMusic = game.assets.manager.get("music/Eternity.mp3");
+		
+		menuMusic.setVolume((game.setting.musicVol()*(game.setting.masterVol()/100))/100);
+		System.out.println((game.setting.musicVol()*(game.setting.masterVol()/100))/100);
+		menuMusic.setLooping(true);
+		menuMusic.play();
+	}
+	
 	@Override
 	public void show() {
 		
@@ -304,6 +316,7 @@ public class MainMenuScreen implements Screen{
 
 	@Override
 	public void dispose() {
+		menuMusic.dispose();
 		stage.dispose();
 	}
 }

@@ -501,7 +501,7 @@ public class Actions {
 	 */
 	public void randEvent(){
 		int eventCheck = game.rng.nextInt(101);
-		System.out.print("event number" + eventCheck);
+		System.out.print("event number " + eventCheck);
 		if (eventCheck <= 5){
 			state.setMoney(state.getMoney() + 20);
 			state.earned_money += 20;
@@ -510,7 +510,7 @@ public class Actions {
 		}
 		else if (eventCheck > 5 && eventCheck <= 10){
 			alterPopularity(1);
-			state.log("A cool and good artist reblogge one of your pictures! You get a small boost in popularity.");
+			state.log("A cool and good artist reblogged one of your pictures! You get a small boost in popularity.");
 			((GameScreen) game.getScreen()).getUI().updateState();
 		}
 	}

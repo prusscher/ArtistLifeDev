@@ -49,6 +49,7 @@ public class Assets {
 		
 		// Music
 		manager.load("music/Dream-Culture.mp3", Music.class);
+		manager.load("music/Eternity.mp3", Music.class);
 	}
 	
 	public void dispose()
