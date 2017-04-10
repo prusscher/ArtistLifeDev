@@ -470,6 +470,8 @@ public class Actions {
 				state.getDate()[2] ++;
 				randEvent();
 			}
+		 state.has_napped = false;
+		 state.coffee_used = false;
 		 state.setHour(1);
 		}
 		else if((state.getHour() + hrs) > 24) {
