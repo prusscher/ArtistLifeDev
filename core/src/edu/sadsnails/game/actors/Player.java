@@ -229,7 +229,7 @@ public class Player extends BaseActor {
 	private Animation<TextureRegion> loadSheet(Texture texToAnim, int numFrames, int width, int height, float time, boolean loop) {
 		TextureRegion[][] tmp = TextureRegion.split(texToAnim, texToAnim.getWidth()/width, texToAnim.getHeight()/height);
 		
-		System.out.println(numFrames + " " + width + "x" + height + " " + tmp.length + " " +tmp[0].length);
+//		System.out.println(numFrames + " " + width + "x" + height + " " + tmp.length + " " +tmp[0].length);
 		
 		TextureRegion[] frames = new TextureRegion[numFrames];
 		int frameCount = 0;

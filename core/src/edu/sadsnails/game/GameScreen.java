@@ -147,6 +147,15 @@ public class GameScreen implements Screen 	{
 //			((OrthographicCamera)stage.getCamera()).zoom = 1+ xyDelta * .5f;
 //		}
 		
+		if(Gdx.input.isKeyPressed(Keys.RIGHT) && Gdx.input.isKeyJustPressed(Keys.RIGHT)){
+			if(((OrthographicCamera)stage.getCamera()).zoom < 1.5f)
+				((OrthographicCamera)stage.getCamera()).zoom += .1f;
+		}
+		if(Gdx.input.isKeyPressed(Keys.LEFT) && Gdx.input.isKeyJustPressed(Keys.LEFT)){
+			if(((OrthographicCamera)stage.getCamera()).zoom > .7f)
+				((OrthographicCamera)stage.getCamera()).zoom -= .1f;
+		}
+		
 		// Set the stage camera to look at the interpolated player position
 		stage.getCamera().lookAt(pos);
 			

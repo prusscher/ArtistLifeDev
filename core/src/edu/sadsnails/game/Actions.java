@@ -228,6 +228,34 @@ public class Actions {
 		}
 	}
 	
+	public boolean canMakeArt(int type) {
+		int eToConsume = 0;
+		
+		switch(type){
+		case 1:
+			eToConsume = 25;
+			break;
+		case 2:
+			eToConsume = 30;
+			break;
+		case 3:
+			eToConsume = 40;
+			break;
+		case 4:
+			eToConsume = 50;
+			break;
+		case 5:
+			eToConsume = 70;
+			break;
+		case 6:
+			eToConsume = 95;
+		}
+		
+		if(eToConsume >= state.getEnergy())
+			return false;
+		return true;
+	}
+	
 	/*	alterPopularity method:
 	 * 		This method serves the purpose of altering the player's popularity
 	 * 		according to their most recent piece of art.
@@ -312,35 +340,41 @@ public class Actions {
 		// if it's a full night's sleep, it moves to the first hour
 		// 	of the next day
 		else{
-		if(type == 2) {
-			System.out.println("I successfully slept");
-			state.log("I successfully slept");
-			passTime(-1);
-			state.setEnergy(100);
-		}
-
-		// if you have napped, you can't nap again
-		// if you have not napped, raise energy by 50
-		// and move clock forward 5 hours
-		else {
-			if(state.has_napped) {
-				System.out.println("I have already napped today");
-				state.log("I have already napped today");
-			} else {
-				if(state.getEnergy() + 50 >= 100) {
-					state.setEnergy(100);
-					state.has_napped = true;
-				}
-				else {
-					state.setEnergy(state.getEnergy() + 50);
-					state.has_napped = true;
-				}
-				passTime(5);
+			
+			if(type == 2) {
+				System.out.println("I successfully slept");
+				state.log("I successfully slept");
+				passTime(-1);
+				state.setEnergy(100);
 			}
-		}
+		
+			// if you have napped, you can't nap again
+			// if you have not napped, raise energy by 50
+			// and move clock forward 5 hours
+			else {
+				if(state.has_napped) {
+					System.out.println("I have already napped today");
+					state.log("I have already napped today");
+				} else {
+					if(state.getEnergy() + 50 >= 100) {
+						state.setEnergy(100);
+						state.has_napped = true;
+					}
+					else {
+						state.setEnergy(state.getEnergy() + 50);
+						state.has_napped = true;
+					}
+					passTime(5);
+				}
+			}
 		}
 	}
 		
+	public boolean canSleep() {
+		if(state.getEnergy() == 100)
+			return false;
+		return true;
+	}
 	
 	/* useBooster method:
 	 * 		This method is for the various items you can purchase

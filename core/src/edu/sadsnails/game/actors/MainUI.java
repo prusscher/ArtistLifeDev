@@ -337,7 +337,7 @@ public class MainUI {
 		artButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				System.out.println("ArtButton");
+//				System.out.println("ArtButton");
 				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
 				closePopups();
 				popupDisplayed = true;
@@ -348,12 +348,14 @@ public class MainUI {
 		napButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				System.out.println("NapButton");
+//				System.out.println("NapButton");
 				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
 				
 				// Call player actor to nap
 				GameScreen screen = (GameScreen)game.getScreen();
-				screen.getPlayer().sleep(Actions.NAP);
+
+				if(screen.getActions().canSleep())
+					screen.getPlayer().sleep(Actions.NAP);
 				
 				closePopups();
 			}
@@ -361,12 +363,14 @@ public class MainUI {
 		sleepButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				System.out.println("sleepButton");
+//				System.out.println("sleepButton");
 				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
 				
 				// Call player actor to sleep
 				GameScreen screen = (GameScreen)game.getScreen();
-				screen.getPlayer().sleep(Actions.SLEEP);
+				
+				if(screen.getActions().canSleep())
+					screen.getPlayer().sleep(Actions.SLEEP);
 				
 				closePopups();
 			}
@@ -374,7 +378,7 @@ public class MainUI {
 		itemButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				System.out.println("itemButton");
+//				System.out.println("itemButton");
 				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
 				closePopups();
 			}
@@ -382,7 +386,7 @@ public class MainUI {
 		customizeButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				System.out.println("customizeButton");
+//				System.out.println("customizeButton");
 				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
 				closePopups();
 				popupDisplayed = true;
@@ -393,13 +397,16 @@ public class MainUI {
 		submitArtButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				System.out.println("submitButton: " + typeSelBox.getSelected() + " " + subjectSelBox.getSelected());
+//				System.out.println("submitButton: " + typeSelBox.getSelected() + " " + subjectSelBox.getSelected());
 				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
 				//screen.getActions().makeArt(typeSelBox.getSelectedIndex(), subjectSelBox.getSelectedIndex());
 				
 				// Call player actor to make art
 				GameScreen screen = (GameScreen)game.getScreen();
-				screen.getPlayer().makeArt(typeSelBox.getSelectedIndex(), subjectSelBox.getSelectedIndex());
+				
+				// If you can make art, make art
+				if(screen.getActions().canMakeArt(typeSelBox.getSelectedIndex()))	
+					screen.getPlayer().makeArt(typeSelBox.getSelectedIndex(), subjectSelBox.getSelectedIndex());
 
 				closePopups();
 			}
@@ -412,7 +419,7 @@ public class MainUI {
 		settingsButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				System.out.println("settingsButton");
+//				System.out.println("settingsButton");
 				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
 				popupDisplayed = true;
 				p_SettingsMenuDisplayed = true;
@@ -662,7 +669,7 @@ public class MainUI {
 		fsToggle.addListener(new ChangeListener(){
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				System.out.println("Fullscreen Toggle: " + fsToggle.isChecked());
+//				System.out.println("Fullscreen Toggle: " + fsToggle.isChecked());
 			}
 		});
 		master.addListener(new ChangeListener() {
@@ -670,7 +677,7 @@ public class MainUI {
 			public void changed(ChangeEvent event, Actor actor) {
 				game.setting.setMasterVol(master.getValue());
 				gameMusic.setVolume(((game.setting.musicVol()*(game.setting.masterVol()/100))/100)/100);
-				System.out.println((game.setting.musicVol()*(game.setting.masterVol()/100))/100);
+//				System.out.println((game.setting.musicVol()*(game.setting.masterVol()/100))/100);
 			}
 		});
 		music.addListener(new ChangeListener() {
