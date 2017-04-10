@@ -1,5 +1,7 @@
 package edu.sadsnails.game;
 
+import java.util.Random;
+
 public class Actions {
 	
 	/* -----------------------------------------------------------------
@@ -426,9 +428,11 @@ public class Actions {
 					state.getDate()[0] ++;
 				state.getDate()[1] ++;
 				state.getDate()[2] = 1;
+				randEvent();
 			}
 			else {
 				state.getDate()[2] ++;
+				randEvent();
 			}
 		 state.setHour(1);
 		}
@@ -439,9 +443,11 @@ public class Actions {
 					state.getDate()[0] ++;
 				state.getDate()[1] ++;
 				state.getDate()[2] = 1;
+				randEvent();
 			}
 			else {
 				state.getDate()[2] ++;
+				randEvent();
 			}
 			state.setHour(hr + hrs);
 			state.has_napped = false;
@@ -450,6 +456,24 @@ public class Actions {
 		
 		state.setHour(state.getHour() + hrs);
 		
+	}
+	/*
+	 * When you roll over to a new day, generates a random number to see if any random events happen
+	 * in the morning.
+	 */
+	public void randEvent(){
+		Random rando = new Random();
+		int eventCheck = rando.nextInt(101);
+		System.out.print("event number" + eventCheck);
+		if (eventCheck <= 5){
+			state.setMoney(state.getMoney() + 20);
+			state.earned_money += 20;
+			state.log("On your way to the store to buy Artist Fuel(tm) you found twenty dollars! What a luckster you are!"); 
+		}
+		else if (eventCheck > 5 && eventCheck <= 10){
+			alterPopularity(1);
+			state.log("A cool and good artist reblogge one of your pictures! You get a small boost in popularity.");
+		}
 	}
 	
 	/* incMoney method:
