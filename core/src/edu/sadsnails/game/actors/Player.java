@@ -74,7 +74,7 @@ public class Player extends BaseActor {
 		int[] loc = room.randomLoc();
 		m.setPosition(loc[0], loc[1]);
 		float time = .1f * (float)dist(getX(), getY(), loc[0], loc[1]);
-		m.setDuration(time);
+		m.setDuration(time/2);
 		return parallel(m, run(new Runnable() { public void run () { setAnimation(walk);}}));
 	}
 	
@@ -86,7 +86,7 @@ public class Player extends BaseActor {
 		MoveToAction m = pool.obtain();
 		m.setPosition(x, y);
 		float time = .1f * (float)dist(getX(), getY(), x, y);
-		m.setDuration(time);
+		m.setDuration(time/2);
 		return parallel(m, run(new Runnable() { public void run () { setAnimation(walk);}}));
 	}
 	
