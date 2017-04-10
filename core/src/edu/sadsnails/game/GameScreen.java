@@ -6,8 +6,13 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 import edu.sadsnails.game.actors.*;
@@ -16,7 +21,8 @@ public class GameScreen implements Screen 	{
 	MyGdxGame game;
 
 	private Stage stage;
-
+	private Stage uiStage;
+	
 	protected Actions actions;
 	protected State state;
 	
@@ -58,7 +64,8 @@ public class GameScreen implements Screen 	{
 	
 	private void setStage() {
 		ui = new MainUI(game, this);
-		stage = ui.getStage();
+		uiStage = ui.getStage();
+		stage = new Stage(new FitViewport(400, 240, new OrthographicCamera()));
 	}
 	
 	private void addActors() {
@@ -111,11 +118,35 @@ public class GameScreen implements Screen 	{
 	public void render(float delta) {
 		Gdx.gl.glClearColor(.2f, .2f, .2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		// Draw The Scene2d stage
+		
+		// Draw The Game stage
 		stage.act();
 		stage.draw();
 		
+		// Draw the UI Stage
+		uiStage.act();
+		uiStage.draw();
+		
+		// Shift the camera to center on the player
+		float lerp = .75f;
+		Vector3 pos = stage.getCamera().position;
+		pos.x += (player.getX() + (player.getWidth()/2) - pos.x) * lerp * delta;
+		pos.y += (player.getY() + (player.getHeight()/2) - pos.y) * lerp * delta;
+		
+		stage.getCamera().lookAt(pos);
+		
+		float z = ((OrthographicCamera)stage.getCamera()).zoom;
+		
+		
+		if(Gdx.input.isKeyPressed(Keys.LEFT) && Gdx.input.isKeyJustPressed(Keys.LEFT)) {
+			((OrthographicCamera)stage.getCamera()).zoom -= .1f;
+			System.out.println(((OrthographicCamera)stage.getCamera()).zoom);
+		}
+		if(Gdx.input.isKeyPressed(Keys.RIGHT) && Gdx.input.isKeyJustPressed(Keys.RIGHT)) {
+			((OrthographicCamera)stage.getCamera()).zoom += .1f;
+			System.out.println(((OrthographicCamera)stage.getCamera()).zoom);
+		}
+			
 		// Return to the main menu
 		if(Gdx.input.isKeyPressed(Keys.BACKSPACE)){
 			game.setScreen(new MainMenuScreen(game));
@@ -124,9 +155,10 @@ public class GameScreen implements Screen 	{
 		if(Gdx.input.isKeyPressed(Keys.F11) && Gdx.input.isKeyJustPressed(Keys.F11)){
 			debug = !debug;
 			stage.setDebugAll(debug);
+			uiStage.setDebugAll(debug);
 			MainUI.gridImage.setVisible(debug);
 			MainUI.mousePos.setVisible(debug);
-			System.out.println(player.getActions().toString());
+			System.out.println("Z: " + pos.z);
 		}
 		
 		// Debug: Set the mouse Pos

@@ -193,11 +193,15 @@ public class MainUI {
 			public void changed(ChangeEvent event, Actor actor) {
 				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
 				if(!popupDisplayed) {
+					action.setText("CLOSE");
+					action.setColor(Color.RED);
 					popupDisplayed = true;
 					actionMenuDisplayed = true;
 					ActionUI.setVisible(true);
 				} else if(pauseMenuDisplayed || p_SettingsMenuDisplayed) {
 					closePopups();
+					action.setText("CLOSE");
+					action.setColor(Color.RED);
 					popupDisplayed = true;
 					actionMenuDisplayed = true;
 					ActionUI.setVisible(true);
@@ -679,6 +683,7 @@ public class MainUI {
 		sfx.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+				
 				game.setting.setSfxVol(sfx.getValue());
 			}
 		});
@@ -710,6 +715,8 @@ public class MainUI {
 		popupDisplayed = false;
 
 		actionMenuDisplayed = false;
+		action.setText("Action");
+		action.setColor(Color.WHITE);
 		a_ArtMenuDisplayed = false;
 		a_CustomMenuDisplayed = false;
 		a_ItemMenuDisplayed = false;
