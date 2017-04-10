@@ -49,6 +49,15 @@ public class Player extends BaseActor {
 		if(!hasActions()) {
 			int a = game.rng.nextInt(100);
 			
+			/*
+			 * Animation Selections B O I 
+			 * 0 - 40	:	Walk to random location
+			 * 40 - 60	:	(Idle) Look around
+			 * 60 - 80	:	(Idle) Idle Stand
+			 * 80 - 95	:	Idle for now, This is handled by the else
+			 * 95 - 100	:	Squats
+			 */
+			
 			if(a <= 40) { // MOVE TO RANDOM LOCAITON
 				addAction(walkAction());
 			} else if(a > 40 && a <= 80) { // GO IDLE
@@ -57,7 +66,7 @@ public class Player extends BaseActor {
 				} else { // Idle animation <2 second of just standn
 					addAction(idleAction());
 				}
-			} else if(a > 80) { // Chance to do SQUATS
+			} else if(a > 95) { // Chance to do SQUATS
 				addAction(squatAction());
 			} else { // All others, just here for now
 				addAction(idleAction());

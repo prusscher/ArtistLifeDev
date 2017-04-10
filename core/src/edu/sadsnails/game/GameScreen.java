@@ -128,23 +128,27 @@ public class GameScreen implements Screen 	{
 		uiStage.draw();
 		
 		// Shift the camera to center on the player
+		// Interpolate change in X and Y on Frame Time and Lerp Value
 		float lerp = .75f;
 		Vector3 pos = stage.getCamera().position;
-		pos.x += (player.getX() + (player.getWidth()/2) - pos.x) * lerp * delta;
-		pos.y += (player.getY() + (player.getHeight()/2) - pos.y) * lerp * delta;
+		float xDelta = (player.getX() + (player.getWidth()/2) - pos.x) * lerp * delta;
+		float yDelta = (player.getY() + (player.getHeight()/2) - pos.y) * lerp * delta;
+		pos.x += xDelta;
+		pos.y += yDelta;
 		
+		
+		// Zooming Code :( no zoom
+//		if(false) {
+//			// Get the distance currently traveled and set Zoom 
+//			float xyDelta = (float) Math.sqrt((xDelta * xDelta) + (yDelta * yDelta));
+//					
+//			// Set the zoom according to current movement
+//			// As the player moves more, zoom out. Zoom in when there is no movement
+//			((OrthographicCamera)stage.getCamera()).zoom = 1+ xyDelta * .5f;
+//		}
+		
+		// Set the stage camera to look at the interpolated player position
 		stage.getCamera().lookAt(pos);
-		
-		float z = ((OrthographicCamera)stage.getCamera()).zoom;
-		
-		if(Gdx.input.isKeyPressed(Keys.LEFT) && Gdx.input.isKeyJustPressed(Keys.LEFT)) {
-			((OrthographicCamera)stage.getCamera()).zoom -= .1f;
-			System.out.println(((OrthographicCamera)stage.getCamera()).zoom);
-		}
-		if(Gdx.input.isKeyPressed(Keys.RIGHT) && Gdx.input.isKeyJustPressed(Keys.RIGHT)) {
-			((OrthographicCamera)stage.getCamera()).zoom += .1f;
-			System.out.println(((OrthographicCamera)stage.getCamera()).zoom);
-		}
 			
 		// Return to the main menu
 		if(Gdx.input.isKeyPressed(Keys.BACKSPACE)){
@@ -188,6 +192,8 @@ public class GameScreen implements Screen 	{
 	public Player getPlayer() { return player; }
 	
 	public MainUI getUI() { return ui; }
+	
+	private double dist(float x1, float y1, float x2, float y2) { return Math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1)); }
 	
 	public void dimForSleep() {
 		this.stage.addAction(sequence(fadeOut(4f), moveBy(0, 0, 6f), fadeIn(4f)));
