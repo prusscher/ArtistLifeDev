@@ -42,7 +42,7 @@ public class GameScreen implements Screen 	{
 		this.game = game;
 
 		state = new State();
-		actions = new Actions(state);
+		actions = new Actions(game, state);
 
 		// Load Game Sounds and load Main Game UI to stage
 		loadSounds();
@@ -136,7 +136,6 @@ public class GameScreen implements Screen 	{
 		stage.getCamera().lookAt(pos);
 		
 		float z = ((OrthographicCamera)stage.getCamera()).zoom;
-		
 		
 		if(Gdx.input.isKeyPressed(Keys.LEFT) && Gdx.input.isKeyJustPressed(Keys.LEFT)) {
 			((OrthographicCamera)stage.getCamera()).zoom -= .1f;

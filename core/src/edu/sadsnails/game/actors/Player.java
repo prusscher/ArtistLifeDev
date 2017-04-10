@@ -70,12 +70,8 @@ public class Player extends BaseActor {
 	 * @return ParallelAction move to random location
 	 */
 	private ParallelAction walkAction() {
-		MoveToAction m = pool.obtain();
 		int[] loc = room.randomLoc();
-		m.setPosition(loc[0], loc[1]);
-		float time = .1f * (float)dist(getX(), getY(), loc[0], loc[1]);
-		m.setDuration(time/2);
-		return parallel(m, run(new Runnable() { public void run () { setAnimation(walk);}}));
+		return walkAction(loc[0], loc[1]);
 	}
 	
 	/**
@@ -86,7 +82,7 @@ public class Player extends BaseActor {
 		MoveToAction m = pool.obtain();
 		m.setPosition(x, y);
 		float time = .1f * (float)dist(getX(), getY(), x, y);
-		m.setDuration(time/2);
+		m.setDuration(time);
 		return parallel(m, run(new Runnable() { public void run () { setAnimation(walk);}}));
 	}
 	

@@ -8,7 +8,7 @@ public class Actions {
 	 * 	This class serves the purpose of maintaining all of the possible
 	 *	actions within the game.
 	 * -----------------------------------------------------------------*/
-	
+	private MyGdxGame game;
 	private State state;
 	
 	private String d_type;
@@ -24,7 +24,8 @@ public class Actions {
 	public static final int NAP = 1;
 	public static final int SLEEP = 1;
 	
-	public Actions(State state){
+	public Actions(MyGdxGame game, State state){
+		this.game = game;
 		this.state = state;
 		d_type = new String("type");
 		d_subject = new String("subject");
@@ -462,17 +463,18 @@ public class Actions {
 	 * in the morning.
 	 */
 	public void randEvent(){
-		Random rando = new Random();
-		int eventCheck = rando.nextInt(101);
+		int eventCheck = game.rng.nextInt(101);
 		System.out.print("event number" + eventCheck);
 		if (eventCheck <= 5){
 			state.setMoney(state.getMoney() + 20);
 			state.earned_money += 20;
 			state.log("On your way to the store to buy Artist Fuel(tm) you found twenty dollars! What a luckster you are!"); 
+			((GameScreen) game.getScreen()).getUI().updateState();
 		}
 		else if (eventCheck > 5 && eventCheck <= 10){
 			alterPopularity(1);
 			state.log("A cool and good artist reblogge one of your pictures! You get a small boost in popularity.");
+			((GameScreen) game.getScreen()).getUI().updateState();
 		}
 	}
 	
