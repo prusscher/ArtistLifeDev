@@ -91,7 +91,7 @@ public class Player extends BaseActor {
 		MoveToAction m = pool.obtain();
 		m.setPosition(x, y);
 		float time = .1f * (float)dist(getX(), getY(), x, y);
-		m.setDuration(time);
+		m.setDuration(time/2);
 		return parallel(m, run(new Runnable() { public void run () { setAnimation(walk);}}));
 	}
 	
