@@ -72,7 +72,7 @@ public class MainMenuScreen implements Screen{
 		this.game = game;
 		
 		fps = new FPSLogger();
-		loadSounds();
+		
 		
 		// FREE TYPE FONT TEST
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/PressStart2P.ttf"));
@@ -252,6 +252,7 @@ public class MainMenuScreen implements Screen{
         
         stage.addActor(water);
         water.setZIndex(0);
+        loadSounds();
 	}
 	
 	private void loadSounds() {
