@@ -48,7 +48,7 @@ public class Assets {
 		manager.load("sound/button.wav", Sound.class);
 		
 		// Music
-		manager.load("music/Furious-Freak.mp3", Music.class);
+		manager.load("music/Dream-Culture.mp3", Music.class);
 	}
 	
 	public void dispose()

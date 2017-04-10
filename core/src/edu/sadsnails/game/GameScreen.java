@@ -54,12 +54,12 @@ public class GameScreen implements Screen 	{
 	
 	private void loadSounds() {
 		buttonSound = game.assets.manager.get("sound/button.wav");
-		gameMusic = game.assets.manager.get("music/Furious-Freak.mp3");
+		gameMusic = game.assets.manager.get("music/Dream-Culture.mp3");
 		
 		gameMusic.setVolume((game.setting.musicVol()*(game.setting.masterVol()/100))/100);
 		System.out.println((game.setting.musicVol()*(game.setting.masterVol()/100))/100);
 		gameMusic.setLooping(true);
-		//gameMusic.play();
+		gameMusic.play();
 	}
 	
 	private void setStage() {
