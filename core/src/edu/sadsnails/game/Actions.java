@@ -29,6 +29,7 @@ public class Actions {
 		this.state = state;
 		d_type = new String("type");
 		d_subject = new String("subject");
+		state.log("Well, you're an artist now! Check here for further updates on your grueling trudge towards making a cool picture or two.");
 	}
 	
 	/*	makeArt method:
