@@ -22,7 +22,7 @@ public class Actions {
 	private int art_rank;
 	
 	public static final int NAP = 1;
-	public static final int SLEEP = 1;
+	public static final int SLEEP = 2;
 	
 	public Actions(MyGdxGame game, State state){
 		this.game = game;
