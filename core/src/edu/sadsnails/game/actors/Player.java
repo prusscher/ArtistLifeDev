@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.ParallelAction;
+import com.badlogic.gdx.scenes.scene2d.actions.AfterAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 import com.badlogic.gdx.utils.Pool;
@@ -84,14 +85,30 @@ public class Player extends BaseActor {
 	}
 	
 	/**
+	 * Walk to action but moves from the current location to the x,y specified
+	 */
+	private ParallelAction walkAction(int x, int y) {
+		int[] loc = room.randomLoc();
+		return walkAction(getX(), getY(), x, y);
+	}
+	
+	/**
+	 * Walk but specify the starting location instead of the ending location
+	 */
+	private ParallelAction walkAction(float x, float y) {
+		int[] loc = room.randomLoc();
+		return walkAction(x, y, loc[0], loc[1]);
+	}
+	
+	/**
 	 * ParallelAction that moves the player to a specified location and sets the current animation to the walk anim.
 	 * @return ParallelAction move to random location
 	 */
-	private ParallelAction walkAction(int x, int y) {
+	private ParallelAction walkAction(float startX, float startY, int x, int y) {
 		MoveToAction m = pool.obtain();
 		m.setPosition(x, y);
-		float time = .1f * (float)dist(getX(), getY(), x, y);
-		m.setDuration(time/2);
+		float time = .1f * (float)dist(startX, startY, x, y);
+		m.setDuration(time);
 		return parallel(m, run(new Runnable() { public void run () { setAnimation(walk);}}));
 	}
 	
@@ -202,13 +219,13 @@ public class Player extends BaseActor {
 	 */
 	public void makeArt(final int type, final int subject) {
 		// Clear all the players current actions
-		clearActions();
+		//clearActions();
 		
 		// Get a reference to the current GameScreen
 		final GameScreen screen = (GameScreen) game.getScreen();
 
 		// Add the action to walk to the art location, make art, call the makeArt Action, and return to the room
-		addAction(sequence(walkAction(artLoc[0], artLoc[1]), artAction(type, subject), walkAction()));
+		addAction(after(sequence(walkAction(artLoc[0], artLoc[1]), artAction(type, subject), walkAction((float) artLoc[1], (float) artLoc[1]))));
 	}
 	
 	/**
@@ -217,13 +234,13 @@ public class Player extends BaseActor {
 	 */
 	public void sleep(final int type) {
 		// Clear all the players current actions
-		clearActions();
+		// clearActions();
 		
 		// Get a reference to the current GameScreen
 		final GameScreen screen = (GameScreen) game.getScreen();
 		
 		// Add the action to walk to the sleep location, sleep, and call the sleep Action
-		addAction(sequence(walkAction(sleepLoc[0], sleepLoc[1]), sleepAction(sleepLoc[0], sleepLoc[1], 16, type, screen), walkAction()));	
+		addAction(after(sequence(walkAction(sleepLoc[0], sleepLoc[1]), sleepAction(sleepLoc[0], sleepLoc[1], 16, type, screen),  walkAction((float) sleepLoc[1], (float) sleepLoc[1]))));	
 	}
 	
 	private Animation<TextureRegion> loadSheet(Texture texToAnim, int numFrames, int width, int height, float time, boolean loop) {

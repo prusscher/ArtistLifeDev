@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -54,7 +55,7 @@ public class GameScreen implements Screen 	{
 	
 	private void loadSounds() {
 		buttonSound = game.assets.manager.get("sound/button.wav");
-		gameMusic = game.assets.manager.get("music/Dream-Culture.mp3");
+		gameMusic = game.assets.manager.get("music/DreamCulture.mp3");
 		
 		gameMusic.setVolume((game.setting.musicVol()*(game.setting.masterVol()/100))/100);
 		System.out.println((game.setting.musicVol()*(game.setting.masterVol()/100))/100);
@@ -173,6 +174,11 @@ public class GameScreen implements Screen 	{
 			System.out.println("Z: " + pos.z);
 		}
 		
+		if(Gdx.input.isKeyPressed(Keys.SPACE) && Gdx.input.isKeyJustPressed(Keys.SPACE)){
+			for(Action a : player.getActions())
+				System.out.println(a);
+		}
+		
 		// Debug: Set the mouse Pos
 		if(debug) {
 			int relX = (int)(((double)Gdx.input.getX() / Gdx.graphics.getWidth()) * 400);
@@ -184,6 +190,7 @@ public class GameScreen implements Screen 	{
 	@Override
 	public void resize(int width, int height) {
 		stage.getViewport().update(width, height, true);
+		uiStage.getViewport().update(width, height, true);
 	}
 
 	@Override
