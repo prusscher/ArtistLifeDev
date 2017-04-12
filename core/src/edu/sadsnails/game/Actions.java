@@ -513,6 +513,22 @@ public class Actions {
 			state.log("A cool and good artist reblogged one of your pictures! You get a small boost in popularity.");
 			((GameScreen) game.getScreen()).getUI().updateState();
 		}
+		else if (eventCheck >= 90 && eventCheck < 94){
+			alterPopularity(-1);
+			state.log("You got into an online argument and called someone a 'canvas licking paintspiller'. Everyone was aghast.");
+			((GameScreen) game.getScreen()).getUI().updateState();
+		}
+		else if (eventCheck >= 95){
+			state.log("A hip new indie pixel retro throwback survival game was released! You bought it without even LOOKING at your wallet.");
+			if (state.getMoney() > 10){
+				state.setMoney(state.getMoney() - 10);
+				((GameScreen) game.getScreen()).getUI().updateState();
+			}
+			else{
+				state.setMoney(0);
+				((GameScreen) game.getScreen()).getUI().updateState();
+			}
+		}
 	}
 	
 	/* incMoney method:
