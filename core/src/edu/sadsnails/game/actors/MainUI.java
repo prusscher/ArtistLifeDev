@@ -7,7 +7,6 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -24,7 +23,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
@@ -63,6 +61,7 @@ public class MainUI {
 		private TextButton itemButton;
 		private TextButton customizeButton;
 		private TextButton logButton;
+		private TextButton storeButton;
 	
 	// ---- Log UI Elements
 	private ScrollPane logPane;
@@ -71,6 +70,36 @@ public class MainUI {
 	// ----- Art Creation sub-menu
 	private VerticalGroup artUI;
 	private VerticalGroup customizeUI;
+	private VerticalGroup storeUI;
+	
+		// StoreUI elements
+		private HorizontalGroup store;
+		private VerticalGroup items;
+			private HorizontalGroup bed;
+				private VerticalGroup item1;
+				private VerticalGroup item2;
+				private VerticalGroup item3;
+				private Image bedImage1, bedImage2, bedImage3;
+				private TextButton itemPrice1;
+				private TextButton itemPrice2;
+				private TextButton itemPrice3;
+			private HorizontalGroup desk;
+				private VerticalGroup item4;
+				private VerticalGroup item5;
+				private VerticalGroup item6;
+				private Image deskImage1, deskImage2, deskImage3;
+				private TextButton itemPrice4;
+				private TextButton itemPrice5;
+				private TextButton itemPrice6;
+			private HorizontalGroup room;
+				private VerticalGroup item7;
+				private VerticalGroup item8;
+				private VerticalGroup item9;
+				private Image roomImage1, roomImage2, roomImage3;
+				private TextButton itemPrice7;
+				private TextButton itemPrice8;
+				private TextButton itemPrice9;
+	
 		// CustomizeUI sub-menu
 		private HorizontalGroup customize;
 		private HorizontalGroup play;
@@ -114,6 +143,7 @@ public class MainUI {
 	private boolean a_ItemMenuDisplayed = false;
 	private boolean a_CustomMenuDisplayed = false;
 	private boolean a_LogDisplayed = false;
+	private boolean a_StoreMenueDisplayed = false;
 	
 	private boolean pauseMenuDisplayed = false;
 	private boolean p_SettingsMenuDisplayed = false;
@@ -221,7 +251,7 @@ public class MainUI {
 					popupDisplayed = true;
 					pauseMenuDisplayed = true;
 					PauseUI.setVisible(true);
-				} else if(actionMenuDisplayed || a_ArtMenuDisplayed || a_CustomMenuDisplayed || a_ItemMenuDisplayed) {
+				} else if(actionMenuDisplayed || a_ArtMenuDisplayed || a_CustomMenuDisplayed || a_ItemMenuDisplayed || a_StoreMenueDisplayed) {
 					closePopups();
 					popupDisplayed = true;
 					pauseMenuDisplayed = true;
@@ -320,6 +350,7 @@ public class MainUI {
 		sleepButton = new TextButton("SLEEP", skin);
 		itemButton = new TextButton("ITEMS", skin);
 		customizeButton = new TextButton("CUSTOMIZE", skin);
+		storeButton = new TextButton("STORE", skin);
 		
 		// Set Button Names
 		artButton.setName("Art Button");
@@ -327,6 +358,7 @@ public class MainUI {
 		sleepButton.setName("Nap Button");
 		itemButton.setName("Item Button");
 		customizeButton.setName("Customize Button");
+		storeButton.setName("Store Button");
 		
 		typeSelBox = new SelectBox<String>(skin);
 		subjectSelBox = new SelectBox<String>(skin);
@@ -413,6 +445,15 @@ public class MainUI {
 				closePopups();
 			}
 		});
+		storeButton.addListener(new ChangeListener(){
+			public void changed(ChangeEvent event, Actor actor) {
+				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
+				closePopups();
+				popupDisplayed = true;
+				a_StoreMenueDisplayed = true;
+				storeUI.setVisible(a_StoreMenueDisplayed);
+			}
+		});
 
 		settingsButton = new TextButton("SETTINGS", skin);
 		quitToMMButton = new TextButton("Quit to Main Menu", skin);
@@ -486,6 +527,7 @@ public class MainUI {
 			ActionUI.addActor(itemButton);
 			ActionUI.addActor(logButton);
 			ActionUI.addActor(customizeButton);
+			ActionUI.addActor(storeButton);
 
 		stage.addActor(ActionUI);
 		
@@ -499,24 +541,13 @@ public class MainUI {
 			artUI.fill();
 			artUI.center();
 			artUI.top();
-			//artUI.setColor(.1f, .1f, .1f, .5f);
 			typeSelBox.setItems(drawing_type_array);
 			subjectSelBox.setItems(drawing_subject_array);
-			
-			Label typeLabel = new Label("Type", skin);
-			typeLabel.setHeight(20);
-			
-			Label subjectLabel = new Label("Subject", skin);
-			subjectLabel.setHeight(20);
-			
-			submitArtButton.padTop(4f);
-			
-			artUI.addActor(typeLabel);
+	
+			artUI.addActor(new Label("Type", skin));
 			artUI.addActor(typeSelBox);
-			
-			artUI.addActor(subjectLabel);
+			artUI.addActor(new Label("Subject", skin));
 			artUI.addActor(subjectSelBox);
-			
 			artUI.addActor(submitArtButton);
 
 		stage.addActor(artUI);
@@ -524,6 +555,144 @@ public class MainUI {
 		artUI.setVisible(false);
 		// end of make art menu
 
+		// MAKE STORE MENU
+		storeUI = new VerticalGroup();
+		storeUI.setBounds(138, 82, 120, 120);
+		storeUI.fill();
+		storeUI.center();
+		storeUI.top();
+		
+		// Create title
+		store = new HorizontalGroup();
+		store.center();
+		store.setHeight(40);
+		store.addActor(new Label("Store", skin));
+		
+		// Create container for items
+		items = new VerticalGroup();
+		items.fill();
+		items.top();
+		
+		// Items
+		bed = new HorizontalGroup();
+			item1 = new VerticalGroup();
+			item2 = new VerticalGroup();
+			item3 = new VerticalGroup();
+			bedImage1 = new Image(new Texture("images/items/bed.png"));
+			bedImage2 = new Image(new Texture("images/items/bed.png"));
+			bedImage3 = new Image(new Texture("images/items/bed.png"));
+			itemPrice1 = new TextButton("$1.00", skin);
+			itemPrice2 = new TextButton("$2.00", skin);
+			itemPrice3 = new TextButton("$13.00", skin);
+		desk = new HorizontalGroup();
+			item4 = new VerticalGroup();
+			item5 = new VerticalGroup();
+			item6 = new VerticalGroup();
+			deskImage1 = new Image(new Texture("images/items/desk.png"));
+			deskImage2 = new Image(new Texture("images/items/desk.png"));
+			deskImage3 = new Image(new Texture("images/items/desk.png"));
+			itemPrice4 = new TextButton("$4.00", skin);
+			itemPrice5 = new TextButton("$5.00", skin);
+			itemPrice6 = new TextButton("$16.00", skin);
+		room = new HorizontalGroup();
+			item7 = new VerticalGroup();
+			item8 = new VerticalGroup();
+			item9 = new VerticalGroup();
+			roomImage1 = new Image(new Texture("images/items/desk.png"));
+			roomImage2 = new Image(new Texture("images/items/desk.png"));
+			roomImage3 = new Image(new Texture("images/items/desk.png"));
+			itemPrice7 = new TextButton("$17.00", skin);
+			itemPrice8 = new TextButton("$18.00", skin);
+			itemPrice9 = new TextButton("$19.00", skin);
+			
+		itemPrice1.addListener(new ChangeListener(){
+			public void changed(ChangeEvent event, Actor actor) {				
+				
+				}
+		});
+		itemPrice2.addListener(new ChangeListener(){
+			public void changed(ChangeEvent event, Actor actor) {				
+				
+				}
+		});
+		itemPrice3.addListener(new ChangeListener(){
+			public void changed(ChangeEvent event, Actor actor) {				
+				
+				}
+		});
+		itemPrice4.addListener(new ChangeListener(){
+			public void changed(ChangeEvent event, Actor actor) {				
+				
+				}
+		});
+		itemPrice5.addListener(new ChangeListener(){
+			public void changed(ChangeEvent event, Actor actor) {				
+				
+				}
+		});
+		itemPrice6.addListener(new ChangeListener(){
+			public void changed(ChangeEvent event, Actor actor) {				
+				
+				}
+		});
+		itemPrice7.addListener(new ChangeListener(){
+			public void changed(ChangeEvent event, Actor actor) {				
+				
+				}
+		});
+		itemPrice8.addListener(new ChangeListener(){
+			public void changed(ChangeEvent event, Actor actor) {				
+				
+				}
+		});
+		itemPrice9.addListener(new ChangeListener(){
+			public void changed(ChangeEvent event, Actor actor) {				
+				
+				}
+		});
+			
+		// Group items
+		item1.addActor(bedImage1);
+		item1.addActor(itemPrice1);
+		item2.addActor(bedImage2);
+		item2.addActor(itemPrice2);
+		item3.addActor(bedImage3);
+		item3.addActor(itemPrice3);
+		bed.addActor(item1);
+		bed.addActor(item2);
+		bed.addActor(item3);
+		item4.addActor(deskImage1);
+		item4.addActor(itemPrice4);
+		item5.addActor(deskImage2);
+		item5.addActor(itemPrice5);
+		item6.addActor(deskImage3);
+		item6.addActor(itemPrice6);
+		desk.addActor(item4);
+		desk.addActor(item5);
+		desk.addActor(item6);
+		item7.addActor(roomImage1);
+		item7.addActor(itemPrice7);
+		item8.addActor(roomImage2);
+		item8.addActor(itemPrice8);
+		item9.addActor(roomImage3);
+		item9.addActor(itemPrice9);
+		room.addActor(item7);
+		room.addActor(item8);
+		room.addActor(item9);
+		
+		items.addActor(new Label("BED", skin));
+		items.addActor(bed);
+		items.addActor(new Label("DESK", skin));
+		items.addActor(desk);
+		items.addActor(new Label("ROOM", skin));
+		items.addActor(room);
+			
+		storeUI.addActor(store);
+		storeUI.addActor(items);
+		stage.addActor(storeUI);
+		storeUI.setZIndex(3);
+		storeUI.setVisible(false);
+			
 		// MAKE CUSTOMIZE MENU
 		customizeUI = new VerticalGroup();
 		customizeUI.setBounds(128, 22, 140, 140);
@@ -645,9 +814,6 @@ public class MainUI {
 
 		// ----- Create the settings table -----
 		settingsTable = new Table();
-		
-		settingsTable.setBackground(new TextureRegionDrawable(new TextureRegion((Texture)game.assets.manager.get("dev/background.png"))));
-		
 		settingsTable.add(new Label("Resolution", skin)).height(20);
 		settingsTable.row();
 		settingsTable.add(resolutions).height(20);
@@ -745,6 +911,7 @@ public class MainUI {
 		a_ItemMenuDisplayed = false;
 		a_LogDisplayed = false;
 		a_LogDisplayed = false;
+		a_StoreMenueDisplayed = false;
 		
 		logPane.setVisible(false);
 		
@@ -754,6 +921,7 @@ public class MainUI {
 		artUI.setVisible(false);
 		customizeUI.setVisible(false);
 		settingsTable.setVisible(false);
+		storeUI.setVisible(false);
 
 		ActionUI.setVisible(false);
 		PauseUI.setVisible(false);
