@@ -8,16 +8,37 @@ import edu.sadsnails.game.MyGdxGame;
 
 public class Room extends BaseActor{
 
+	int curRoom = 0;
+	
+	private TextureRegion[] rooms = new TextureRegion[2];
+	
 	public Room(MyGdxGame game) {
 		super(game);
 	
-		TextureRegion colorFrames = new TextureRegion((Texture) this.game.assets.manager.get("images/rooms/room1.png"));
+		Texture tempTex = (Texture) this.game.assets.manager.get("images/rooms/room.png");
+		TextureRegion[][] tmp = TextureRegion.split(tempTex, tempTex.getWidth()/2, tempTex.getHeight());
 		
-		Animation<TextureRegion> color = new Animation<TextureRegion>(.25f, colorFrames);
-		color.setPlayMode(Animation.PlayMode.NORMAL);
+		rooms[0] = tmp[0][0];
+		rooms[1] = tmp[0][1];
 		
-		animation = color;
+		region = rooms[curRoom];
+	}
 	
+	@Override
+	public void act(float delta) {
+		// TODO Auto-generated method stub
+		//super.act(delta);
+	
+		// Override BaseActors act so animations dont play d o g
+	}
+	
+	public void nextRoom() {
+		curRoom++;
+		
+		if(curRoom > rooms.length-1)
+			curRoom = 0;
+		
+		region = rooms[curRoom];
 	}
 	
 	/**

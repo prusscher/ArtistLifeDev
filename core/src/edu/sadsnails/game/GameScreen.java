@@ -175,8 +175,7 @@ public class GameScreen implements Screen 	{
 		}
 		
 		if(Gdx.input.isKeyPressed(Keys.SPACE) && Gdx.input.isKeyJustPressed(Keys.SPACE)){
-			for(Action a : player.getActions())
-				System.out.println(a);
+			room.nextRoom();
 		}
 		
 		// Debug: Set the mouse Pos
