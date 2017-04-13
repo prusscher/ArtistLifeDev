@@ -557,6 +557,7 @@ public class MainUI {
 
 		// MAKE STORE MENU
 		storeUI = new VerticalGroup();
+//		storeUI.set
 		storeUI.setBounds(138, 82, 120, 120);
 		storeUI.fill();
 		storeUI.center();
@@ -577,33 +578,33 @@ public class MainUI {
 		bed = new HorizontalGroup();
 			item1 = new VerticalGroup();
 			item2 = new VerticalGroup();
-			item3 = new VerticalGroup();
+//			item3 = new VerticalGroup();
 			bedImage1 = new Image(new Texture("images/items/bed.png"));
 			bedImage2 = new Image(new Texture("images/items/bed.png"));
-			bedImage3 = new Image(new Texture("images/items/bed.png"));
+//			bedImage3 = new Image(new Texture("images/items/bed.png"));
 			itemPrice1 = new TextButton("$1.00", skin);
 			itemPrice2 = new TextButton("$2.00", skin);
-			itemPrice3 = new TextButton("$13.00", skin);
+//			itemPrice3 = new TextButton("$13.00", skin);
 		desk = new HorizontalGroup();
 			item4 = new VerticalGroup();
 			item5 = new VerticalGroup();
-			item6 = new VerticalGroup();
+//			item6 = new VerticalGroup();
 			deskImage1 = new Image(new Texture("images/items/desk.png"));
 			deskImage2 = new Image(new Texture("images/items/desk.png"));
-			deskImage3 = new Image(new Texture("images/items/desk.png"));
+//			deskImage3 = new Image(new Texture("images/items/desk.png"));
 			itemPrice4 = new TextButton("$4.00", skin);
 			itemPrice5 = new TextButton("$5.00", skin);
-			itemPrice6 = new TextButton("$16.00", skin);
+//			itemPrice6 = new TextButton("$16.00", skin);
 		room = new HorizontalGroup();
 			item7 = new VerticalGroup();
 			item8 = new VerticalGroup();
-			item9 = new VerticalGroup();
+//			item9 = new VerticalGroup();
 			roomImage1 = new Image(new Texture("images/items/desk.png"));
 			roomImage2 = new Image(new Texture("images/items/desk.png"));
-			roomImage3 = new Image(new Texture("images/items/desk.png"));
+//			roomImage3 = new Image(new Texture("images/items/desk.png"));
 			itemPrice7 = new TextButton("$17.00", skin);
 			itemPrice8 = new TextButton("$18.00", skin);
-			itemPrice9 = new TextButton("$19.00", skin);
+//			itemPrice9 = new TextButton("$19.00", skin);
 			
 		itemPrice1.addListener(new ChangeListener(){
 			public void changed(ChangeEvent event, Actor actor) {				
@@ -615,11 +616,8 @@ public class MainUI {
 				
 				}
 		});
-		itemPrice3.addListener(new ChangeListener(){
-			public void changed(ChangeEvent event, Actor actor) {				
-				
-				}
-		});
+//		itemPrice3.addListener(new ChangeListener(){public void changed(ChangeEvent event, Actor actor) {}});
+		
 		itemPrice4.addListener(new ChangeListener(){
 			public void changed(ChangeEvent event, Actor actor) {				
 				
@@ -630,11 +628,8 @@ public class MainUI {
 				
 				}
 		});
-		itemPrice6.addListener(new ChangeListener(){
-			public void changed(ChangeEvent event, Actor actor) {				
-				
-				}
-		});
+//		itemPrice6.addListener(new ChangeListener(){public void changed(ChangeEvent event, Actor actor) {}});
+		
 		itemPrice7.addListener(new ChangeListener(){
 			public void changed(ChangeEvent event, Actor actor) {				
 				
@@ -645,40 +640,38 @@ public class MainUI {
 				
 				}
 		});
-		itemPrice9.addListener(new ChangeListener(){
-			public void changed(ChangeEvent event, Actor actor) {				
-				
-				}
-		});
+//		itemPrice9.addListener(new ChangeListener(){public void changed(ChangeEvent event, Actor actor) {}});
 			
 		// Group items
 		item1.addActor(bedImage1);
 		item1.addActor(itemPrice1);
 		item2.addActor(bedImage2);
 		item2.addActor(itemPrice2);
-		item3.addActor(bedImage3);
-		item3.addActor(itemPrice3);
+//		item3.addActor(bedImage3);
+//		item3.addActor(itemPrice3);
 		bed.addActor(item1);
 		bed.addActor(item2);
-		bed.addActor(item3);
+//		bed.addActor(item3);
+		
 		item4.addActor(deskImage1);
 		item4.addActor(itemPrice4);
 		item5.addActor(deskImage2);
 		item5.addActor(itemPrice5);
-		item6.addActor(deskImage3);
-		item6.addActor(itemPrice6);
+//		item6.addActor(deskImage3);
+//		item6.addActor(itemPrice6);
 		desk.addActor(item4);
 		desk.addActor(item5);
-		desk.addActor(item6);
+//		desk.addActor(item6);
+		
 		item7.addActor(roomImage1);
 		item7.addActor(itemPrice7);
 		item8.addActor(roomImage2);
 		item8.addActor(itemPrice8);
-		item9.addActor(roomImage3);
-		item9.addActor(itemPrice9);
+//		item9.addActor(roomImage3);
+//		item9.addActor(itemPrice9);
 		room.addActor(item7);
 		room.addActor(item8);
-		room.addActor(item9);
+//		room.addActor(item9);
 		
 		items.addActor(new Label("BED", skin));
 		items.addActor(bed);
