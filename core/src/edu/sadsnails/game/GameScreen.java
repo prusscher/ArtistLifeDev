@@ -84,7 +84,7 @@ public class GameScreen implements Screen 	{
 		
 		desk = new Desk(game);
 		desk.setName("desk");
-		desk.setBounds(210, 95, 64, 64);
+		desk.setBounds(210, 105, 64, 64);
 		stage.addActor(desk);
 		desk.setZIndex(2);
 		
@@ -176,6 +176,8 @@ public class GameScreen implements Screen 	{
 		
 		if(Gdx.input.isKeyPressed(Keys.SPACE) && Gdx.input.isKeyJustPressed(Keys.SPACE)){
 			room.nextRoom();
+			desk.nextDesk();
+			bed.nextBed();
 		}
 		
 		// Debug: Set the mouse Pos

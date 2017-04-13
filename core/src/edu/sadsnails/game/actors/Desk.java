@@ -10,14 +10,35 @@ public class Desk extends BaseActor{
 
 	int curDesk = 0;
 	
+	private TextureRegion[] desks = new TextureRegion[2];
+	
 	public Desk(MyGdxGame game) {
 		super(game);
 		
-		TextureRegion colorFrames = new TextureRegion((Texture) this.game.assets.manager.get("images/items/desk.png"));
+		Texture tempTex = (Texture) this.game.assets.manager.get("images/items/desk.png");
+		TextureRegion[][] tmp = TextureRegion.split(tempTex, tempTex.getWidth()/2, tempTex.getHeight());
 		
-		Animation<TextureRegion> color = new Animation<TextureRegion>(.25f, colorFrames);
-		color.setPlayMode(Animation.PlayMode.NORMAL);
+		desks[0] = tmp[0][0];
+		desks[1] = tmp[0][1];
 		
-		animation = color;
+		region = desks[curDesk];
+		//animation = color;
+	}
+	
+	@Override
+	public void act(float delta) {
+		// TODO Auto-generated method stub
+		//super.act(delta);
+	
+		// Override BaseActors act so animations dont play d o g
+	}
+	
+	public void nextDesk() {
+		curDesk++;
+		
+		if(curDesk > desks.length-1)
+			curDesk = 0;
+		
+		region = desks[curDesk];
 	}
 }
