@@ -34,6 +34,7 @@ public class Assets {
 		manager.load("images/player/walk.png", Texture.class);
 		manager.load("images/player/playerShadow.png", Texture.class);
 		manager.load("images/player/sleep.png", Texture.class);
+		manager.load("images/player/draw.png", Texture.class);
 		
 		manager.load("images/playerIcon/testman.png", Texture.class);
 		manager.load("images/playerIcon/base.png", Texture.class);

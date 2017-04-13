@@ -40,6 +40,7 @@ public class Player extends BaseActor {
 		squat 		= loadSheet((Texture) this.game.assets.manager.get("images/player/squat.png"), 31, 7, 5, .125f, true); 
 		walk 		= loadSheet((Texture) this.game.assets.manager.get("images/player/walk.png"), 4, 4, 1, .2f, true);
 		sleep 		= loadSheet((Texture) this.game.assets.manager.get("images/player/sleep.png"), 2, 2, 1, .75f, true);
+		drawing 	= loadSheet((Texture) this.game.assets.manager.get("images/player/draw.png"), 2, 2, 1, .25f, true);
 		
 		//squat.setPlayMode(Animation.PlayMode.NORMAL);
 		this.setAnimation(idle);
@@ -167,7 +168,7 @@ public class Player extends BaseActor {
 		return sequence(
 					parallel(m, run(new Runnable() { 
 						public void run () { 
-							setAnimation(squat);
+							setAnimation(drawing);
 						}})), 
 					run(new Runnable() { 
 						public void run () { 
