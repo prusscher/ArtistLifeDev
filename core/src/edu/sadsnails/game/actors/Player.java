@@ -19,10 +19,11 @@ public class Player extends BaseActor {
 	private Animation<TextureRegion> lookaround;
 	private Animation<TextureRegion> squat;
 	private Animation<TextureRegion> walk;
+	private Animation<TextureRegion> sleep;
 	private Animation<TextureRegion> drawing;
 	
 	private int[] artLoc = {210, 110};
-	private int[] sleepLoc = {145, 105};
+	private int[] sleepLoc = {130, 115}; // 145, 105
 	
 	private Room room;
 	
@@ -34,10 +35,11 @@ public class Player extends BaseActor {
 		this.room = room;
 		
 		// Load the player animations 
-		idle = loadSheet((Texture) this.game.assets.manager.get("images/player/idle.png"), 2, 2, 1, .75f, true);
-		lookaround = loadSheet((Texture) this.game.assets.manager.get("images/player/lookaround.png"),4, 4, 1, .75f, true);
-		squat = loadSheet((Texture) this.game.assets.manager.get("images/player/squat.png"), 31, 7, 5, .125f, true); 
-		walk = loadSheet((Texture) this.game.assets.manager.get("images/player/walk.png"), 4, 4, 1, .2f, true);
+		idle 		= loadSheet((Texture) this.game.assets.manager.get("images/player/idle.png"), 2, 2, 1, .75f, true);
+		lookaround 	= loadSheet((Texture) this.game.assets.manager.get("images/player/lookaround.png"),4, 4, 1, .75f, true);
+		squat 		= loadSheet((Texture) this.game.assets.manager.get("images/player/squat.png"), 31, 7, 5, .125f, true); 
+		walk 		= loadSheet((Texture) this.game.assets.manager.get("images/player/walk.png"), 4, 4, 1, .2f, true);
+		sleep 		= loadSheet((Texture) this.game.assets.manager.get("images/player/sleep.png"), 2, 2, 1, .75f, true);
 		
 		//squat.setPlayMode(Animation.PlayMode.NORMAL);
 		this.setAnimation(idle);
@@ -191,8 +193,9 @@ public class Player extends BaseActor {
 					screen.dimForSleep(); 
 				else 
 					screen.dimForNap(); 
-				}
-			};
+				setAnimation(sleep);
+			}
+		};
 		
 		Runnable updateStats = new Runnable() { 
 			public void run() { 
@@ -241,26 +244,5 @@ public class Player extends BaseActor {
 		
 		// Add the action to walk to the sleep location, sleep, and call the sleep Action
 		addAction(after(sequence(walkAction(sleepLoc[0], sleepLoc[1]), sleepAction(sleepLoc[0], sleepLoc[1], 16, type, screen),  walkAction((float) sleepLoc[1], (float) sleepLoc[1]))));	
-	}
-	
-	private Animation<TextureRegion> loadSheet(Texture texToAnim, int numFrames, int width, int height, float time, boolean loop) {
-		TextureRegion[][] tmp = TextureRegion.split(texToAnim, texToAnim.getWidth()/width, texToAnim.getHeight()/height);
-		
-//		System.out.println(numFrames + " " + width + "x" + height + " " + tmp.length + " " +tmp[0].length);
-		
-		TextureRegion[] frames = new TextureRegion[numFrames];
-		int frameCount = 0;
-		
-		for(int x = 0; x < width; x++)
-			for(int y = 0; y < height; y++)
-				if(frameCount < numFrames)
-					frames[frameCount++] = tmp[y][x];
-				else
-					break;
-		Animation<TextureRegion> out = new Animation<TextureRegion>(time, frames);
-		if(loop)	
-			out.setPlayMode(Animation.PlayMode.LOOP);
-		
-		return out;
 	}
 }

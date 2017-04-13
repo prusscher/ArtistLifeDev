@@ -7,6 +7,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -23,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
@@ -497,13 +499,24 @@ public class MainUI {
 			artUI.fill();
 			artUI.center();
 			artUI.top();
+			//artUI.setColor(.1f, .1f, .1f, .5f);
 			typeSelBox.setItems(drawing_type_array);
 			subjectSelBox.setItems(drawing_subject_array);
-	
-			artUI.addActor(new Label("Type", skin));
+			
+			Label typeLabel = new Label("Type", skin);
+			typeLabel.setHeight(20);
+			
+			Label subjectLabel = new Label("Subject", skin);
+			subjectLabel.setHeight(20);
+			
+			submitArtButton.padTop(4f);
+			
+			artUI.addActor(typeLabel);
 			artUI.addActor(typeSelBox);
-			artUI.addActor(new Label("Subject", skin));
+			
+			artUI.addActor(subjectLabel);
 			artUI.addActor(subjectSelBox);
+			
 			artUI.addActor(submitArtButton);
 
 		stage.addActor(artUI);
@@ -632,6 +645,9 @@ public class MainUI {
 
 		// ----- Create the settings table -----
 		settingsTable = new Table();
+		
+		settingsTable.setBackground(new TextureRegionDrawable(new TextureRegion((Texture)game.assets.manager.get("dev/background.png"))));
+		
 		settingsTable.add(new Label("Resolution", skin)).height(20);
 		settingsTable.row();
 		settingsTable.add(resolutions).height(20);

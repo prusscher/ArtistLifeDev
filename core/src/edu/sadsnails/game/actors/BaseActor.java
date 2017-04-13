@@ -65,4 +65,24 @@ public class BaseActor extends Actor {
         }
     } 
 	
+	public Animation<TextureRegion> loadSheet(Texture texToAnim, int numFrames, int width, int height, float time, boolean loop) {
+		TextureRegion[][] tmp = TextureRegion.split(texToAnim, texToAnim.getWidth()/width, texToAnim.getHeight()/height);
+		
+//		System.out.println(numFrames + " " + width + "x" + height + " " + tmp.length + " " +tmp[0].length);
+		
+		TextureRegion[] frames = new TextureRegion[numFrames];
+		int frameCount = 0;
+		
+		for(int x = 0; x < width; x++)
+			for(int y = 0; y < height; y++)
+				if(frameCount < numFrames)
+					frames[frameCount++] = tmp[y][x];
+				else
+					break;
+		Animation<TextureRegion> out = new Animation<TextureRegion>(time, frames);
+		if(loop)	
+			out.setPlayMode(Animation.PlayMode.LOOP);
+		
+		return out;
+	}
 }

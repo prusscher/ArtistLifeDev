@@ -23,6 +23,7 @@ public class Assets {
 		manager.load("dev/grid.png", Texture.class);
 		manager.load("dev/BaseActor.png", Texture.class);
 		manager.load("dev/ColorAnim.png", Texture.class);
+		manager.load("dev/background.png", Texture.class);
 		
 		manager.load("images/mainMenu/mainmenuwater_sheet.png", Texture.class);
 		
@@ -32,6 +33,7 @@ public class Assets {
 		manager.load("images/player/squat.png", Texture.class);
 		manager.load("images/player/walk.png", Texture.class);
 		manager.load("images/player/playerShadow.png", Texture.class);
+		manager.load("images/player/sleep.png", Texture.class);
 		
 		manager.load("images/playerIcon/testman.png", Texture.class);
 		manager.load("images/playerIcon/base.png", Texture.class);
