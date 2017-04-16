@@ -105,7 +105,7 @@ public class Actions {
 			d_subject = "Nature";
 			break;
 		case 7:
-			d_subject = "Human";
+			d_subject = "People";
 			break;
 		}
 		
