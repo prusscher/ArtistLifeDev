@@ -121,6 +121,9 @@ public class MainUI {
 
 	// ----- Pause Menu Elements
 	private VerticalGroup PauseUI;
+		private TextButton helpButton;
+			private Label helpInformation;
+			private ScrollPane helpDoc;
 		private TextButton settingsButton;
 		private TextButton quitToMMButton;
 		private TextButton quitToDeskButton;
@@ -146,6 +149,7 @@ public class MainUI {
 	private boolean a_StoreMenueDisplayed = false;
 	
 	private boolean pauseMenuDisplayed = false;
+	private boolean helpDocDisplayed = false;
 	private boolean p_SettingsMenuDisplayed = false;
 
 	// Debug Stuff
@@ -256,7 +260,7 @@ public class MainUI {
 					popupDisplayed = true;
 					pauseMenuDisplayed = true;
 					PauseUI.setVisible(true);
-				} else if(p_SettingsMenuDisplayed) {
+				} else if(p_SettingsMenuDisplayed || helpDocDisplayed) {
 					closePopups();
 					pause.setText("Pause");
 					action.setVisible(true);
@@ -445,6 +449,37 @@ public class MainUI {
 				closePopups();
 			}
 		});
+		
+		// Help menu setup
+		helpInformation = new Label("\nWelcome to Artist Life!\n\n"
+				+ "To create artwork, use the Action button and select MAKE ART.\n\n"
+				+ "For each type of artwork you create, the community will react differently "
+				+ "to each combination. This will determine the amount of XP and money you earn.\n\n"
+				+ "As you level up from earned XP, you will unlock new things.\n\n"
+				+ "But will also lose energy for creating artwork, so make sure you take a nap,"
+				+ "go to sleep, or even purchase an energy drink in the store!.\n\n"
+				+ "To customize your character, use the Action button and select CUSTOMIZE.\n", skin);
+		helpInformation.setWrap(true);
+		helpDoc = new ScrollPane(helpInformation, skin);
+		helpDoc.setBounds(100, 60, 200, 120);
+		helpDoc.setColor(.1f, .1f, .1f, .8f);
+		stage.addActor(helpDoc);
+		helpDoc.setVisible(false);
+		
+		helpButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				System.out.println("helpButton");
+				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
+				popupDisplayed = true;
+				helpDocDisplayed = true;
+				helpDoc.setVisible(true);
+				PauseUI.setVisible(false);
+				pause.setText("Exit");
+				action.setVisible(false);
+			}
+		});
+		
 		storeButton.addListener(new ChangeListener(){
 			public void changed(ChangeEvent event, Actor actor) {
 				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
@@ -776,6 +811,7 @@ public class MainUI {
 		PauseUI.setBounds(138, 22, 120, 120);
 		PauseUI.fill();
 
+		PauseUI.addActor(helpButton);
 		PauseUI.addActor(settingsButton);
 		PauseUI.addActor(quitToMMButton);
 		PauseUI.addActor(quitToDeskButton);
@@ -908,6 +944,7 @@ public class MainUI {
 		
 		logPane.setVisible(false);
 		
+		helpDocDisplayed = false;
 		pauseMenuDisplayed = false;
 		p_SettingsMenuDisplayed = false;
 
@@ -915,6 +952,7 @@ public class MainUI {
 		customizeUI.setVisible(false);
 		settingsTable.setVisible(false);
 		storeUI.setVisible(false);
+		helpDoc.setVisible(false);
 
 		ActionUI.setVisible(false);
 		PauseUI.setVisible(false);
