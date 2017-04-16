@@ -1,12 +1,14 @@
 package edu.sadsnails.game;
 
+import java.util.Random;
+
 public class Actions {
 	
 	/* -----------------------------------------------------------------
 	 * 	This class serves the purpose of maintaining all of the possible
 	 *	actions within the game.
 	 * -----------------------------------------------------------------*/
-	
+	private MyGdxGame game;
 	private State state;
 	
 	private String d_type;
@@ -19,10 +21,15 @@ public class Actions {
 	
 	private int art_rank;
 	
-	public Actions(State state){
+	public static final int NAP = 1;
+	public static final int SLEEP = 2;
+	
+	public Actions(MyGdxGame game, State state){
+		this.game = game;
 		this.state = state;
 		d_type = new String("type");
 		d_subject = new String("subject");
+		state.log("Well, you're an artist now! Check here for further updates on your grueling trudge towards making a cool picture or two.");
 	}
 	
 	/*	makeArt method:
@@ -37,8 +44,8 @@ public class Actions {
 	 * 
 	 */
 	public void makeArt(int type, int subject) {
-		
 		System.out.println("I made art");
+		state.log("I made art");
 		type++; subject++;
 		switch(type){
 		case 1:
@@ -98,14 +105,16 @@ public class Actions {
 			d_subject = "Nature";
 			break;
 		case 7:
-			d_subject = "Human";
+			d_subject = "People";
 			break;
 		}
 		
 		System.out.println("Type: " + d_type + " \nSubject: " + d_subject);
+		state.log("Type: " + d_type + " \nSubject: " + d_subject);
 		
-		if(energy_consum >= state.energy) {
+		if(energy_consum >= state.getEnergy()) {
 			System.out.println("This task will take more energy than you have");
+			state.log("This task will take more energy than you have");
 			time_consum = 0;
 			energy_consum = 0;
 			xp_gain = 0;
@@ -131,6 +140,7 @@ public class Actions {
 		|| (d_type.equals("Painting") && d_subject.equals("People")))
 		{
 			System.out.println("The audience really liked your drawing");
+			state.log("The audience really liked your drawing");
 			art_rank = 2;
 			alterPopularity(2);
 		}
@@ -150,6 +160,7 @@ public class Actions {
 		|| (d_type.equals("Painting") && d_subject.equals("Fantasy")))
 		{
 			System.out.println("The audience liked your drawing a little");
+			state.log("The audience liked your drawing a little");
 			art_rank = 1;
 			alterPopularity(1);
 		}
@@ -162,6 +173,7 @@ public class Actions {
 		|| (d_type.equals("Surreal") && d_subject.equals("Nature")))
 		{
 			System.out.println("The audience did not feel strongly one way or the other about your drawing");
+			state.log("The audience did not feel strongly one way or the other about your drawing");
 			art_rank = 0;
 			alterPopularity(0);
 		}
@@ -173,6 +185,7 @@ public class Actions {
 		|| (d_type.equals("Painting") && d_subject.equals("Funny")))
 		{
 			System.out.println("The audience did not really like your drawing");
+			state.log("The audience did not really like your drawing");
 			art_rank = -1;
 			alterPopularity(-1);
 		}
@@ -184,17 +197,66 @@ public class Actions {
 		|| (d_type.equals("Surreal") && d_subject.equals("Anime")))
 		{
 			System.out.println("The audience hated your drawing");
+			state.log("The audience hated your drawing");
 			art_rank = -2;
 			alterPopularity(-2);
 		}
 		incMoney(state.popularity, art_rank);
-		state.energy -= energy_consum;
+		state.setEnergy(state.getEnergy() - energy_consum);
 		incXP(xp_gain);
 		passTime(time_consum);
 		state.printStates();
 		}
-		
 	}
+	
+	public int getTime(int type) {
+		type++;
+		switch(type){
+			case 1:
+				return 2;
+			case 2:
+				return 1;
+			case 3:
+				return 3;
+			case 4:
+				return 5;
+			case 5:
+				return 7;
+			case 6:
+				return 10;
+			default:
+				return 1;
+		}
+	}
+	
+	public boolean canMakeArt(int type) {
+		int eToConsume = 0;
+		
+		switch(type){
+		case 1:
+			eToConsume = 25;
+			break;
+		case 2:
+			eToConsume = 30;
+			break;
+		case 3:
+			eToConsume = 40;
+			break;
+		case 4:
+			eToConsume = 50;
+			break;
+		case 5:
+			eToConsume = 70;
+			break;
+		case 6:
+			eToConsume = 95;
+		}
+		
+		if(eToConsume >= state.getEnergy())
+			return false;
+		return true;
+	}
+	
 	/*	alterPopularity method:
 	 * 		This method serves the purpose of altering the player's popularity
 	 * 		according to their most recent piece of art.
@@ -270,42 +332,55 @@ public class Actions {
 	 */
 	public void sleep(int type) {		
 		// if energy is 100 you cannot sleep
-		if(state.energy == 100) {
-			System.out.println("You can't sleep when you're wide awake!");
+		if(state.getEnergy() == 100) {
+			
 		}
 		// try to sleep
 		// if it's a nap, check to see if you've napped already
 		// if it's a full night's sleep, it moves to the first hour
 		// 	of the next day
 		else{
-		if(type == 2) {
-			System.out.println("I successfully slept");
-			passTime(-1);
-			state.energy = 100;
-		}
-
-		// if you have napped, you can't nap again
-		// if you have not napped, raise energy by 50
-		// and move clock forward 5 hours
-		else {
-			if(state.has_napped)
-				System.out.println("I have already napped today");
-
-			else {
-				if(state.energy + 50 >= 100) {
-					state.energy = 100;
-					state.has_napped = true;
-				}
-				else {
-					state.energy += 50;
-					state.has_napped = true;
-				}
-				passTime(5);
+			
+			if(type == 2) {
+				System.out.println("I successfully slept");
+				state.log("I successfully slept");
+				passTime(-1);
+				state.setEnergy(100);
 			}
-		}
+		
+			// if you have napped, you can't nap again
+			// if you have not napped, raise energy by 50
+			// and move clock forward 5 hours
+			else {
+				if(state.has_napped) {
+					System.out.println("I have already napped today");
+					state.log("I have already napped today");
+				} else {
+					if(state.getEnergy() + 50 >= 100) {
+						state.setEnergy(100);
+						state.has_napped = true;
+					}
+					else {
+						state.setEnergy(state.getEnergy() + 50);
+						state.has_napped = true;
+					}
+					passTime(5);
+				}
+			}
 		}
 	}
 		
+	public boolean canSleep() {
+		if(state.getEnergy() == 100){
+			System.out.println("You can't sleep when you're wide awake!");
+			state.log("You can't sleep when you're wide awake!");
+			((GameScreen) game.getScreen()).getUI().updateState();
+			return false;
+		}
+		else{
+		return true;
+		}
+	}
 	
 	/* useBooster method:
 	 * 		This method is for the various items you can purchase
@@ -319,23 +394,23 @@ public class Actions {
 	public void buyBooster() {
 		if(state.coffee_used) 
 			System.out.println("I have already had coffee today");
-		else if(state.money < 5) {
+		else if(state.getMoney() < 5) {
 			System.out.println("I do not have enough money for this");
 		}
-		else if(state.energy == 100) {
+		else if(state.getEnergy() == 100) {
 			System.out.println("I cannot drink coffee when I am wide awake");
 		}
-		else if((state.energy + 40) > 100) {
+		else if((state.getEnergy() + 40) > 100) {
 			System.out.println("I bought coffee!");
-			state.energy = 100;
-			state.money -= 5;
+			state.setEnergy(100);
+			state.setMoney(state.getMoney() - 5);
 			state.spent_money += 5;
 			state.coffee_used = true;
 		}
 		else {
 			System.out.println("I bought coffee!");
-			state.energy += 40;
-			state.money -= 5;
+			state.setEnergy(state.getEnergy() + 40);
+			state.setMoney(state.getMoney() - 5);
 			state.spent_money += 5;
 			state.coffee_used = true;
 		}
@@ -347,38 +422,38 @@ public class Actions {
 	 */
 	public void incXP(int xpAmount) {
 		
-		if(xpAmount + state.xp >= state.toNext && state.level != 8) {
+		if(xpAmount + state.getXp() >= state.toNext && state.level != 8) {
 			//level up, if you're not max level
 			
-			state.xp	+= xpAmount;
+			state.setXp(state.getXp() + xpAmount);
 			state.level	++;
 			state.toNext *= 3;
 			
 			switch (state.level){
-			case 1: state.title = "Stubborn Snail";
+			case 1: state.setTitle("1");
 					break;
-			case 2: state.title = "Determined Doodler";
+			case 2: state.setTitle("2");
 					break;
-			case 3: state.title = "Seasoned Sketcher";
+			case 3: state.setTitle("3");
 					break;
-			case 4: state.title = "Accomplished Artiste";
+			case 4: state.setTitle("4");
 					break;
-			case 5: state.title = "Level Five Clever Text";
+			case 5: state.setTitle("5");
 					break;
-			case 6: state.title = "Level Six Clever And Cool Text";
+			case 6: state.setTitle("6");
 					break;
-			case 7: state.title = "Actually Aesthetic";
+			case 7: state.setTitle("7");
 					break;
-			case 8: state.title = "A R T I S T";
+			case 8: state.setTitle("8");
 					break;
-			default: state.title = "you broke me. :(";
+			default: state.setTitle("0 WRONG");
 					 break;
 			}
 			
-			System.out.println("You've leveled up! You are now level " +state.level + "! People have started to call you the " + state.title);
+			System.out.println("You've leveled up! You are now level " +state.level + "! People have started to call you the " + state.getTitle());
 		}
 		else
-			state.xp 	+= xpAmount;
+			state.setXp(state.getXp() + xpAmount);
 		}
 	
 	/* passTime method:
@@ -389,35 +464,76 @@ public class Actions {
 	 */
 	public void passTime(int hrs) {
 		if(hrs == -1) {
-			if(state.date[2] == 30) {
-				if(state.date[1] == 12) 
-					state.date[0] ++;
-				state.date[1] ++;
-				state.date[2] = 1;
+			if(state.getDate()[2] == 30) {
+				if(state.getDate()[1] == 12) 
+					state.getDate()[0] ++;
+				state.getDate()[1] ++;
+				state.getDate()[2] = 1;
+				randEvent();
 			}
 			else {
-				state.date[2] ++;
+				state.getDate()[2] ++;
+				randEvent();
 			}
-		 state.hour = 1;
+		 state.has_napped = false;
+		 state.coffee_used = false;
+		 state.setHour(1);
 		}
-		else if((state.hour + hrs) > 24) {
-			int hr = 24 - state.hour;
-			if(state.date[2] == 30) {
-				if(state.date[1] == 12) 
-					state.date[0] ++;
-				state.date[1] ++;
-				state.date[2] = 1;
+		else if((state.getHour() + hrs) > 24) {
+			int hr = 24 - state.getHour();
+			if(state.getDate()[2] == 30) {
+				if(state.getDate()[1] == 12) 
+					state.getDate()[0] ++;
+				state.getDate()[1] ++;
+				state.getDate()[2] = 1;
+				randEvent();
 			}
 			else {
-				state.date[2] ++;
+				state.getDate()[2] ++;
+				randEvent();
 			}
-			state.hour = hr + hrs;
+			state.setHour(hr + hrs);
 			state.has_napped = false;
 			state.coffee_used = false;
 		}
 		
-		state.hour += hrs;
+		state.setHour(state.getHour() + hrs);
 		
+	}
+	/*
+	 * When you roll over to a new day, generates a random number to see if any random events happen
+	 * in the morning.
+	 */
+	public void randEvent(){
+		int eventCheck = game.rng.nextInt(101);
+		System.out.print("event number " + eventCheck);
+		if (eventCheck <= 5){
+			state.setMoney(state.getMoney() + 20);
+			state.earned_money += 20;
+			state.log("On your way to the store to buy Artist Fuel(tm) you found twenty dollars! What a luckster you are!"); 
+			((GameScreen) game.getScreen()).getUI().updateState();
+		}
+		else if (eventCheck > 5 && eventCheck <= 10){
+			alterPopularity(1);
+			state.log("A cool and good artist reblogged one of your pictures! You get a small boost in popularity.");
+			((GameScreen) game.getScreen()).getUI().updateState();
+		}
+		else if (eventCheck >= 90 && eventCheck < 94){
+			alterPopularity(-1);
+			state.log("You got into an online argument and called someone a 'canvas licking paintspiller'. Everyone was aghast.");
+			((GameScreen) game.getScreen()).getUI().updateState();
+		}
+		else if (eventCheck >= 95){
+			state.log("A hip new indie pixel retro throwback survival game was released! You bought it without even LOOKING at your wallet.");
+			if (state.getMoney() > 10){
+				state.setMoney(state.getMoney() - 10);
+				((GameScreen) game.getScreen()).getUI().updateState();
+			}
+			else{
+				state.setMoney(0);
+				((GameScreen) game.getScreen()).getUI().updateState();
+			}
+		}
 	}
 	
 	/* incMoney method:
@@ -431,23 +547,23 @@ public class Actions {
 		if(popularity == -1) {
 			switch(ranking) {
 			case -2:
-				state.money += 0;
+				state.setMoney(state.getMoney() + 0);
 				state.earned_money += 0;
 				break;
 			case -1:
-				state.money += 0;
+				state.setMoney(state.getMoney() + 0);
 				state.earned_money += 0;
 				break;
 			case 0:
-				state.money += 1;
+				state.setMoney(state.getMoney() + 1);
 				state.earned_money += 1;
 				break;
 			case 1:
-				state.money += 5;
+				state.setMoney(state.getMoney() + 5);
 				state.earned_money += 5;
 				break;
 			case 2:
-				state.money += 10;
+				state.setMoney(state.getMoney() + 10);
 				state.earned_money += 10;
 				break;
 			}
@@ -455,23 +571,23 @@ public class Actions {
 		if(popularity == -0.5) {
 			switch(ranking) {
 			case -2:
-				state.money += 0;
+				state.setMoney(state.getMoney() + 0);
 				state.earned_money += 0;
 				break;
 			case -1:
-				state.money += 1;
+				state.setMoney(state.getMoney() + 1);
 				state.earned_money += 1;
 				break;
 			case 0:
-				state.money += 2;
+				state.setMoney(state.getMoney() + 2);
 				state.earned_money += 2;
 				break;
 			case 1:
-				state.money += 7;
+				state.setMoney(state.getMoney() + 7);
 				state.earned_money += 7;
 				break;
 			case 2:
-				state.money += 8;
+				state.setMoney(state.getMoney() + 8);
 				state.earned_money += 8;
 				break;
 			}
@@ -479,23 +595,23 @@ public class Actions {
 		if(popularity == 0) {
 			switch(ranking) {
 			case -2:
-				state.money += 1;
+				state.setMoney(state.getMoney() + 1);
 				state.earned_money += 1;
 				break;
 			case -1:
-				state.money += 5;
+				state.setMoney(state.getMoney() + 5);
 				state.earned_money += 5;
 				break;
 			case 0:
-				state.money += 10;
+				state.setMoney(state.getMoney() + 10);
 				state.earned_money += 10;
 				break;
 			case 1:
-				state.money += 12;
+				state.setMoney(state.getMoney() + 12);
 				state.earned_money += 12;
 				break;
 			case 2:
-				state.money += 15;
+				state.setMoney(state.getMoney() + 15);
 				state.earned_money += 15;
 				break;
 			}
@@ -503,23 +619,23 @@ public class Actions {
 		if(popularity == 0.5) {
 			switch(ranking) {
 			case -2:
-				state.money += 2;
+				state.setMoney(state.getMoney() + 2);
 				state.earned_money += 2;
 				break;
 			case -1:
-				state.money += 5;
+				state.setMoney(state.getMoney() + 5);
 				state.earned_money += 5;
 				break;
 			case 0:
-				state.money += 15;
+				state.setMoney(state.getMoney() + 15);
 				state.earned_money += 15;
 				break;
 			case 1:
-				state.money += 20;
+				state.setMoney(state.getMoney() + 20);
 				state.earned_money += 20;
 				break;
 			case 2:
-				state.money += 25;
+				state.setMoney(state.getMoney() + 25);
 				state.earned_money += 25;
 				break;
 			}
@@ -527,23 +643,23 @@ public class Actions {
 		if(popularity == 1) {
 			switch(ranking) {
 			case -2:
-				state.money += 3;
+				state.setMoney(state.getMoney() + 3);
 				state.earned_money += 3;
 				break;
 			case -1:
-				state.money += 6;
+				state.setMoney(state.getMoney() + 6);
 				state.earned_money += 6;
 				break;
 			case 0:
-				state.money += 20;
+				state.setMoney(state.getMoney() + 20);
 				state.earned_money += 20;
 				break;
 			case 1:
-				state.money += 25;
+				state.setMoney(state.getMoney() + 25);
 				state.earned_money += 25;
 				break;
 			case 2:
-				state.money += 30;
+				state.setMoney(state.getMoney() + 30);
 				state.earned_money += 30;
 				break;
 			}
