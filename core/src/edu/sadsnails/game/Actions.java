@@ -333,8 +333,7 @@ public class Actions {
 	public void sleep(int type) {		
 		// if energy is 100 you cannot sleep
 		if(state.getEnergy() == 100) {
-			System.out.println("You can't sleep when you're wide awake!");
-			state.log("You can't sleep when you're wide awake!");
+			
 		}
 		// try to sleep
 		// if it's a nap, check to see if you've napped already
@@ -372,9 +371,15 @@ public class Actions {
 	}
 		
 	public boolean canSleep() {
-		if(state.getEnergy() == 100)
+		if(state.getEnergy() == 100){
+			System.out.println("You can't sleep when you're wide awake!");
+			state.log("You can't sleep when you're wide awake!");
+			((GameScreen) game.getScreen()).getUI().updateState();
 			return false;
+		}
+		else{
 		return true;
+		}
 	}
 	
 	/* useBooster method:
