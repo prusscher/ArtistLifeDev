@@ -1006,7 +1006,7 @@ public class MainUI {
 		
 		statsLabel.setBounds(100, 20, 200, 200);
 		statsLabel.setAlignment(Align.center);
-		statsLabel.setColor(Color.ORANGE);
+		statsLabel.setColor(Color.WHITE);
 		stage.addActor(statsLabel);
 		statsLabel.setVisible(false);
 		
@@ -1268,5 +1268,18 @@ public class MainUI {
 		
 		// Set the log text
 		logLabel.setText(screen.getState().getLog());
+		
+		// Update the stats
+		State state = screen.getState();
+		statsLabel.setText("XP: " + state.getXp() + "\n" + "\n" +
+		  		"Level: " + state.getLevel() + "\n" + "\n" +
+		  		"Title: " + state.getTitle() + "\n" + "\n" +
+		  		"Popularity: " + state.getPopularity() + "\n" + "\n" +
+		  		"Year " + state.getDate()[0] + " Month " + state.getDate()[1] + " Day " + state.getDate()[2] + "\n" + "\n" +
+		  		"Hour: " + state.getHour() + "\n" + "\n" +
+		  		"Energy: " + state.getEnergy() + "\n" + "\n" +
+		  		"Current Funds: " + state.getMoney() + "\n" + "\n" +
+		  		"Money Earned: " + state.getEarned_money() + "\n" + "\n" +
+		  		"Money Spent: " + state.getSpent_money());
 	}
 }
