@@ -370,10 +370,16 @@ public class Actions {
 		}
 	}
 		
-	public boolean canSleep() {
+	public boolean canSleep(int type) {
 		if(state.getEnergy() == 100){
 			System.out.println("You can't sleep when you're wide awake!");
 			state.log("You can't sleep when you're wide awake!");
+			((GameScreen) game.getScreen()).getUI().updateState();
+			return false;
+		}
+		else if(state.has_napped == true && type == 1){
+			System.out.println("You shouldn't take more than one nap a day!");
+			state.log("You shouldn't take more than one nap a day!");
 			((GameScreen) game.getScreen()).getUI().updateState();
 			return false;
 		}
