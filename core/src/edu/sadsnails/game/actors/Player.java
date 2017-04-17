@@ -23,7 +23,7 @@ public class Player extends BaseActor {
 	private Animation<TextureRegion> drawing;
 	
 	private int[] artLoc = {210, 110};
-	private int[] sleepLoc = {130, 115}; // 145, 105
+	private int[] sleepLoc = {130, 105}; // 145, 105
 	
 	private Room room;
 	
