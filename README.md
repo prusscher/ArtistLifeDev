@@ -2,6 +2,9 @@
 Game for CS3141. Developer Repository for Team 4.
 Level/Progression based game built using libGDX and Java for Desktop.
 
+# Sprint 4 Deliverable
+https://github.com/prusscher/ArtistLifeDev/releases/tag/0.1.4
+
 # Sprint 3 Deliverable
 https://github.com/prusscher/ArtistLifeDev/releases/tag/0.1.3
 
