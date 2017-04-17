@@ -40,6 +40,11 @@ public class State {
 	
 	protected String pop_title;
 	
+	// Items
+	private int bedIndex;
+	private int deskIndex;
+	private int roomIndex;
+	
 	// Booster
 	protected boolean coffee_used;
 	protected boolean has_napped;
@@ -61,7 +66,6 @@ public class State {
 	private String log;
 	
 	public State() {
-		
 		// Get to the settings directory and create a new file
     	prefsFolder = System.getenv("LOCALAPPDATA") + "\\sadsnails\\saves";
     	fileName = prefsFolder + "\\save.txt";
@@ -107,23 +111,37 @@ public class State {
 		setMoney(0); setSpent_money(0); setEarned_money(0);
 		pop_title = "Not popular or unpopular";	
     	
+		setBedIndex(0);
+		setDeskIndex(0);
+		setRoomIndex(0);
+		
 		// Read File and reset variables to the save file
-    	if(fileExists && pair.size() == 14) {
+    	if(fileExists && pair.size() == 17) {
+    		System.out.println("Loading Player Save File");
+    		
     		// Load previous state
     		setXp(pair.getInt("xp"));
-    		toNext 			= pair.getInt("toNext");
+    		toNext = pair.getInt("toNext");
     		setLevel(pair.getInt("level"));
     		setTitle(pair.getString("title"));
     		setPopularity(pair.getFloat("popularity"));
-    		getDate()[0] 		= pair.getInt("date0");
-    		getDate()[1] 		= pair.getInt("date1");
-    		getDate()[2] 		= pair.getInt("date2");
+    		getDate()[0] = pair.getInt("date0");
+    		getDate()[1] = pair.getInt("date1");
+    		getDate()[2] = pair.getInt("date2");
     		setHour(pair.getInt("hour"));
     		setEnergy(pair.getInt("energy"));
     		setMoney(pair.getFloat("money"));
     		setSpent_money(pair.getFloat("spent_money"));
     		setEarned_money(pair.getFloat("earned_money"));
     		pop_title 		= pair.getString("pop_title");	
+    		
+    		setBedIndex(pair.getInt("bedIndex"));
+    		setDeskIndex(pair.getInt("deskIndex"));
+    		setRoomIndex(pair.getInt("roomIndex"));
+    		
+    		if(bedIndex == -1) bedIndex = 0;
+    		if(deskIndex == -1) deskIndex = 0;
+    		if(roomIndex == -1) roomIndex = 0;
     	}
     	
     	log = "\n";
@@ -132,6 +150,7 @@ public class State {
 	}
 	
 	public void save() {
+		System.out.println("Saving Player File");
 		pair.putInt("xp", getXp());
 		pair.putInt("toNext", toNext);
 		pair.putInt("level", getLevel());
@@ -147,6 +166,10 @@ public class State {
 		pair.putFloat("earned_money", getEarned_money());
 		pair.putString("pop_title", pop_title);
 		
+		pair.putInt("bedIndex", getBedIndex());
+		pair.putInt("deskIndex", getDeskIndex());
+		pair.putInt("roomIndex", getRoomIndex());
+		
 		pair.write(fileName);
 	}
 	
@@ -160,8 +183,7 @@ public class State {
 //		System.out.println("Energy: " + energy);
 //		System.out.println("Money : " + money);
 //		System.out.println("Money Earned : " + earned_money);
-//		System.out.println("Money Spent : " + spent_money);
-		
+//		System.out.println("Money Spent : " + spent_money);	
 	}
 	
 	public int getHour() {
@@ -194,6 +216,10 @@ public class State {
 
 	public void setMoney(float money) {
 		this.money = money;
+	}
+	
+	public void spendMoney(float money) {
+		this.money -= money;
 	}
 
 	public int getEnergy() {
@@ -258,5 +284,29 @@ public class State {
 
 	public void setSpent_money(float spent_money) {
 		this.spent_money = spent_money;
+	}
+
+	public int getBedIndex() {
+		return bedIndex;
+	}
+
+	public void setBedIndex(int bedIndex) {
+		this.bedIndex = bedIndex;
+	}
+
+	public int getDeskIndex() {
+		return deskIndex;
+	}
+
+	public void setDeskIndex(int deskIndex) {
+		this.deskIndex = deskIndex;
+	}
+
+	public int getRoomIndex() {
+		return roomIndex;
+	}
+
+	public void setRoomIndex(int roomIndex) {
+		this.roomIndex = roomIndex;
 	}
 }

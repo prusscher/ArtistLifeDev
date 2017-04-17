@@ -43,6 +43,7 @@ public class Assets {
 		manager.load("images/playerIcon/shirts.png", Texture.class);
 
 		manager.load("images/rooms/room.png", Texture.class);	
+		manager.load("images/rooms/roomIcons.png", Texture.class);	
 		
 		manager.load("images/items/bed.png", Texture.class);
 		manager.load("images/items/desk.png", Texture.class);

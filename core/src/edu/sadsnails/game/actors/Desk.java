@@ -41,4 +41,15 @@ public class Desk extends BaseActor{
 		
 		region = desks[curDesk];
 	}
+	
+	public int getDeskIndex() { return curDesk; }
+	
+	public void setBed(int num) {
+		if(num > desks.length-1)
+			curDesk = 0;
+		else 
+			curDesk = num;
+		
+		region = desks[curDesk];
+	}
 }

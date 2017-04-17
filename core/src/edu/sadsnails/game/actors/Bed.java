@@ -1,7 +1,6 @@
 package edu.sadsnails.game.actors;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import edu.sadsnails.game.MyGdxGame;
@@ -38,6 +37,17 @@ public class Bed extends BaseActor{
 		
 		if(curBed > beds.length-1)
 			curBed = 0;
+		
+		region = beds[curBed];
+	}
+	
+	public int getBedIndex() { return curBed; }
+	
+	public void setBed(int num) {
+		if(num > beds.length-1)
+			curBed = 0;
+		else
+			curBed = num;
 		
 		region = beds[curBed];
 	}

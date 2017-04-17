@@ -73,18 +73,21 @@ public class GameScreen implements Screen 	{
 		room = new Room(game);
 		room.setName("room");
 		room.setBounds(80, 0, 240, 240);
+		room.setRoom(state.getRoomIndex());
 		stage.addActor(room);
 		room.setZIndex(0);
 		
 		bed = new Bed(game);
 		bed.setName("bed");
 		bed.setBounds(125, 95, 64, 64);
+		bed.setBed(state.getBedIndex());
 		stage.addActor(bed);
 		bed.setZIndex(2);
 		
 		desk = new Desk(game);
 		desk.setName("desk");
 		desk.setBounds(210, 105, 64, 64);
+		desk.setBed(state.getDeskIndex());
 		stage.addActor(desk);
 		desk.setZIndex(2);
 		
@@ -174,11 +177,11 @@ public class GameScreen implements Screen 	{
 			System.out.println("Z: " + pos.z);
 		}
 		
-		if(Gdx.input.isKeyPressed(Keys.SPACE) && Gdx.input.isKeyJustPressed(Keys.SPACE)){
-			room.nextRoom();
-			desk.nextDesk();
-			bed.nextBed();
-		}
+//		if(Gdx.input.isKeyPressed(Keys.SPACE) && Gdx.input.isKeyJustPressed(Keys.SPACE)){
+//			room.nextRoom();
+//			desk.nextDesk();
+//			bed.nextBed();
+//		}
 		
 		// Debug: Set the mouse Pos
 		if(debug) {
@@ -206,6 +209,8 @@ public class GameScreen implements Screen 	{
 	public Actions getActions() { return actions; }
 	public State getState() { return state; }
 	public Room getRoom() { return room; }
+	public Desk getDesk() { return desk; }
+	public Bed getBed() { return bed; }
 	public Player getPlayer() { return player; }
 	
 	public MainUI getUI() { return ui; }
@@ -219,9 +224,13 @@ public class GameScreen implements Screen 	{
 		this.stage.addAction(sequence(alpha(.2f, 4f), moveBy(0, 0, 6f), alpha(1f, 4f)));
 	}
 	
+	public void save() {
+		state.save();
+	}
+	
 	@Override
 	public void dispose() {
-		state.save();
+		save();
 		stage.dispose();
 		ui = null;
 		buttonSound.dispose();

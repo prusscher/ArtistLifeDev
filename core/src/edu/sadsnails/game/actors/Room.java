@@ -41,6 +41,17 @@ public class Room extends BaseActor{
 		region = rooms[curRoom];
 	}
 	
+	public int getRoomIndex() { return curRoom; }
+	
+	public void setRoom(int room) {
+		if(room > rooms.length-1)
+			curRoom = 0;
+		else
+			curRoom = room;
+		
+		region = rooms[curRoom];
+	}
+	
 	/**
 	 * Get random location inside of the room
 	 * Basically, just get a random x and y in the specified range.

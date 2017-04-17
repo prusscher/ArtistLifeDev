@@ -7,6 +7,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -24,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
@@ -155,7 +157,12 @@ public class MainUI {
 	private boolean helpDocDisplayed = false;
 	private boolean p_SettingsMenuDisplayed = false;
 	private boolean p_StatsDisplayed = false;
-
+	
+	private int bedPrice2 = 25;
+	private int bedPrice3 = 80;
+	private int destPrice2 = 150;
+	private int roomPrice2 = 1000;
+	
 	// Debug Stuff
 	private Texture grid;
 	public static Image gridImage;
@@ -485,7 +492,8 @@ public class MainUI {
 		quitToMMButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				Screen thisScreen = game.getScreen();
+				GameScreen thisScreen = (GameScreen) game.getScreen();
+				thisScreen.save();
 				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
 				game.setScreen(new MainMenuScreen(game));
 				thisScreen.dispose();
@@ -494,6 +502,7 @@ public class MainUI {
 		quitToDeskButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+				((GameScreen) game.getScreen()).save();
 				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
 				game.getScreen().dispose();
 				Gdx.app.exit();
@@ -584,70 +593,241 @@ public class MainUI {
 		items.fill();
 		items.top();
 		
+		Texture bedTexture = game.assets.manager.get("images/items/bed.png", Texture.class);
+		Texture deskTexture = game.assets.manager.get("images/items/desk.png", Texture.class);
+		Texture roomTexture = game.assets.manager.get("images/rooms/roomIcons.png", Texture.class);
+		
+		// Set Bed Images
+		TextureRegion[][] temp = TextureRegion.split(bedTexture, bedTexture.getWidth()/3, bedTexture.getHeight());
+		TextureRegion[] beds = {temp[0][0], temp[0][1], temp[0][2]};
+		
+		// Set Desk Images
+		temp = TextureRegion.split(deskTexture, deskTexture.getWidth()/2, deskTexture.getHeight());
+		TextureRegion[] desks = {temp[0][0], temp[0][1]};
+		
+		// Set Room Images
+		temp = TextureRegion.split(roomTexture, roomTexture.getWidth()/2, roomTexture.getHeight());
+		TextureRegion[] rooms = {temp[0][0], temp[0][1]};
+		
 		// Items
 		bed = new HorizontalGroup();
 			item1 = new VerticalGroup();
 			item2 = new VerticalGroup();
-//			item3 = new VerticalGroup();
-			bedImage1 = new Image(new Texture("images/items/bed.png"));
-			bedImage2 = new Image(new Texture("images/items/bed.png"));
-//			bedImage3 = new Image(new Texture("images/items/bed.png"));
-			itemPrice1 = new TextButton("$1.00", skin);
-			itemPrice2 = new TextButton("$2.00", skin);
-//			itemPrice3 = new TextButton("$13.00", skin);
+			item3 = new VerticalGroup();
+			bedImage1 = new Image(beds[0]);
+			bedImage2 = new Image(beds[1]);
+			bedImage3 = new Image(beds[2]);
+			itemPrice1 = new TextButton("Bought", skin);
+			itemPrice2 = new TextButton("$25.00", skin);
+			itemPrice3 = new TextButton("$80.00", skin);
 		desk = new HorizontalGroup();
 			item4 = new VerticalGroup();
 			item5 = new VerticalGroup();
 //			item6 = new VerticalGroup();
-			deskImage1 = new Image(new Texture("images/items/desk.png"));
-			deskImage2 = new Image(new Texture("images/items/desk.png"));
+			deskImage1 = new Image(desks[0]);
+			deskImage2 = new Image(desks[1]);
 //			deskImage3 = new Image(new Texture("images/items/desk.png"));
-			itemPrice4 = new TextButton("$4.00", skin);
-			itemPrice5 = new TextButton("$5.00", skin);
+			itemPrice4 = new TextButton("Bought", skin);
+			itemPrice5 = new TextButton("$150.00", skin);
 //			itemPrice6 = new TextButton("$16.00", skin);
 		room = new HorizontalGroup();
 			item7 = new VerticalGroup();
 			item8 = new VerticalGroup();
 //			item9 = new VerticalGroup();
-			roomImage1 = new Image(new Texture("images/items/desk.png"));
-			roomImage2 = new Image(new Texture("images/items/desk.png"));
+			roomImage1 = new Image(rooms[0]);
+//			roomImage1.setWidth(32);
+//			roomImage1.setHeight(32);
+//			roomImage1.setScale(.25f);
+			
+			roomImage2 = new Image(rooms[1]);
+//			roomImage2.setWidth(32);
+//			roomImage2.setHeight(32);
+//			roomImage2.setScale(.25f);
+			
 //			roomImage3 = new Image(new Texture("images/items/desk.png"));
-			itemPrice7 = new TextButton("$17.00", skin);
-			itemPrice8 = new TextButton("$18.00", skin);
+			itemPrice7 = new TextButton("Bought", skin);
+			itemPrice8 = new TextButton("$1000.00", skin);
 //			itemPrice9 = new TextButton("$19.00", skin);
 			
 		itemPrice1.addListener(new ChangeListener(){
 			public void changed(ChangeEvent event, Actor actor) {				
+				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
 				
+				// Call player actor to nap
+				GameScreen screen = (GameScreen)game.getScreen();
+				Bed bed = screen.getBed();
+				
+				if(bed.getBedIndex() != 0) {	// The Bed has been bought and isnt currently bed 0
+					bed.setBed(0);
+					screen.getState().setBedIndex(0);
+					
+					screen.getState().log("You swap back to Bed 1");
 				}
-		});
+				
+				closePopups();
+				}
+			});
+		
 		itemPrice2.addListener(new ChangeListener(){
 			public void changed(ChangeEvent event, Actor actor) {				
+				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
 				
+				// Call player actor to nap
+				GameScreen screen = (GameScreen)game.getScreen();
+				Bed bed = screen.getBed();
+				
+				if(bed.getBedIndex() != 1 && bedPrice2 == 0) {	// The Bed has been bought and isnt currently bed 0
+					bed.setBed(1);
+					screen.getState().setBedIndex(1);
+					screen.getState().log("You swap back to Bed 2");
+				} else if(bed.getBedIndex() != 1) {
+					if(screen.getState().getMoney() > bedPrice2) {// Check if good moneywise
+						bed.setBed(1);
+						screen.getState().setBedIndex(1);
+						
+						screen.getState().spendMoney(bedPrice2);
+						screen.getState().log("You bought Bed 2 for $25.00, You'll sleep slightly better now.");
+						
+						bedPrice2 = 0;
+						
+						itemPrice2.setText("Bought");
+					}
 				}
+				
+				updateState();
+				closePopups();
+			}
 		});
-//		itemPrice3.addListener(new ChangeListener(){public void changed(ChangeEvent event, Actor actor) {}});
+		
+		itemPrice3.addListener(new ChangeListener(){
+			public void changed(ChangeEvent event, Actor actor) {
+				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
+				
+				// Call player actor to nap
+				GameScreen screen = (GameScreen)game.getScreen();
+				Bed bed = screen.getBed();
+				
+				System.out.println("Bed 3 buy dud " + bed.getBedIndex() + " " + bedPrice3);
+				
+				if(bed.getBedIndex() != 2 && bedPrice3 == 0) {	// The Bed has been bought and isnt currently bed 0
+					bed.setBed(2);
+					screen.getState().setBedIndex(2);
+				} else if(bed.getBedIndex() != 2) {
+					if(screen.getState().getMoney() > bedPrice3) {// Check if good moneywise
+						// Set the bed and state
+						bed.setBed(2);
+						screen.getState().setBedIndex(2);
+						
+						screen.getState().spendMoney(bedPrice3);
+						screen.getState().log("You bought Bed 3 for $80.00, You'll sleep much better now.");
+						
+						bedPrice3 = 0;
+
+						itemPrice3.setText("Bought");
+					}
+				}
+				
+				updateState();
+				closePopups();
+			}
+		});
 		
 		itemPrice4.addListener(new ChangeListener(){
 			public void changed(ChangeEvent event, Actor actor) {				
-				
+					buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
+					
+					// Call player actor to nap
+					GameScreen screen = (GameScreen)game.getScreen();
+					Desk desk = screen.getDesk();
+					
+					if(desk.getDeskIndex() != 0) {	// The Bed has been bought and isnt currently bed 0
+						desk.setBed(0);
+						screen.getState().setDeskIndex(0);
+						
+						screen.getState().log("You swap back to Desk 1");
+					}
+					
+					closePopups();
 				}
 		});
 		itemPrice5.addListener(new ChangeListener(){
 			public void changed(ChangeEvent event, Actor actor) {				
+				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
 				
+				// Call player actor to nap
+				GameScreen screen = (GameScreen)game.getScreen();
+				Desk desk = screen.getDesk();
+				
+				if(desk.getDeskIndex() != 1 && destPrice2 == 0) {	// The Bed has been bought and isnt currently bed 0
+					desk.setBed(1);
+					screen.getState().setDeskIndex(1);
+				} else if(desk.getDeskIndex() != 1) {
+					if(screen.getState().getMoney() > destPrice2) {// Check if good moneywise
+						// Set the bed and state
+						desk.setBed(0);
+						screen.getState().setDeskIndex(1);
+						
+						screen.getState().spendMoney(destPrice2);
+						screen.getState().log("You bought Desk 2 for $150.00, You'll draw much better now.");
+						
+						destPrice2 = 0;
+
+						itemPrice5.setText("Bought");
+					}
+				}
+				
+				updateState();
+				closePopups();
 				}
 		});
 //		itemPrice6.addListener(new ChangeListener(){public void changed(ChangeEvent event, Actor actor) {}});
 		
 		itemPrice7.addListener(new ChangeListener(){
 			public void changed(ChangeEvent event, Actor actor) {				
-				
+					buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
+					
+					// Call player actor to nap
+					GameScreen screen = (GameScreen)game.getScreen();
+					Room room = screen.getRoom();
+					
+					if(room.getRoomIndex() != 0) {	// The Bed has been bought and isnt currently bed 0
+						room.setRoom(0);
+						screen.getState().setRoomIndex(0);
+						
+						screen.getState().log("You swap back to Room 1");
+					}
+					
+					closePopups();
 				}
 		});
 		itemPrice8.addListener(new ChangeListener(){
 			public void changed(ChangeEvent event, Actor actor) {				
+				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
 				
+				// Call player actor to nap
+				GameScreen screen = (GameScreen)game.getScreen();
+				Room room = screen.getRoom();
+				
+				if(room.getRoomIndex() != 1 && roomPrice2 == 0) {	// The Bed has been bought and isnt currently bed 0
+					room.setRoom(1);
+					screen.getState().setRoomIndex(1);
+				} else if(room.getRoomIndex() != 1) {
+					if(screen.getState().getMoney() > roomPrice2) {// Check if good moneywise
+						// Set the bed and state
+						room.setRoom(1);
+						screen.getState().setRoomIndex(1);
+						
+						screen.getState().spendMoney(roomPrice2);
+						screen.getState().log("You bought Room 2 for $1000.00, You'll fell much better about not living in a squalor.");
+						
+						roomPrice2 = 0;
+
+						itemPrice8.setText("Bought");
+					}
+				}
+				
+				updateState();
+				closePopups();
 				}
 		});
 //		itemPrice9.addListener(new ChangeListener(){public void changed(ChangeEvent event, Actor actor) {}});
@@ -657,11 +837,11 @@ public class MainUI {
 		item1.addActor(itemPrice1);
 		item2.addActor(bedImage2);
 		item2.addActor(itemPrice2);
-//		item3.addActor(bedImage3);
-//		item3.addActor(itemPrice3);
+		item3.addActor(bedImage3);
+		item3.addActor(itemPrice3);
 		bed.addActor(item1);
 		bed.addActor(item2);
-//		bed.addActor(item3);
+		bed.addActor(item3);
 		
 		item4.addActor(deskImage1);
 		item4.addActor(itemPrice4);
