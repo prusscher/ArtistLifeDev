@@ -201,7 +201,7 @@ public class Actions {
 			art_rank = -2;
 			alterPopularity(-2);
 		}
-		incMoney(state.popularity, art_rank);
+		incMoney(state.getPopularity(), art_rank);
 		state.setEnergy(state.getEnergy() - energy_consum);
 		incXP(xp_gain);
 		passTime(time_consum);
@@ -276,45 +276,45 @@ public class Actions {
 		
 		switch(val) {
 		case -2:
-			if((state.popularity - 1) < -1)
-				state.popularity = -1;
+			if((state.getPopularity() - 1) < -1)
+				state.setPopularity(-1);
 			else
-				state.popularity -= 1;
+				state.setPopularity(state.getPopularity() - 1);
 			break;
 		case -1:
-			if((state.popularity - 0.5) < -1)
-				state.popularity = -1;
+			if((state.getPopularity() - 0.5) < -1)
+				state.setPopularity(-1);
 			else
-				state.popularity -= 0.5;
+				state.setPopularity((float) (state.getPopularity() - 0.5));
 			break;
 		case 0:
 			//nothin
 			break;
 		case 1:
-			if((state.popularity + 0.5) > 1)
-				state.popularity = 1;
+			if((state.getPopularity() + 0.5) > 1)
+				state.setPopularity(1);
 			else
-				state.popularity += 0.5;
+				state.setPopularity((float) (state.getPopularity() + 0.5));
 			break;
 		case 2:
-			if((state.popularity + 1) > 1)
-				state.popularity = 1;
+			if((state.getPopularity() + 1) > 1)
+				state.setPopularity(1);
 			else
-				state.popularity += 1;
+				state.setPopularity(state.getPopularity() + 1);
 			break;
 			
 			
 		}
 
-		if(state.popularity == -1) 
+		if(state.getPopularity() == -1) 
 			state.pop_title = "Very unpopular";
-		else if(state.popularity == -0.5) 
+		else if(state.getPopularity() == -0.5) 
 			state.pop_title = "Moderately unpopular";
-		else if(state.popularity == 0) 
+		else if(state.getPopularity() == 0) 
 			state.pop_title = "Not popular or unpopular";
-		else if(state.popularity == 0.5) 
+		else if(state.getPopularity() == 0.5) 
 			state.pop_title = "Moderately popular";
-		else if(state.popularity == 1) 
+		else if(state.getPopularity() == 1) 
 			state.pop_title = "Very popular";
 		
 	}
@@ -410,14 +410,14 @@ public class Actions {
 			System.out.println("I bought coffee!");
 			state.setEnergy(100);
 			state.setMoney(state.getMoney() - 5);
-			state.spent_money += 5;
+			state.setSpent_money(state.getSpent_money() + 5);
 			state.coffee_used = true;
 		}
 		else {
 			System.out.println("I bought coffee!");
 			state.setEnergy(state.getEnergy() + 40);
 			state.setMoney(state.getMoney() - 5);
-			state.spent_money += 5;
+			state.setSpent_money(state.getSpent_money() + 5);
 			state.coffee_used = true;
 		}
 	}
@@ -428,14 +428,14 @@ public class Actions {
 	 */
 	public void incXP(int xpAmount) {
 		
-		if(xpAmount + state.getXp() >= state.toNext && state.level != 8) {
+		if(xpAmount + state.getXp() >= state.toNext && state.getLevel() != 8) {
 			//level up, if you're not max level
 			
 			state.setXp(state.getXp() + xpAmount);
-			state.level	++;
+			state.setLevel(state.getLevel() + 1);
 			state.toNext *= 3;
 			
-			switch (state.level){
+			switch (state.getLevel()){
 			case 1: state.setTitle("1");
 					break;
 			case 2: state.setTitle("2");
@@ -456,7 +456,7 @@ public class Actions {
 					 break;
 			}
 			
-			System.out.println("You've leveled up! You are now level " +state.level + "! People have started to call you the " + state.getTitle());
+			System.out.println("You've leveled up! You are now level " +state.getLevel() + "! People have started to call you the " + state.getTitle());
 		}
 		else
 			state.setXp(state.getXp() + xpAmount);
@@ -515,7 +515,7 @@ public class Actions {
 		System.out.print("event number " + eventCheck);
 		if (eventCheck <= 5){
 			state.setMoney(state.getMoney() + 20);
-			state.earned_money += 20;
+			state.setEarned_money(state.getEarned_money() + 20);
 			state.log("On your way to the store to buy Artist Fuel(tm) you found twenty dollars! What a luckster you are!"); 
 			((GameScreen) game.getScreen()).getUI().updateState();
 		}
@@ -554,23 +554,23 @@ public class Actions {
 			switch(ranking) {
 			case -2:
 				state.setMoney(state.getMoney() + 0);
-				state.earned_money += 0;
+				state.setEarned_money(state.getEarned_money() + 0);
 				break;
 			case -1:
 				state.setMoney(state.getMoney() + 0);
-				state.earned_money += 0;
+				state.setEarned_money(state.getEarned_money() + 0);
 				break;
 			case 0:
 				state.setMoney(state.getMoney() + 1);
-				state.earned_money += 1;
+				state.setEarned_money(state.getEarned_money() + 1);
 				break;
 			case 1:
 				state.setMoney(state.getMoney() + 5);
-				state.earned_money += 5;
+				state.setEarned_money(state.getEarned_money() + 5);
 				break;
 			case 2:
 				state.setMoney(state.getMoney() + 10);
-				state.earned_money += 10;
+				state.setEarned_money(state.getEarned_money() + 10);
 				break;
 			}
 		}
@@ -578,23 +578,23 @@ public class Actions {
 			switch(ranking) {
 			case -2:
 				state.setMoney(state.getMoney() + 0);
-				state.earned_money += 0;
+				state.setEarned_money(state.getEarned_money() + 0);
 				break;
 			case -1:
 				state.setMoney(state.getMoney() + 1);
-				state.earned_money += 1;
+				state.setEarned_money(state.getEarned_money() + 1);
 				break;
 			case 0:
 				state.setMoney(state.getMoney() + 2);
-				state.earned_money += 2;
+				state.setEarned_money(state.getEarned_money() + 2);
 				break;
 			case 1:
 				state.setMoney(state.getMoney() + 7);
-				state.earned_money += 7;
+				state.setEarned_money(state.getEarned_money() + 7);
 				break;
 			case 2:
 				state.setMoney(state.getMoney() + 8);
-				state.earned_money += 8;
+				state.setEarned_money(state.getEarned_money() + 8);
 				break;
 			}
 		}
@@ -602,23 +602,23 @@ public class Actions {
 			switch(ranking) {
 			case -2:
 				state.setMoney(state.getMoney() + 1);
-				state.earned_money += 1;
+				state.setEarned_money(state.getEarned_money() + 1);
 				break;
 			case -1:
 				state.setMoney(state.getMoney() + 5);
-				state.earned_money += 5;
+				state.setEarned_money(state.getEarned_money() + 5);
 				break;
 			case 0:
 				state.setMoney(state.getMoney() + 10);
-				state.earned_money += 10;
+				state.setEarned_money(state.getEarned_money() + 10);
 				break;
 			case 1:
 				state.setMoney(state.getMoney() + 12);
-				state.earned_money += 12;
+				state.setEarned_money(state.getEarned_money() + 12);
 				break;
 			case 2:
 				state.setMoney(state.getMoney() + 15);
-				state.earned_money += 15;
+				state.setEarned_money(state.getEarned_money() + 15);
 				break;
 			}
 		}
@@ -626,23 +626,23 @@ public class Actions {
 			switch(ranking) {
 			case -2:
 				state.setMoney(state.getMoney() + 2);
-				state.earned_money += 2;
+				state.setEarned_money(state.getEarned_money() + 2);
 				break;
 			case -1:
 				state.setMoney(state.getMoney() + 5);
-				state.earned_money += 5;
+				state.setEarned_money(state.getEarned_money() + 5);
 				break;
 			case 0:
 				state.setMoney(state.getMoney() + 15);
-				state.earned_money += 15;
+				state.setEarned_money(state.getEarned_money() + 15);
 				break;
 			case 1:
 				state.setMoney(state.getMoney() + 20);
-				state.earned_money += 20;
+				state.setEarned_money(state.getEarned_money() + 20);
 				break;
 			case 2:
 				state.setMoney(state.getMoney() + 25);
-				state.earned_money += 25;
+				state.setEarned_money(state.getEarned_money() + 25);
 				break;
 			}
 		}
@@ -650,23 +650,23 @@ public class Actions {
 			switch(ranking) {
 			case -2:
 				state.setMoney(state.getMoney() + 3);
-				state.earned_money += 3;
+				state.setEarned_money(state.getEarned_money() + 3);
 				break;
 			case -1:
 				state.setMoney(state.getMoney() + 6);
-				state.earned_money += 6;
+				state.setEarned_money(state.getEarned_money() + 6);
 				break;
 			case 0:
 				state.setMoney(state.getMoney() + 20);
-				state.earned_money += 20;
+				state.setEarned_money(state.getEarned_money() + 20);
 				break;
 			case 1:
 				state.setMoney(state.getMoney() + 25);
-				state.earned_money += 25;
+				state.setEarned_money(state.getEarned_money() + 25);
 				break;
 			case 2:
 				state.setMoney(state.getMoney() + 30);
-				state.earned_money += 30;
+				state.setEarned_money(state.getEarned_money() + 30);
 				break;
 			}
 		}

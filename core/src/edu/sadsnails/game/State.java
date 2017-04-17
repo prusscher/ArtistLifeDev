@@ -20,11 +20,11 @@ public class State {
 	protected int toNext;		// the next XP milestone before your level increases
 
 	// Level
-	protected int level;		// current level in drawing skill [0 -> 8]
+	private int level;		// current level in drawing skill [0 -> 8]
 	private String title;		//the title associated with your current level
 	
 	// Popularity
-	protected float popularity;	// current popularity [-1 <-> 1]
+	private float popularity;	// current popularity [-1 <-> 1]
 	
 	// Time
 	private int [] date;		// the current date: year(0) | month(1) | day(2)	
@@ -35,8 +35,8 @@ public class State {
 	
 	// Money
 	private float money;		
-	protected float spent_money;
-	protected float earned_money;
+	private float spent_money;
+	private float earned_money;
 	
 	protected String pop_title;
 	
@@ -95,16 +95,16 @@ public class State {
     	// Default State
 		setXp(0);
 		toNext = 30;
-		level = 0;
+		setLevel(0);
 		setTitle("1");
-		popularity = 0;
+		setPopularity(0);
 		setDate(new int[3]);
 			getDate()[0] = 1;
 			getDate()[1] = 1;
 			getDate()[2] = 1;
 		setHour(1);
 		setEnergy(100);
-		setMoney(0); spent_money = 0; earned_money = 0;
+		setMoney(0); setSpent_money(0); setEarned_money(0);
 		pop_title = "Not popular or unpopular";	
     	
 		// Read File and reset variables to the save file
@@ -112,17 +112,17 @@ public class State {
     		// Load previous state
     		setXp(pair.getInt("xp"));
     		toNext 			= pair.getInt("toNext");
-    		level 			= pair.getInt("level");
+    		setLevel(pair.getInt("level"));
     		setTitle(pair.getString("title"));
-    		popularity 		= pair.getFloat("popularity");
+    		setPopularity(pair.getFloat("popularity"));
     		getDate()[0] 		= pair.getInt("date0");
     		getDate()[1] 		= pair.getInt("date1");
     		getDate()[2] 		= pair.getInt("date2");
     		setHour(pair.getInt("hour"));
     		setEnergy(pair.getInt("energy"));
     		setMoney(pair.getFloat("money"));
-    		spent_money 	= pair.getFloat("spent_money");
-    		earned_money 	= pair.getFloat("earned_money");
+    		setSpent_money(pair.getFloat("spent_money"));
+    		setEarned_money(pair.getFloat("earned_money"));
     		pop_title 		= pair.getString("pop_title");	
     	}
     	
@@ -134,8 +134,8 @@ public class State {
 	public void save() {
 		pair.putInt("xp", getXp());
 		pair.putInt("toNext", toNext);
-		pair.putInt("level", level);
-		pair.putFloat("popularity", popularity);
+		pair.putInt("level", getLevel());
+		pair.putFloat("popularity", getPopularity());
 		pair.putString("title", getTitle());
 		pair.putInt("date0", getDate()[0]);
 		pair.putInt("date1", getDate()[1]);
@@ -143,8 +143,8 @@ public class State {
 		pair.putInt("hour", 1);
 		pair.putInt("energy", 100);
 		pair.putFloat("money", getMoney());
-		pair.putFloat("spent_money", spent_money);
-		pair.putFloat("earned_money", earned_money);
+		pair.putFloat("spent_money", getSpent_money());
+		pair.putFloat("earned_money", getEarned_money());
 		pair.putString("pop_title", pop_title);
 		
 		pair.write(fileName);
@@ -226,5 +226,37 @@ public class State {
 	 */
 	public void log(String logText) {
 		log += logText + "\n\n";
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	public float getPopularity() {
+		return popularity;
+	}
+
+	public void setPopularity(float popularity) {
+		this.popularity = popularity;
+	}
+
+	public float getEarned_money() {
+		return earned_money;
+	}
+
+	public void setEarned_money(float earned_money) {
+		this.earned_money = earned_money;
+	}
+
+	public float getSpent_money() {
+		return spent_money;
+	}
+
+	public void setSpent_money(float spent_money) {
+		this.spent_money = spent_money;
 	}
 }

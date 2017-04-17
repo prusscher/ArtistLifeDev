@@ -31,6 +31,7 @@ import edu.sadsnails.game.Actions;
 import edu.sadsnails.game.GameScreen;
 import edu.sadsnails.game.MainMenuScreen;
 import edu.sadsnails.game.MyGdxGame;
+import edu.sadsnails.game.State;
 import edu.sadsnails.game.widgets.PlayerIcon;
 
 public class MainUI {
@@ -121,6 +122,11 @@ public class MainUI {
 
 	// ----- Pause Menu Elements
 	private VerticalGroup PauseUI;
+		private TextButton statsButton;
+			private Label statsLabel;
+		private TextButton helpButton;
+			private Label helpInformation;
+			private ScrollPane helpDoc;
 		private TextButton settingsButton;
 		private TextButton quitToMMButton;
 		private TextButton quitToDeskButton;
@@ -146,7 +152,9 @@ public class MainUI {
 	private boolean a_StoreMenueDisplayed = false;
 	
 	private boolean pauseMenuDisplayed = false;
+	private boolean helpDocDisplayed = false;
 	private boolean p_SettingsMenuDisplayed = false;
+	private boolean p_StatsDisplayed = false;
 
 	// Debug Stuff
 	private Texture grid;
@@ -230,7 +238,7 @@ public class MainUI {
 					popupDisplayed = true;
 					actionMenuDisplayed = true;
 					ActionUI.setVisible(true);
-				} else if(pauseMenuDisplayed || p_SettingsMenuDisplayed) {
+				} else if(pauseMenuDisplayed || helpDocDisplayed || p_SettingsMenuDisplayed || p_StatsDisplayed) {
 					closePopups();
 					action.setText("CLOSE");
 					action.setColor(Color.RED);
@@ -256,7 +264,7 @@ public class MainUI {
 					popupDisplayed = true;
 					pauseMenuDisplayed = true;
 					PauseUI.setVisible(true);
-				} else if(p_SettingsMenuDisplayed) {
+				} else if(p_SettingsMenuDisplayed || helpDocDisplayed || p_StatsDisplayed) {
 					closePopups();
 					pause.setText("Pause");
 					action.setVisible(true);
@@ -455,6 +463,8 @@ public class MainUI {
 			}
 		});
 
+		statsButton = new TextButton("STATS", skin);
+		helpButton = new TextButton("HELP", skin);
 		settingsButton = new TextButton("SETTINGS", skin);
 		quitToMMButton = new TextButton("Quit to Main Menu", skin);
 		quitToDeskButton = new TextButton("Quit to Desktop", skin);
@@ -770,12 +780,77 @@ public class MainUI {
 		customizeUI.setZIndex(3);
 		customizeUI.setVisible(false);
 		// end of customize menu
+		
+		// Help menu setup
+		helpInformation = new Label("\nWelcome to Artist Life!\n\n"
+				+ "To create artwork, use the Action button and select MAKE ART.\n\n"
+				+ "For each type of artwork you create, the community will react differently "
+				+ "to each combination. This will determine the amount of XP and money you earn.\n\n"
+				+ "As you level up from earned XP, you will unlock new things.\n\n"
+				+ "But will also lose energy for creating artwork, so make sure you take a nap,"
+				+ "go to sleep, or even purchase an energy drink in the store!.\n\n"
+				+ "To customize your character, use the Action button and select CUSTOMIZE.\n", skin);
+		helpInformation.setWrap(true);
+		helpDoc = new ScrollPane(helpInformation, skin);
+		helpDoc.setBounds(100, 60, 200, 120);
+		helpDoc.setColor(.1f, .1f, .1f, .8f);
+		stage.addActor(helpDoc);
+		helpDoc.setVisible(false);
+		
+		helpButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				System.out.println("helpButton");
+				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
+				popupDisplayed = true;
+				helpDocDisplayed = true;
+				helpDoc.setVisible(true);
+				PauseUI.setVisible(false);
+				pause.setText("Exit");
+				action.setVisible(false);
+			}
+		});
+		
+		State state = screen.getState();
+		statsLabel = new Label(	"XP: " + state.getXp() + "\n" + "\n" +
+						  		"Level: " + state.getLevel() + "\n" + "\n" +
+						  		"Title: " + state.getTitle() + "\n" + "\n" +
+						  		"Popularity: " + state.getPopularity() + "\n" + "\n" +
+						  		"Year " + state.getDate()[0] + " Month " + state.getDate()[1] + " Day " + state.getDate()[2] + "\n" + "\n" +
+						  		"Hour: " + state.getHour() + "\n" + "\n" +
+						  		"Energy: " + state.getEnergy() + "\n" + "\n" +
+						  		"Current Funds: " + state.getMoney() + "\n" + "\n" +
+						  		"Money Earned: " + state.getEarned_money() + "\n" + "\n" +
+						  		"Money Spent: " + state.getSpent_money()
+						  		, skin);
+		
+		statsLabel.setBounds(100, 20, 200, 200);
+		statsLabel.setAlignment(Align.center);
+		statsLabel.setColor(Color.ORANGE);
+		stage.addActor(statsLabel);
+		statsLabel.setVisible(false);
+		
+		statsButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				System.out.println("statButton");
+				buttonSound.play((game.setting.sfxVol()*(game.setting.masterVol()/100))/100);
+				popupDisplayed = true;
+				p_StatsDisplayed = true;
+				statsLabel.setVisible(true);
+				PauseUI.setVisible(false);
+				pause.setText("Exit");
+				action.setVisible(false);
+			}
+		});
 
 		// PAUSE MENU
 		PauseUI = new VerticalGroup();
 		PauseUI.setBounds(138, 22, 120, 120);
 		PauseUI.fill();
-
+		
+		PauseUI.addActor(statsButton);
+		PauseUI.addActor(helpButton);
 		PauseUI.addActor(settingsButton);
 		PauseUI.addActor(quitToMMButton);
 		PauseUI.addActor(quitToDeskButton);
@@ -908,14 +983,20 @@ public class MainUI {
 		
 		logPane.setVisible(false);
 		
+		pause.setText("Pause");
+		pause.setColor(Color.WHITE);
 		pauseMenuDisplayed = false;
+		helpDocDisplayed = false;
+		p_StatsDisplayed = false;
 		p_SettingsMenuDisplayed = false;
 
 		artUI.setVisible(false);
 		customizeUI.setVisible(false);
 		settingsTable.setVisible(false);
 		storeUI.setVisible(false);
-
+		helpDoc.setVisible(false);
+		statsLabel.setVisible(false);
+		
 		ActionUI.setVisible(false);
 		PauseUI.setVisible(false);
 	}
